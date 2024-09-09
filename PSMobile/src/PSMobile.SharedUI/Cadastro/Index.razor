@@ -1,0 +1,39 @@
+@page "/cadastro"
+@inherits IndexCadastroPage
+@using MudBlazor
+@using PSMobile.core.Entities
+
+<MudContainer Class="mt-4">
+    <MudText Typo="Typo.h4" Class="mb-4">Cadastros</MudText>
+
+    <MudGrid>
+        <MudItem xs="12">
+            <MudDataGrid Items="@Cadastros"
+                         Filterable="false"
+                         SortMode="@SortMode.Single"
+                         Striped="@IsStriped"
+                         Hover="@IsHover"
+                         Dense="@IsDense"
+                         Bordered="@IsBordered"
+                         Groupable="false">
+                <Columns>
+                    <PropertyColumn Property="x => x.cad_nome" Title="Nome Cadastro" />
+                    <PropertyColumn Property="x => x.cad_razao" Title="Razão Social" />
+                    <TemplateColumn CellClass="d-flex justify-end">
+                        <CellTemplate>
+                            <MudStack Row Class="gap-2">
+                                <!-- Adicione ações ou botões aqui -->
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager PageSizeOptions="@PageSizeOptionsString"
+                                      RowsPerPageString="@RowsPerPageString"
+                                      InfoFormat="@InfoFormatString"
+                                      T="Cadastros" />
+                </PagerContent>
+            </MudDataGrid>
+        </MudItem>
+    </MudGrid>
+</MudContainer>

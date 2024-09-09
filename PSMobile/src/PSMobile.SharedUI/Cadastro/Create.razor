@@ -1,0 +1,47 @@
+@page "/cadastro/criar"
+@inherits CreateCadastroPage
+@using MudBlazor
+
+
+<MudGrid>
+    <MudItem xs="12">
+        <MudText Typo="Typo.h4">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudTextField @bind-Value="Cadastro.cad_razao" Label="Razão Social" Required="true" />
+    </MudItem>
+
+    <MudItem xs="4">
+        <MudTextField @bind-Value="Cadastro.cad_cnpj" Label="CNPJ" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField @bind-Value="Cadastro.cad_ie" Label="Inscrição Estadual" />
+    </MudItem>
+    <MudItem xs="4">
+        <MudTextField @bind-Value="Cadastro.cad_im" Label="Inscrição Municipal" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5">Cliente</MudText>
+        <MudTextField @bind-Value="Cadastro.CadastroCliente.cad_cli_naturalidade" Label="Naturalidade" />
+        <MudTextField @bind-Value="Cadastro.CadastroCliente.cad_cli_diastolerancia" Label="Dias de Tolerância" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5">Fornecedor</MudText>
+        <MudTextField @bind-Value="Cadastro.CadastroFornecedor.cad_for_suframa" Label="SUFRAMA" />
+        <MudTextField @bind-Value="Cadastro.CadastroFornecedor.cad_for_contacontabil" Label="Conta Contábil" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudText Typo="Typo.h5">Transportadora</MudText>
+        <MudTextField @bind-Value="Cadastro.CadastroTransportadora.cad_rntrc" Label="RNTRC" />
+        <MudTextField @bind-Value="Cadastro.CadastroTransportadora.cad_rntrctipoproprietario" Label="Tipo de Proprietário" />
+    </MudItem>
+
+    <MudItem xs="12">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnSubmit">Salvar</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@OnCancel">Cancelar</MudButton>
+    </MudItem>
+</MudGrid>
