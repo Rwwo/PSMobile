@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 
 using PSMobile.SharedKernel.Utilities;
+using PSMobile.SharedUI;
 
 namespace PSMobile.Mobile;
 public static class MauiProgram
@@ -26,6 +27,8 @@ public static class MauiProgram
         builder.Services.AddScoped<ICadastroService, CadastroService>(); // Registrar o serviço
 
         builder.Services.AddSingleton<IConnectivity>(c => Connectivity.Current);
+
+        InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
 
         return builder.Build();
     }

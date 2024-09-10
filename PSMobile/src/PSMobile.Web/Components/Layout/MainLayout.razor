@@ -14,67 +14,64 @@
         <NavMenu />
     </MudDrawer>
     <MudMainContent Class="mt-16 pa-4">
-            @Body
+        @Body
     </MudMainContent>
 </MudLayout>
 
 
-    @code {
-        private bool _drawerOpen = true;
-
-        private bool _isDarkMode = false;
-
-        private MudTheme? _theme = null;
+@code {
+    private bool _drawerOpen = true;
 
 
 
-        protected override void OnInitialized()
+    private bool _isDarkMode = false;
 
-        {
+
+
+    private MudTheme? _theme = null;
+
+
+
+    protected override void OnInitialized()
+
+    {
 
         base.OnInitialized();
 
 
 
         _theme = new()
-
             {
-
                 PaletteLight = _lightPalette,
-
                 PaletteDark = _darkPalette,
-
                 LayoutProperties = new LayoutProperties()
-
             };
 
-        }
+    }
 
+    private void DrawerToggle()
 
-
-
-
-        private void DrawerToggle()
-
-        {
+    {
 
         _drawerOpen = !_drawerOpen;
 
-        }
+    }
+    private void DarkModeToggle()
+    {
 
 
-
-        private void DarkModeToggle()
-
-        {
 
         _isDarkMode = !_isDarkMode;
 
-        }
+    }
 
 
 
-        private readonly PaletteLight _lightPalette = new()
+
+
+
+
+    private readonly PaletteLight _lightPalette = new()
 
         {
 
@@ -94,7 +91,11 @@
 
 
 
-        private readonly PaletteDark _darkPalette = new()
+
+
+
+
+    private readonly PaletteDark _darkPalette = new()
 
         {
 
@@ -152,15 +153,35 @@
 
 
 
-        public string DarkLightModeButtonIcon => _isDarkMode switch
 
-        {
+
+
+
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+
+
+
+    {
+
+
+
+
+
+
 
         true => Icons.Material.Rounded.AutoMode,
 
+
+
+
+
+
+
         false => Icons.Material.Outlined.DarkMode,
 
-        };
+
+
+    };
 }
 
 

@@ -31,7 +31,7 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddAdditionalAssemblies(typeof(PSMobile.SharedUI.Cadastro.Index).Assembly);
-
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(PSMobile.SharedUI._Imports).Assembly);
 
 app.Run();

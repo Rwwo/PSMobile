@@ -4,7 +4,7 @@ using PSMobile.SharedKernel.Common;
 
 using PSMobile.core.Entities;
 
-namespace PSMobile.SharedUI.Cadastro;
+namespace PSMobile.SharedUI.Components.Pages.Cadastro;
 public class CreateCadastroPage : MyBaseComponent
 {
     public Cadastros Cadastro { get; set; } = new Cadastros();

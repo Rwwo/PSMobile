@@ -4,7 +4,7 @@ using PSMobile.core.Entities;
 using PSMobile.SharedKernel.Common;
 using PSMobile.SharedKernel.Utilities;
 
-namespace PSMobile.SharedUI.Cadastro;
+namespace PSMobile.SharedUI.Components.Pages.Cadastro;
 public class IndexCadastroPage : MyBaseComponent
 {
     [Inject] protected ICadastroService CadService { get; set; } = null!;
