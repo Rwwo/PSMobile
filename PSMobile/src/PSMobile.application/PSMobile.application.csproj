@@ -8,12 +8,11 @@
 
   <ItemGroup>
     <Folder Include="Profiles\" />
-    <Folder Include="Validations\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
-    <PackageReference Include="MediatR" Version="12.4.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PSMobile.core\PSMobile.core.csproj" />
+    <ProjectReference Include="..\PSMobile.SharedKernel\PSMobile.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

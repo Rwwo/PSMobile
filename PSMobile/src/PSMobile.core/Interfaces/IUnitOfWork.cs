@@ -2,6 +2,6 @@
 
 public interface IUnitOfWork
 {
-    ICadastroRepository ICadastroRepository { get; }
+    ICadastroRepository CadastroRepository { get; }
     Task CommitAsync();
 }

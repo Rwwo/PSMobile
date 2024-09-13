@@ -1,47 +1,231 @@
 @page "/cadastro/criar"
 @inherits CreateCadastroPage
-@using MudBlazor
 
+<PageTitle>Clientes</PageTitle>
 
-<MudGrid>
-    <MudItem xs="12">
-        <MudText Typo="Typo.h4">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
-    </MudItem>
+<MudContainer Class="mt-4">
 
-    <MudItem xs="12">
-        <MudTextField @bind-Value="Cadastro.cad_razao" Label="Razão Social" Required="true" />
-    </MudItem>
+    <MudText Typo="Typo.h4">Cadastro de Cliente</MudText>
 
-    <MudItem xs="4">
-        <MudTextField @bind-Value="Cadastro.cad_cnpj" Label="CNPJ" />
-    </MudItem>
-    <MudItem xs="4">
-        <MudTextField @bind-Value="Cadastro.cad_ie" Label="Inscrição Estadual" />
-    </MudItem>
-    <MudItem xs="4">
-        <MudTextField @bind-Value="Cadastro.cad_im" Label="Inscrição Municipal" />
-    </MudItem>
+    <BackButton Href="/cadastro"
+                Text="Voltar Clientes" />
 
-    <MudItem xs="12">
-        <MudText Typo="Typo.h5">Cliente</MudText>
-        <MudTextField @bind-Value="Cadastro.CadastroCliente.cad_cli_naturalidade" Label="Naturalidade" />
-        <MudTextField @bind-Value="Cadastro.CadastroCliente.cad_cli_diastolerancia" Label="Dias de Tolerância" />
-    </MudItem>
+    <MudPaper Class="pa-2">
 
-    <MudItem xs="12">
-        <MudText Typo="Typo.h5">Fornecedor</MudText>
-        <MudTextField @bind-Value="Cadastro.CadastroFornecedor.cad_for_suframa" Label="SUFRAMA" />
-        <MudTextField @bind-Value="Cadastro.CadastroFornecedor.cad_for_contacontabil" Label="Conta Contábil" />
-    </MudItem>
+        <EditForm Model="@Cliente" OnValidSubmit="OnValidSubmitAsync">
+            <DataAnnotationsValidator />
 
-    <MudItem xs="12">
-        <MudText Typo="Typo.h5">Transportadora</MudText>
-        <MudTextField @bind-Value="Cadastro.CadastroTransportadora.cad_rntrc" Label="RNTRC" />
-        <MudTextField @bind-Value="Cadastro.CadastroTransportadora.cad_rntrctipoproprietario" Label="Tipo de Proprietário" />
-    </MudItem>
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h4">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
+                </MudItem>
 
-    <MudItem xs="12">
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnSubmit">Salvar</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@OnCancel">Cancelar</MudButton>
-    </MudItem>
-</MudGrid>
+                <!-- Dados de Identificação e Básicos -->
+                <MudItem xs="12">
+                    <MudTextField Label="Nome" @bind-Value="Cliente.Nome" Required="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Label="CNPJ" @bind-Value="Cliente.Cnpj" Required="true" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudSelect Label="Sexo" @bind-Value="Cliente.Sexo">
+                        <MudSelectItem T="string"> Masculino </MudSelectItem>
+                        <MudSelectItem T="string"> Feminino </MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="Razão Social" @bind-Value="Cliente.Razao" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="IE" @bind-Value="Cliente.Ie" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="IM" @bind-Value="Cliente.Im" />
+                </MudItem>
+                <MudItem xs="12">
+                    <MudTextField Label="IST" @bind-Value="Cliente.Ist" />
+                </MudItem>
+
+                <MudSpacer />
+
+                <MudItem xs="12">
+                    <MudExpansionPanels>
+                        <MudExpansionPanel Text="Dados de Contato">
+                            <MudItem xs="12">
+                                <MudTextField Label="Telefone 1" @bind-Value="Cliente.Fone1" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Telefone 2" @bind-Value="Cliente.Fone2" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Telefone 3" @bind-Value="Cliente.Fone3" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Contato" @bind-Value="Cliente.Contato" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Telefone de Contato" @bind-Value="Cliente.FoneContato" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Email" @bind-Value="Cliente.Email" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Site" @bind-Value="Cliente.Site" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Documentação">
+                            <!--  -->
+                            <MudItem xs="12">
+                                <MudTextField Label="RG" @bind-Value="Cliente.Rg" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Órgão" @bind-Value="Cliente.Orgao" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudDatePicker Label="Data de Nascimento/Fundação" @bind-Date="Cliente.DataNasFun" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Informações de Cliente">
+
+                            <MudItem xs="12">
+                                <MudDatePicker Label="Data de Cadastro" @bind-Date="Cliente.CliDataCad" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Observações" @bind-Value="Cliente.Obs" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Usuário" @bind-Value="Cliente.CliUsu" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Computador" @bind-Value="Cliente.CliComput" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Informações Financeiras">
+                            <MudItem xs="12">
+                                <MudTextField Label="Limite Total" @bind-Value="Cliente.CliLimiteTotal" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Limite Mensal" @bind-Value="Cliente.CliLimiteMensal" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Número de Parcelas" @bind-Value="Cliente.CliLimiteParcelas" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Renda Comprovada" @bind-Value="Cliente.CliRendaComprovada" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Comprovante de Renda" @bind-Value="Cliente.CliComprovanteRenda" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Renda" @bind-Value="Cliente.CliRenda" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Endereço">
+                            <MudItem xs="12">
+                                <MudTextField Label="CEP" @bind-Value="Cliente.Cep" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Endereço" @bind-Value="Cliente.Endereco" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Número" @bind-Value="Cliente.Numero" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Complemento" @bind-Value="Cliente.Complemento" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código UFS" @bind-Value="Cliente.UfsCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código da Cidade" @bind-Value="Cliente.CidCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Bairro" @bind-Value="Cliente.Bairro" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Endereço de Entrega">
+                            <MudItem xs="12">
+                                <MudTextField Label="CEP Entrega" @bind-Value="Cliente.EntCep" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Endereço Entrega" @bind-Value="Cliente.EntEndereco" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Número Entrega" @bind-Value="Cliente.EntNumero" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Complemento Entrega" @bind-Value="Cliente.EntComplemento" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código UFS Entrega" @bind-Value="Cliente.EntUfsCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código da Cidade Entrega" @bind-Value="Cliente.EntCidCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Bairro Entrega" @bind-Value="Cliente.EntBairro" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Endereço de Correspondência">
+                            <MudItem xs="12">
+                                <MudTextField Label="CEP Correspondência" @bind-Value="Cliente.CorCep" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Endereço Correspondência" @bind-Value="Cliente.CorEndereco" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Número Correspondência" @bind-Value="Cliente.CorNumero" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Complemento Correspondência" @bind-Value="Cliente.CorComplemento" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código UFS Correspondência" @bind-Value="Cliente.CorUfsCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código da Cidade Correspondência" @bind-Value="Cliente.CorCidCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Bairro Correspondência" @bind-Value="Cliente.CorBairro" />
+                            </MudItem>
+                        </MudExpansionPanel>
+
+                        <MudExpansionPanel Text="Outros Campos e Flags">
+                            <MudItem xs="12">
+                                <MudTextField Label="Preencher Endereços" @bind-Value="Cliente.PreencherEnderecos" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Tipo de Cadastro" @bind-Value="Cliente.CadTipo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Desconto" @bind-Value="Cliente.CadCliDesconto" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código Pai" @bind-Value="Cliente.CadPaiCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código do Pai (Correspondência)" @bind-Value="Cliente.CadCorPaiCodigo" />
+                            </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Código do Pai (Entrega)" @bind-Value="Cliente.CadEntPaiCodigo" />
+                            </MudItem>
+                        </MudExpansionPanel>
+                    </MudExpansionPanels>
+                </MudItem>
+
+                <MudItem xs="12">
+                    <SaveButton />
+                </MudItem>
+
+            </MudGrid>
+        </EditForm>
+
+    </MudPaper>
+
+</MudContainer>

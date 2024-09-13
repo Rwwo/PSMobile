@@ -59,7 +59,21 @@ public class CustomExceptionMiddleware
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Response.ContentType = "application/json";
 
-        var details = new ErrorDetails(500, $"Erro Log {exception.Message} - {exception.InnerException}", null);
+        var details = new ErrorDetails(
+            500,
+            $"Erro Log",
+            new List<string>()
+            {
+                exception.InnerException is Npgsql.PostgresException npgsqlEx
+                    ? npgsqlEx.Hint
+                    : exception.InnerException?.ToString(),
+
+                exception.InnerException is Npgsql.PostgresException npgsqlEx1
+                    ? npgsqlEx1.MessageText
+                    : exception.InnerException?.Message
+            });
+
+
 
         var jsonResponse = JsonSerializer.Serialize(details);
 

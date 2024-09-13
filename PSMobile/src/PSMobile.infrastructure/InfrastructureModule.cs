@@ -22,11 +22,10 @@ public static class InfrastructureModule
 
     public static IServiceCollection AddDbContextConfig(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         
-        //services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-        services.AddDbContext<MyDbContext>(options =>
+        services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             options.EnableSensitiveDataLogging();

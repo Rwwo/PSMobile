@@ -1,10 +1,12 @@
 ﻿using System.Linq.Expressions;
 
+using PSMobile.core.Entities;
+
 namespace PSMobile.core.Interfaces;
-public interface IRepository<T>
+public interface IRepository<T> where T : BaseEntity
 {
-    Task<List<T>> GetAllAsync(bool onlyActive = true, params Expression<Func<T, object>>[] includes);
-    //Task<T?> GetByIdAsync(int id, params Expression<Func<T, object>>[] includes);
+    Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null);
+    Task<T> GetByIdAsync(Expression<Func<T, bool>> filter = null);
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(T entity);

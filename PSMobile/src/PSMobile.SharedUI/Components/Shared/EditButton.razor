@@ -1,0 +1,13 @@
+﻿@using MudBlazor
+
+<MudFab Size="Size.Small"
+        Label=""
+        Disabled="Disabled"
+        @onclick="OnClick"
+        StartIcon="@Icons.Material.Filled.Edit"
+        Color="Color.Warning" />
+
+@code {
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+}

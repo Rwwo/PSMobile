@@ -1,29 +1,34 @@
 ﻿using MudBlazor;
-
 using PSMobile.SharedKernel.Common;
-
 using PSMobile.core.Entities;
+using Microsoft.AspNetCore.Components.Forms;
+using PSMobile.SharedKernel.Common.Dtos;
+using PSMobile.SharedKernel.Utilities.Services;
+using PSMobile.SharedKernel.Utilities.Interfaces;
+using Microsoft.AspNetCore.Components;
 
 namespace PSMobile.SharedUI.Components.Pages.Cadastro;
 public class CreateCadastroPage : MyBaseComponent
 {
-    public Cadastros Cadastro { get; set; } = new Cadastros();
+    public ClienteInputModel Cliente { get; set; } = new();
+    [Inject] private ICadastroService CadService { get; set; } = null!;
 
     public bool IsEditing { get; set; } = false;
 
-    public void OnSubmit()
+    public async Task OnValidSubmitAsync(EditContext editContext)
     {
-        if (IsEditing)
-            // Lógica para atualizar o cadastro existente
-            Snackbar.Add("Cadastro atualizado com sucesso!", Severity.Success);
-        else
+        if (editContext.Model is ClienteInputModel model)
         {
-            // Lógica para adicionar novo cadastro
-            Snackbar.Add("Cadastro adicionado com sucesso!", Severity.Success);
+            await CadService.GravarAsync(model);
         }
 
-        // Redirecionar após a operação
-        Navigation.NavigateTo("/");
+        if (IsEditing)
+            Snackbar.Add("Cadastro atualizado com sucesso!", Severity.Success);
+        else
+            Snackbar.Add("Cadastro adicionado com sucesso!", Severity.Success);
+
+
+        Navigation.NavigateTo("/cadastro");
     }
 
     public void OnCancel()

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using PSMobile.core.Entities;
 
 namespace PSMobile.infrastructure.Context;
-public class MyDbContext : DbContext
+public class AppDbContext : DbContext
 {
-    public MyDbContext(DbContextOptions<MyDbContext> contextOptions)
+    public AppDbContext(DbContextOptions<AppDbContext> contextOptions)
         : base(contextOptions)
     {
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);

@@ -8,6 +8,7 @@ using PSMobile.application.Commands.Cadastros;
 using PSMobile.application.Queries.Cadastros;
 using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
+using PSMobile.SharedKernel.Common.Dtos;
 
 namespace PSMobile.api.Controllers;
 
@@ -24,11 +25,21 @@ public class CadastrosController : MainController
     }
 
 
-    [HttpGet]
+    [HttpGet()]
     public async Task<ActionResult<List<Cadastros>>> GetAll()
     {
 
         var query = new GetAllCadastrosQuery();
+        var result = await _mediator.Send(query);
+
+        return CustomResponse(HttpStatusCode.OK, result);
+
+    }
+    [HttpGet("{cad_key:int}")]
+    public async Task<ActionResult<Cadastros>> GetByCadKey(int cad_key)
+    {
+
+        var query = new GetCadastrosByCadKeyQuery(cad_key);
         var result = await _mediator.Send(query);
 
         return CustomResponse(HttpStatusCode.OK, result);
@@ -45,7 +56,7 @@ public class CadastrosController : MainController
 
 
     [HttpPost()]
-    public async Task<ActionResult<List<Cadastros>>> Post([FromBody] Cadastros entity)
+    public async Task<ActionResult<List<Cadastros>>> Post([FromBody] ClienteInputModel entity)
     {
         if (!ModelState.IsValid)
         {
@@ -56,33 +67,12 @@ public class CadastrosController : MainController
             return BadRequest(messages);
         }
 
-        var command = new CreateCadastroCommand(entity);
+        var command = new GravarCadastroCommand(entity);
         var result = await _mediator.Send(command);
 
         return CustomResponse(HttpStatusCode.OK, result);
     }
-
-
-    [HttpPut("{cad_key:int}")]
-    public async Task<ActionResult<Cadastros>> Put(int cad_key, [FromBody] Cadastros entity)
-    {
-        if (cad_key != entity.cad_key)
-            return BadRequest();
-
-        if (!ModelState.IsValid)
-        {
-            var messages = ModelState
-                .SelectMany(ms => ms.Value.Errors)
-                .Select(e => e.ErrorMessage)
-                .ToList();
-            return BadRequest(messages);
-        }
-
-        var command = new UpdateCadastroCommand(cad_key, entity);
-        var result = await _mediator.Send(command);
-
-        return Ok(result);
-    }
+    
 
     [HttpDelete("{cad_key:int}")]
     public async Task<ActionResult<Cadastros>> Delete(int cad_key)

@@ -1,23 +1,29 @@
-﻿using PSMobile.infrastructure.Context;
-
+﻿using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
+using PSMobile.infrastructure.Context;
+using PSMobile.infrastructure.Repositories;
 
-namespace PSMobile.infrastructure.Repositories;
 public class UnitOfWork : IUnitOfWork
 {
-    public MyDbContext _context;
+    private readonly AppDbContext _context;
+    private readonly IRepository<Cadastros> _repositoryBase;
 
-    public UnitOfWork(MyDbContext contexto)
+    // Repositório privado e sua interface pública
+    private CadastroRepository? _cadastroRepository;
+
+    public UnitOfWork(AppDbContext contexto, IRepository<Cadastros> repositoryBase)
     {
-        _context = contexto;
+        _context = contexto ?? throw new ArgumentNullException(nameof(contexto));
+        _repositoryBase = repositoryBase ?? throw new ArgumentNullException(nameof(repositoryBase));
     }
 
-    private CadastroRepository? CadastroRepository { get; set; } = null!;
-    public ICadastroRepository ICadastroRepository
+    // Expondo o repositório através de uma interface
+    public ICadastroRepository CadastroRepository
     {
-        get => CadastroRepository ?? (CadastroRepository = new CadastroRepository(_context));
+        get => _cadastroRepository ??= new CadastroRepository(_context, _repositoryBase);
     }
 
+    // Método de commit para salvar alterações no banco de dados
     public async Task CommitAsync()
     {
         await _context.SaveChangesAsync();

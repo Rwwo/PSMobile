@@ -1,17 +1,75 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+<MudThemeProvider Theme="@myCustomTheme" IsDarkMode="_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h5" Class="ml-3">PS MultiPlataforma</MudText>
+        <MudSpacer />
+        <MudStack Row>
+
+            @if (_isDarkMode)
+            {
+                <MudIconButton @onclick="DarkModeToggle" Icon="@Icons.Material.Filled.WbSunny" Color="Color.Inherit" Edge="Edge.End" />
+            }
+            else
+            {
+                <MudIconButton @onclick="DarkModeToggle" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Inherit" Edge="Edge.End" />
+            }
+
+        </MudStack>
+    </MudAppBar>
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
-    </div>
+    </MudDrawer>
+    <MudMainContent Class="mt-16 pa-4">
+        @Body
+    </MudMainContent>
+</MudLayout>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+@code {
+    private bool _drawerOpen = true;
+    private bool _isDarkMode = false;
+
+    private MudTheme? _theme = null;
+
+
+    private void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    private void DarkModeToggle()
+    {
+        _isDarkMode = !_isDarkMode;
+    }
+
+    private MudTheme myCustomTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = Colors.Blue.Darken3,
+                Secondary = Colors.Pink.Accent2,
+                Background = Colors.Grey.Lighten5,
+                AppbarBackground = Colors.Blue.Darken4,
+                AppbarText = Colors.Shades.White,
+                DrawerBackground = Colors.Grey.Darken3,
+                DrawerText = Colors.Shades.White,
+                TextPrimary = Colors.Grey.Darken3,
+                TextSecondary = Colors.Grey.Darken2,
+            }
+        };
+
+    public string DarkLightModeButtonIcon => _isDarkMode switch
+    {
+        true => Icons.Material.Rounded.AutoMode,
+        false => Icons.Material.Outlined.DarkMode,
+    };
+}
+
+

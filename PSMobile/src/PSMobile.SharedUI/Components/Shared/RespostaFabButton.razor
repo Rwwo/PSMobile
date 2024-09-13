@@ -1,0 +1,28 @@
+﻿@using MudBlazor
+@code {
+    [Parameter] public int? ClienteRequisitoRespostasCount { get; set; }
+    [Parameter] public bool DisableAddContato { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private string GetIcon()
+    {
+        return ClienteRequisitoRespostasCount > 0 
+            ? Icons.Material.Filled.Preview 
+            : Icons.Material.Filled.QuestionMark;
+    }
+
+    private Color GetColor()
+    {
+        return ClienteRequisitoRespostasCount > 0 
+            ? Color.Success 
+            : Color.Warning;
+    }
+}
+
+<MudFab 
+    Size="Size.Small"
+    Label=""
+    Disabled="@DisableAddContato"
+    @onclick="@OnClick"
+    StartIcon="@GetIcon()"
+    Color="@GetColor()" />

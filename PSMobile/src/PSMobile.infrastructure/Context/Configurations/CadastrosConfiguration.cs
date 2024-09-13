@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection.Emit;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using PSMobile.core.Entities;
@@ -104,6 +106,10 @@ public class CadastrosConfiguration : IEntityTypeConfiguration<Cadastros>
             contato.Property(ct => ct.cad_whats2).HasColumnName("cad_whats2");
             contato.Property(ct => ct.cad_whats3).HasColumnName("cad_whats3");
 
+            contato.Property(ct => ct.cad_fone1).HasColumnName("cad_fone1");
+            contato.Property(ct => ct.cad_fone2).HasColumnName("cad_fone2");
+            contato.Property(ct => ct.cad_fone3).HasColumnName("cad_fone3");
+
             contato.Property(r => r.cad_cli_ref1fone).HasColumnName("cad_cli_ref1fone");
             contato.Property(r => r.cad_cli_ref2fone).HasColumnName("cad_cli_ref2fone");
             contato.Property(r => r.cad_cli_ref3fone).HasColumnName("cad_cli_ref3fone");
@@ -149,7 +155,6 @@ public class CadastrosConfiguration : IEntityTypeConfiguration<Cadastros>
             endereco.Property(e => e.cad_ufs_codigo).HasColumnName("cad_corufs_codigo");
             endereco.Property(e => e.cad_cid_codigo).HasColumnName("cad_corcid_codigo");
         });
-
 
 
     }
