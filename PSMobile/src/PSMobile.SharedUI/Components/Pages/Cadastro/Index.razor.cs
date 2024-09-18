@@ -26,23 +26,10 @@ public class IndexCadastroPage : MyBaseComponent
         }
         catch (Exception ex)
         {
-            Snackbar.Add("Erro ao buscar os dados!", Severity.Warning, conf =>
-            {
-                conf.Action = "Detalhes";
-                conf.ActionColor = Color.Info;
-                conf.Onclick = snack =>
-                {
-                    Help(ex.Message);
-                    return Task.CompletedTask;
-                };
-            });
-
+            HandleException(ex);
         }
     }
-    public void Help(string msg)
-    {
-        Snackbar.Add(msg, Severity.Warning);
-    }
+
     public async Task DeleteAsync(Cadastros input)
     {
         try
@@ -72,7 +59,7 @@ public class IndexCadastroPage : MyBaseComponent
     {
         ServiceLocal.SetarCliente(input);
         Snackbar.Add(input.cad_nome, Severity.Success);
-        //Navigation.NavigateTo($"/tags/editar");
+        Navigation.NavigateTo($"/cadastro/gravar");
     }
 
     public bool Search(Cadastros Cliente)

@@ -66,15 +66,14 @@ public class CustomExceptionMiddleware
             {
                 exception.InnerException is Npgsql.PostgresException npgsqlEx
                     ? npgsqlEx.Hint
-                    : exception.InnerException?.ToString(),
+                    : exception.Message.ToString(),
 
                 exception.InnerException is Npgsql.PostgresException npgsqlEx1
                     ? npgsqlEx1.MessageText
                     : exception.InnerException?.Message
             });
 
-
-
+  
         var jsonResponse = JsonSerializer.Serialize(details);
 
         await context.Response.WriteAsync(jsonResponse);

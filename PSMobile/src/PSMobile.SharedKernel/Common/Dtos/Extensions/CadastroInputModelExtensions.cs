@@ -1,10 +1,9 @@
 ﻿using PSMobile.core.Entities;
 
 namespace PSMobile.SharedKernel.Common.Dtos.Extensions;
-
-public static class ClienteInputModelExtensions
+public static class CadastroInputModelExtensions
 {
-    public static Cadastros ToCadastros(this ClienteInputModel inputModel)
+    public static Cadastros ToCadastros(this CadastroInputModel inputModel)
     {
         var cadastro = new Cadastros
         {
@@ -23,22 +22,22 @@ public static class ClienteInputModelExtensions
             CadastroCliente = new CadastroCliente
             {
                 cad_cli_datacad = inputModel.CliDataCad,
-                cad_cli_usu = inputModel.CliUsu,
-                cad_cli_comput = inputModel.CliComput,
-                //cad_cli_liberado = (short)(inputModel.CadCliLiberado ?? 1),
-                //cad_cli_diastolerancia = inputModel.CadCliDiasTolerancia ?? 0,
+                //cad_cli_usu = inputModel.CliUsu,
+                //cad_cli_comput = inputModel.CliComput,
+                cad_cli_liberado = (short)inputModel.CadCliLiberado,
+                cad_cli_diastolerancia = inputModel.CadCliDiasTolerancia,
                 cad_cli_datamud = DateTime.Now,  // Atualiza data de modificação
                 //cad_cli_naturalidade = inputModel.CliNaturalidade,
                 CadastroCredito = new CadastroCredito
                 {
-                    cad_cli_usu = inputModel.CliUsu,
+                    //cad_cli_usu = inputModel.CliUsu,
                     cad_cli_desconto = inputModel.CadCliDesconto,
-                    cad_cli_limitetotal = inputModel.CliLimiteTotal,
-                    cad_cli_limitemensal = inputModel.CliLimiteMensal,
-                    cad_cli_limiteparcelas = inputModel.CliLimiteParcelas,
-                    cad_cli_rendacomprovada = inputModel.CliRendaComprovada,
-                    cad_cli_comprovanterenda = inputModel.CliComprovanteRenda,
-                    cad_cli_renda = inputModel.CliRenda,
+                    cad_cli_limitetotal = inputModel.CliLimiteTotal ?? 0,
+                    cad_cli_limitemensal = inputModel.CliLimiteMensal ?? 0,
+                    cad_cli_limiteparcelas = inputModel.CliLimiteParcelas ?? 0,
+                    cad_cli_rendacomprovada = inputModel.CliRendaComprovada ?? null,
+                    cad_cli_comprovanterenda = inputModel.CliComprovanteRenda ?? null,
+                    cad_cli_renda = inputModel.CliRenda ?? null,
                     //cad_cli_juros = inputModel.CadCliJuros
                 }
             },
@@ -77,7 +76,9 @@ public static class ClienteInputModelExtensions
                 cad_contato = inputModel.Contato,
                 cad_fonecontato = inputModel.FoneContato,
                 cad_email = inputModel.Email,
-                cad_site = inputModel.Site
+                cad_fone1 = inputModel.Fone1,
+                cad_fone2 = inputModel.Fone2,
+                cad_fone3 = inputModel.Fone3,
             }
         };
 

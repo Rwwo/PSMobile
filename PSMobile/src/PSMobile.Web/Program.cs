@@ -15,6 +15,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://192.168.0.170:44332") });
 builder.Services.AddScoped<ICadastroService, CadastroService>(); // Registrar o serviço
+builder.Services.AddScoped<IApiService, ApiService>();
+
 
 builder.Services.AddSingleton<ILocalNavigationService, LocalNavigationService>();
 

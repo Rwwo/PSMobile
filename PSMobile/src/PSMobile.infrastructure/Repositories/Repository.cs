@@ -6,7 +6,6 @@ using PSMobile.core.Interfaces;
 using PSMobile.infrastructure.Context;
 
 namespace PSMobile.infrastructure.Repositories;
-
 public partial class Repository<T> : IRepository<T> where T : BaseEntity
 {
     private readonly DbSet<T> _dbSet;
@@ -48,28 +47,57 @@ public partial class Repository<T> : IRepository<T> where T : BaseEntity
         }
     }
 
-    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> filter = null)
+    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+                                           List<Expression<Func<T, object>>>? includes = null)
     {
         try
         {
             var query = _dbSet.AsNoTracking();
+
+            // Aplica os includes se houver
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            // Aplica o filtro se houver
             if (filter != null)
+            {
                 query = query.Where(filter);
+            }
 
             return await query.ToListAsync();
         }
         catch (Exception ex)
         {
             HandleException(ex);
-            return new List<T>(); // Em caso de exceção, retorna uma lista vazia para evitar quebra de aplicação
+            return new List<T>(); // Retorna uma lista vazia em caso de erro
         }
     }
 
-    public async Task<T> GetByIdAsync(Expression<Func<T, bool>> filter = null)
+
+
+    public async Task<T> GetByIdAsync(Expression<Func<T, bool>>? filter = null,
+                                      List<Expression<Func<T, object>>>? includes = null)
     {
         try
         {
-            return filter == null ? null : await _dbSet.AsNoTracking().SingleOrDefaultAsync(filter);
+            var query = _dbSet.AsNoTracking();
+
+            // Aplica os includes se houver
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            // Aplica o filtro
+            return filter == null ? null : await query.SingleOrDefaultAsync(filter);
         }
         catch (Exception ex)
         {
@@ -77,6 +105,9 @@ public partial class Repository<T> : IRepository<T> where T : BaseEntity
             return null; // Em caso de exceção, retorna null
         }
     }
+
+
+
 
     public async Task UpdateAsync(T entity)
     {

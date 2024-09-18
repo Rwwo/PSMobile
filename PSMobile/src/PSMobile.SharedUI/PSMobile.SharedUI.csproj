@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.TextEditor" Version="1.1.0" />
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
     <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.90" />
   </ItemGroup>
@@ -20,6 +21,10 @@
   <ItemGroup>
     <ProjectReference Include="..\PSMobile.core\PSMobile.core.csproj" />
     <ProjectReference Include="..\PSMobile.SharedKernel\PSMobile.SharedKernel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 </Project>

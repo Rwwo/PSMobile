@@ -56,7 +56,7 @@ public class CadastrosController : MainController
 
 
     [HttpPost()]
-    public async Task<ActionResult<List<Cadastros>>> Post([FromBody] ClienteInputModel entity)
+    public async Task<ActionResult<List<Cadastros>>> Post([FromBody] CadastroInputModel entity)
     {
         if (!ModelState.IsValid)
         {

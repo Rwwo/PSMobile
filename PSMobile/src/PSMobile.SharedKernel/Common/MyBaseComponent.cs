@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Microsoft.Maui.Networking;
 
 using MudBlazor;
+
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Common;
@@ -10,6 +10,7 @@ public abstract class MyBaseComponent : ComponentBase
 {
     [Inject] protected ILocalNavigationService ServiceLocal { get; set; } = null!;
     [Inject] protected ISnackbar Snackbar { get; set; } = null!;
+    [Inject] protected IApiService ApiService { get; set; } = null!;
     [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] protected NavigationManager Navigation { get; set; } = null!;
     [Inject] protected IDialogService DialogService { get; set; } = null!;
@@ -24,4 +25,37 @@ public abstract class MyBaseComponent : ComponentBase
     protected int[] PageSizeOptionsString { get; private set; } = { 10, 25, 50, 100, int.MaxValue };
     protected string InfoFormatString { get; private set; } = "{first_item}-{last_item} de {all_items}";
 
+    protected void HandleError(List<string> ErrosApiService)
+    {
+        Snackbar.Add("Erro ao executar operação!", Severity.Warning, conf =>
+        {
+            conf.Action = "Detalhes";
+            conf.ActionColor = Color.Info;
+            conf.Onclick = snack =>
+            {
+                ShowDetails(string.Join('\n', ErrosApiService.ToArray()));
+                return Task.CompletedTask;
+            };
+        });
+    }
+    protected void HandleException(Exception ex)
+    {
+        Snackbar.Add("Erro ao executar operação!", Severity.Warning, conf =>
+        {
+            conf.Action = "Detalhes";
+            conf.ActionColor = Color.Info;
+            conf.Onclick = snack =>
+            {
+                ShowDetails(ex.Message);
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    private void ShowDetails(string message)
+    {
+        Snackbar.Add(message, Severity.Warning);
+    }
+
 }
+

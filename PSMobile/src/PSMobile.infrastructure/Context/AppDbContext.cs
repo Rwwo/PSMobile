@@ -13,6 +13,8 @@ public class AppDbContext : DbContext
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
     public DbSet<Cadastros> Cadastros { get; set; }
+    public DbSet<Cidades> Cidades { get; set; }
+    public DbSet<Ufs> Ufs { get; set; }
 
     private const string CONST_DATA_CADASTRO = "DataCadastro";
     private const string CONST_DATA_MODIFICACAO = "DataModificacao";

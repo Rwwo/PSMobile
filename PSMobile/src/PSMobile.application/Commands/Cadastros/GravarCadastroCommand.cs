@@ -6,9 +6,9 @@ namespace PSMobile.application.Commands.Cadastros;
 
 public class GravarCadastroCommand : IRequest<core.Entities.Cadastros>
 {
-    public ClienteInputModel Cliente { get; private set; }
+    public CadastroInputModel Cliente { get; private set; }
 
-    public GravarCadastroCommand(ClienteInputModel cliente)
+    public GravarCadastroCommand(CadastroInputModel cliente)
     {
         Cliente = cliente;
     }

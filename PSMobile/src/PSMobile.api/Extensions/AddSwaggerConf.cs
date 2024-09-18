@@ -12,6 +12,7 @@ public static class AddSwaggerConf
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.IncludeFields = true;
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
             });
 
         builder.Services.AddEndpointsApiExplorer();

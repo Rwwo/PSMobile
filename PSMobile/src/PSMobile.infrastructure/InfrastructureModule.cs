@@ -23,8 +23,11 @@ public static class InfrastructureModule
     public static IServiceCollection AddDbContextConfig(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        services.AddScoped<ICidadesRepository, CidadesRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        
+
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));

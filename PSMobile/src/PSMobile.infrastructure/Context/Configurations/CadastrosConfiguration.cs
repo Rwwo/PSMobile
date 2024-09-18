@@ -1,10 +1,9 @@
-﻿using System.Reflection.Emit;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using PSMobile.core.Entities;
 
+namespace PSMobile.infrastructure.Context.Configurations;
 public class CadastrosConfiguration : IEntityTypeConfiguration<Cadastros>
 {
     public void Configure(EntityTypeBuilder<Cadastros> builder)
