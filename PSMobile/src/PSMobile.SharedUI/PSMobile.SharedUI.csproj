@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Components\Pages\Pedido\" />
+    <Folder Include="Components\Shared\ThirdComponents\Enuns\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
