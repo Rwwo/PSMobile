@@ -15,7 +15,7 @@
         <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync" OnInvalidSubmit="OnInvalidSubmitAsync">
             <DataAnnotationsValidator />
 
-            <MudGrid>
+            <MudGrid Class="pa-2">
                 <MudItem xs="12">
                     <MudText Typo="Typo.h5">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
                 </MudItem>
@@ -43,6 +43,7 @@
                                   For="@(() => InputModel.Cnpj)"
                                   Clearable />
                 </MudItem>
+
                 <MudItem xs="12" sm="6">
                     <MudSelect T="string" Label="Sexo" @bind-Value="InputModel.Sexo">
                         <MudSelectItem Value="@("M")">Masculino</MudSelectItem>
@@ -55,11 +56,13 @@
                                   @bind-Value="InputModel.Ie"
                                   Clearable />
                 </MudItem>
+                
                 <MudItem xs="12" sm="4">
                     <MudTextField Label="IM"
                                   @bind-Value="InputModel.Im"
                                   Clearable />
                 </MudItem>
+                
                 <MudItem xs="12" sm="4">
                     <MudTextField Label="IST"
                                   @bind-Value="InputModel.Ist"
@@ -69,10 +72,10 @@
                 <MudSpacer />
 
                 <MudItem xs="12">
-                    <MudExpansionPanels MultiExpansion="true" Dense="true">
+                    <MudExpansionPanels MultiExpansion="true" Dense="true" >
                         <!-- Endereço -->
                         <MudExpansionPanel Text="Endereço" >
-                            <MudGrid Class="mb-2">
+                            <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="CEP"
                                                   @bind-Value="InputModel.Cep"
@@ -103,7 +106,7 @@
                                 <MudItem xs="12">
                                     <MudAutocomplete T="Cidades" Label="Selecione uma cidade"
                                                      @bind-Value="Cidade"
-                                                     SearchFunc="@(async (value) => await Search1(value))"
+                                                     SearchFunc="@Search1"
                                                      ShowProgressIndicator="true"
                                                      MinCharacters="3"
                                                      Clearable
@@ -117,8 +120,8 @@
                         </MudExpansionPanel>
 
                         <!-- Dados de Contato -->
-                        <MudExpansionPanel Text="Dados de Contato" >
-                            <MudGrid Class="mb-2">
+                        <MudExpansionPanel Text="Dados de Contato">
+                            <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Telefone 1"
                                                   Mask="@(new PatternMask("(00) 00000-0000"))"
@@ -162,8 +165,8 @@
                         </MudExpansionPanel>
 
                         <!-- Documentação -->
-                        <MudExpansionPanel Text="Documentação">
-                            <MudGrid Class="mb-2">
+                        <MudExpansionPanel Text="Documentação" >
+                            <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="RG"
                                                   @bind-Value="InputModel.Rg"
@@ -188,8 +191,8 @@
                         </MudExpansionPanel>
 
                         <!-- Informações de Cliente -->
-                        <MudExpansionPanel Text="Informações de Cliente" >
-                            <MudGrid Class="mb-2">
+                        <MudExpansionPanel Text="Informações de Cliente">
+                            <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12">
                                     <MudTextField Label="Observações"
                                                   @bind-Value="InputModel.Obs"
@@ -201,7 +204,7 @@
 
                         <!-- Informações Financeiras -->
                         <MudExpansionPanel Text="Informações Financeiras" >
-                            <MudGrid Class="mb-2">
+                            <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Limite Total"
                                                   @bind-Value="InputModel.CliLimiteTotal"

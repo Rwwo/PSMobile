@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@myCustomTheme" IsDarkMode="_isDarkMode" />
+<MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -8,7 +9,7 @@
 <MudLayout>
     <MudAppBar Elevation="1">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h5" Class="ml-3">PS MultiPlataforma</MudText>
+        <MudText Typo="Typo.h5" Class="ml-3">PSSys Multiplataforma</MudText>
         <MudSpacer />
         <MudStack Row>
 
@@ -51,17 +52,17 @@
 
     private MudTheme myCustomTheme = new MudTheme()
         {
-            Palette = new Palette()
+            PaletteLight = new PaletteLight()
             {
                 Primary = Colors.Blue.Darken3,
                 Secondary = Colors.Pink.Accent2,
-                Background = Colors.Grey.Lighten5,
+                Background = Colors.Gray.Lighten5,
                 AppbarBackground = Colors.Blue.Darken4,
                 AppbarText = Colors.Shades.White,
-                DrawerBackground = Colors.Grey.Darken3,
+                DrawerBackground = Colors.Gray.Darken3,
                 DrawerText = Colors.Shades.White,
-                TextPrimary = Colors.Grey.Darken3,
-                TextSecondary = Colors.Grey.Darken2,
+                TextPrimary = Colors.Gray.Darken3,
+                TextSecondary = Colors.Gray.Darken2,
             }
         };
 

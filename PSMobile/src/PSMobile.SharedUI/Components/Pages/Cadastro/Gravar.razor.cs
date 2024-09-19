@@ -25,14 +25,15 @@ public class GravarCadastroPage : MyBaseComponent
 
         if (CurrentCadastro is null)
             return;
-
+        
+        IsEditing = true;
         InputModel = CurrentCadastro.ToCadastrosInputModel();
         if (InputModel.CidCodigo is not null)
             Cidade = Cidades.SingleOrDefault(t => t.cid_codigo == InputModel.CidCodigo);
 
     }
 
-    public async Task<IEnumerable<Cidades>> Search1(string value)
+    public async Task<IEnumerable<Cidades>> Search1(string value, CancellationToken clt)
     {
         await Task.Yield();
 

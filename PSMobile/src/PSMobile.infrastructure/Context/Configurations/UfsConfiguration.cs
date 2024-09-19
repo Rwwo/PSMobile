@@ -16,8 +16,5 @@ public class UfsConfiguration : IEntityTypeConfiguration<Ufs>
         builder.HasMany(t => t.Cidades)
             .WithOne(e => e.Ufs)
             .HasForeignKey(e => e.cid_ufs_codigo);
-
     }
-
-
 }

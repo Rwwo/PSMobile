@@ -2,6 +2,6 @@
 
 namespace PSMobile.core.Interfaces;
 
-public interface ICidadesRepository : IRepository<Cidades>
+public interface IFuncionariosRepository : IRepository<Funcionarios>
 {
 }

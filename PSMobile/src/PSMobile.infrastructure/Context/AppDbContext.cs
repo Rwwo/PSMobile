@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     }
     public DbSet<Cadastros> Cadastros { get; set; }
     public DbSet<Cidades> Cidades { get; set; }
+    public DbSet<Funcionarios> Funcionarios { get; set; }
     public DbSet<Ufs> Ufs { get; set; }
 
     private const string CONST_DATA_CADASTRO = "DataCadastro";

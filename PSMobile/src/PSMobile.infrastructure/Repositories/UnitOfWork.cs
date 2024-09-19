@@ -29,6 +29,12 @@ public class UnitOfWork : IUnitOfWork
     }
 
 
+    private FuncionariosRepository? _FuncionariosRepository;
+    public IFuncionariosRepository FuncionariosRepository
+    {
+        get => _FuncionariosRepository ??= new FuncionariosRepository(_context);
+    }
+
 
     public async Task CommitAsync()
     {

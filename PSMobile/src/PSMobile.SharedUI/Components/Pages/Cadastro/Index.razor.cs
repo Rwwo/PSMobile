@@ -17,6 +17,10 @@ public class IndexCadastroPage : MyBaseComponent
         IsLoading = true;
         await LoadDataAsync();
         IsLoading = false;
+
+        await InvokeAsync(StateHasChanged);
+
+        await base.OnInitializedAsync();
     }
     private async Task LoadDataAsync()
     {
