@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.core.Notifications;
 using PSMobile.infrastructure.Context;
@@ -22,9 +23,16 @@ public static class InfrastructureModule
 
     public static IServiceCollection AddDbContextConfig(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+        services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
+        //services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+
+        services.AddScoped<ICadastroRepository, CadastroRepository>();
         services.AddScoped<ICidadesRepository, CidadesRepository>();
+
+        services.AddScoped<IFuncionariosRepository, FuncionariosRepository>();
+
+        services.AddScoped<IUFsRepository, UFsRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using PSMobile.application.Commands.Cadastros;
 using PSMobile.application.Queries.Cadastros;
+using PSMobile.application.Queries.Funcionarios;
 using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Common.Dtos;
 
@@ -25,9 +26,8 @@ namespace PSMobile.api.Controllers
 
         // Rota para buscar todos os cadastros
         [HttpGet("all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] GetAllCadastrosQuery query)
         {
-            var query = new GetAllCadastrosQuery();
             var result = await _mediator.Send(query);
             return CustomResponse(HttpStatusCode.OK, result);
         }
@@ -42,10 +42,9 @@ namespace PSMobile.api.Controllers
         }
 
         // Rota para buscar cadastros por coluna personalizada
-        [HttpGet("custom/{custom}")]
-        public async Task<IActionResult> GetByCustomColumn(string custom)
+        [HttpGet("custom")]
+        public async Task<IActionResult> GetByCustomColumn([FromQuery] GetAllCustomColumnCadastrosQuery query)
         {
-            var query = new GetAllCustomColumnCadastrosQuery(custom);
             var result = await _mediator.Send(query);
             return CustomResponse(HttpStatusCode.OK, result);
         }
@@ -68,13 +67,5 @@ namespace PSMobile.api.Controllers
             return CustomResponse(HttpStatusCode.OK, result);
         }
 
-        // Rota para deletar cadastro por chave
-        [HttpDelete("{cad_key:int}")]
-        public async Task<IActionResult> Delete(int cad_key)
-        {
-            var command = new DeleteCadastroCommand(cad_key);
-            var result = await _mediator.Send(command);
-            return CustomResponse(HttpStatusCode.OK, result);
-        }
     }
 }

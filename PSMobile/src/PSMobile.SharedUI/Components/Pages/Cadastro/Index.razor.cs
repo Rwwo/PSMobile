@@ -1,68 +1,57 @@
-﻿using Microsoft.AspNetCore.Components;
-
-using MudBlazor;
+﻿using MudBlazor;
 
 using PSMobile.core.Entities;
+using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Common;
-using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedUI.Components.Pages.Cadastro;
 public class IndexCadastroPage : MyBaseComponent
 {
-    [Inject] private ICadastroService CadService { get; set; } = null!;
+
+    public MudDataGrid<Cadastros> dataGrid;
     public string searchString = "";
-    public List<Cadastros>? Cadastros { get; set; } = null;
+
     protected async override Task OnInitializedAsync()
     {
         IsLoading = true;
-        await LoadDataAsync();
         IsLoading = false;
 
         await InvokeAsync(StateHasChanged);
-
         await base.OnInitializedAsync();
     }
-    private async Task LoadDataAsync()
+    public async Task<GridData<Cadastros>> ServerReload(GridState<Cadastros> state)
     {
-        try
+        int pageSize = dataGrid.RowsPerPage == 0 ? 10 : dataGrid.RowsPerPage;
+        int pageNumber = dataGrid.CurrentPage == 0 ? 1 : dataGrid.CurrentPage;
+
+        PaginatedResult<Cadastros> dados;
+
+        if (string.IsNullOrEmpty(searchString))
         {
-            Cadastros = await CadService.GetAllAsync();
+            dados = await UowAPI.CadastroService.GetAllAsync(pageSize, pageNumber);
         }
-        catch (Exception ex)
+        else
         {
-            HandleException(ex);
+            dados = await UowAPI.CadastroService.GetByCustomColumnAsync(searchString, pageSize, pageNumber);
         }
+
+        return new GridData<Cadastros>
+        {
+            TotalItems = dados.TotalItems,
+            Items = dados.Items
+        };
     }
 
-    public async Task DeleteAsync(Cadastros input)
+
+    public Task OnSearch(string text)
     {
-        try
-        {
-            var result = await DialogService.ShowMessageBox
-            (
-                "Atenção",
-                $"Deseja excluir a Tag: {input.cad_nome}?",
-                yesText: "SIM",
-                cancelText: "NÃO"
-            );
-
-            if (result is true)
-            {
-                //await _uow.ITagsRepository.DeleteByIdAsync(input.Id);
-                Snackbar.Add("Cadastro excluído com sucesso!", Severity.Success);
-
-                await LoadDataAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            Snackbar.Add(ex.Message, Severity.Error);
-        }
+        searchString = text;
+        return dataGrid.ReloadServerData();
     }
+
     public void GoToUpdate(Cadastros input)
     {
         ServiceLocal.SetarCliente(input);
-        Snackbar.Add(input.cad_nome, Severity.Success);
         Navigation.NavigateTo($"/cadastro/gravar");
     }
 

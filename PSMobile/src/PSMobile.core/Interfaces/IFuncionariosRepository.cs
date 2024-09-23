@@ -2,6 +2,5 @@
 
 namespace PSMobile.core.Interfaces;
 
-public interface IFuncionariosRepository : IRepository<Funcionarios>
-{
-}
+public interface IFuncionariosRepository : IReadRepository<Funcionarios>
+{ }

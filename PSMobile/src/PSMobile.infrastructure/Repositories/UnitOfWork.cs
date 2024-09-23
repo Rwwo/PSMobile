@@ -6,9 +6,9 @@ namespace PSMobile.infrastructure.Repositories;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
-    private readonly IRepository<Cadastros> _repositoryBase;
+    private readonly IReadRepository<Cadastros> _repositoryBase;
 
-    public UnitOfWork(AppDbContext contexto, IRepository<Cadastros> repositoryBase)
+    public UnitOfWork(AppDbContext contexto, IReadRepository<Cadastros> repositoryBase)
     {
         _context = contexto ?? throw new ArgumentNullException(nameof(contexto));
         _repositoryBase = repositoryBase ?? throw new ArgumentNullException(nameof(repositoryBase));
@@ -18,7 +18,7 @@ public class UnitOfWork : IUnitOfWork
     private CadastroRepository? _cadastroRepository;
     public ICadastroRepository CadastroRepository
     {
-        get => _cadastroRepository ??= new CadastroRepository(_context, _repositoryBase);
+        get => _cadastroRepository ??= new CadastroRepository(_context);
     }
 
 
@@ -33,6 +33,12 @@ public class UnitOfWork : IUnitOfWork
     public IFuncionariosRepository FuncionariosRepository
     {
         get => _FuncionariosRepository ??= new FuncionariosRepository(_context);
+    }
+
+    public PedidosRepository? _PedidosRepository;
+    public IPedidosRepository PedidosRepository
+    {
+        get => _PedidosRepository ??= new PedidosRepository(_context);
     }
 
 

@@ -2,7 +2,7 @@
 
 namespace PSMobile.core.Entities;
 
-public class Cidades : BaseEntity
+public class Cidades : Entity
 {
     [Key]
     public int cid_key { get; set; }
@@ -14,12 +14,7 @@ public class Cidades : BaseEntity
 
     public int cid_ufs_codigo { get; set; }
 
-
-
     public Ufs Ufs { get; set; }
-
-    public override void Deletar() { }
-    public override void ReAtivar() { }
 
     public string CidadeNormalizado => this.ToString();
     public override string ToString() => $"{cid_nome} - {Ufs.ufs_uf}";

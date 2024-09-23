@@ -6,49 +6,21 @@ using PSMobile.core.Interfaces;
 using PSMobile.infrastructure.Context;
 
 namespace PSMobile.infrastructure.Repositories;
-public partial class Repository<T> : IRepository<T> where T : BaseEntity
+public class ReadRepository<T> : IReadRepository<T> where T : Entity
 {
     private readonly DbSet<T> _dbSet;
     private readonly AppDbContext _context;
 
-    public Repository(AppDbContext context)
+    public ReadRepository(AppDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
     }
 
-    public async Task AddAsync(T entity)
-    {
-        try
-        {
-            await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
-        }
-    }
-
-    public async Task DeleteAsync(T entity)
-    {
-        try
-        {
-            if (entity != null)
-            {
-                entity.Deletar();
-                _dbSet.Update(entity);
-                await _context.SaveChangesAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
-        }
-    }
-
-    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
-                                           List<Expression<Func<T, object>>>? includes = null)
+    public async Task<PaginatedResult<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+                                                              List<Expression<Func<T, object>>>? includes = null,
+                                                              int pageNumber = 1,
+                                                              int pageSize = 10)
     {
         try
         {
@@ -69,14 +41,23 @@ public partial class Repository<T> : IRepository<T> where T : BaseEntity
                 query = query.Where(filter);
             }
 
-            return await query.ToListAsync();
+            // Obtém o número total de itens sem paginação
+            var totalItems = await query.CountAsync();
+
+            // Aplica a paginação
+            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // Retorna o resultado paginado de forma assíncrona
+            return new PaginatedResult<T>(items, totalItems, pageNumber, pageSize);
         }
         catch (Exception ex)
         {
             HandleException(ex);
-            return new List<T>(); // Retorna uma lista vazia em caso de erro
+            return new PaginatedResult<T>(new List<T>(), 0, pageNumber, pageSize);
+
         }
     }
+
 
 
 
@@ -107,21 +88,6 @@ public partial class Repository<T> : IRepository<T> where T : BaseEntity
     }
 
 
-
-
-    public async Task UpdateAsync(T entity)
-    {
-        try
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
-        }
-    }
-
     private void HandleException(Exception ex)
     {
         if (ex is DbUpdateException dbUpdateEx && dbUpdateEx.InnerException != null)
@@ -131,4 +97,5 @@ public partial class Repository<T> : IRepository<T> where T : BaseEntity
 
         throw new RepositoryException("Um erro não esperado ocorreu", ex);
     }
+
 }

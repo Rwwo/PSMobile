@@ -21,18 +21,16 @@ public class FuncionariosController : MainController
 
     // Rota para buscar todos os funcionários
     [HttpGet("all")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllFuncionariosQuery query)
     {
-        var query = new GetAllFuncionariosQuery();
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }
 
     // Rota para buscar funcionários por nome
     [HttpGet("search-by-name")]
-    public async Task<IActionResult> GetFuncionariosByName([FromQuery] string name)
+    public async Task<IActionResult> GetFuncionariosByName([FromQuery] GetFuncionariosByNomeQuery query)
     {
-        var query = new GetFuncionariosByNomeQuery(name);
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }

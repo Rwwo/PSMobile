@@ -4,8 +4,9 @@ using PSMobile.infrastructure.Context;
 
 namespace PSMobile.infrastructure.Repositories;
 
-public class CidadesRepository : Repository<Cidades>, ICidadesRepository
+public class CidadesRepository : ReadRepository<Cidades>, ICidadesRepository
 {
     public CidadesRepository(AppDbContext context)
         : base(context) { }
 }
+

@@ -1,8 +1,7 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
+﻿using System.Net.Http.Json;
 
 using PSMobile.core.Entities;
+using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Common.Dtos;
 using PSMobile.SharedKernel.Responses;
 using PSMobile.SharedKernel.Utilities.Interfaces;
@@ -13,22 +12,23 @@ public class CadastroService : ICadastroService
     private readonly HttpClient _httpClient;
     public CadastroService(HttpClient httpClient)
     {
-        var handler = new HttpClientHandler();
-        handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-
-        _httpClient = new HttpClient(handler);
-        _httpClient.BaseAddress = httpClient.BaseAddress;
+        _httpClient = httpClient;
     }
 
-    public async Task<List<Cadastros>> GetAllAsync()
+    public async Task<PaginatedResult<Cadastros>> GetAllAsync(int pageSize = 10, int pageNumber = 1)
     {
-        var dados = await _httpClient.GetFromJsonAsync<List<Cadastros>>("api/Cadastros");
-        return dados;
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/all{query}");
     }
 
-    public async Task<List<Cadastros>> GetByCustomColumnAsync(string custom)
+    public async Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1)
     {
-        return await _httpClient.GetFromJsonAsync<List<Cadastros>>($"api/Cadastros/{custom}");
+        var query = $"custom?Custom={custom}&PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/{query}");
+    }
+    public async Task<Cadastros> GetByIdAsync(int id)
+    {
+        return await _httpClient.GetFromJsonAsync<Cadastros>($"api/Cadastros/{id}");
     }
 
     public async Task<Result<Cadastros>> GravarAsync(CadastroInputModel cadastro)
@@ -46,16 +46,7 @@ public class CadastroService : ICadastroService
         return Result<Cadastros>.Failure(errors);
     }
 
-    public async Task<Result<bool>> DeleteAsync(int cadKey)
-    {
-        var response = await _httpClient.DeleteAsync($"api/Cadastros/{cadKey}");
 
-        if (response.IsSuccessStatusCode)
-            return Result<bool>.Success(true);
-
-        var errors = await response.TratarErroAsync();
-        return Result<bool>.Failure(errors);
-    }
 }
 
 

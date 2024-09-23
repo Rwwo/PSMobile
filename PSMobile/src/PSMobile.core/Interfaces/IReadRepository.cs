@@ -1,0 +1,20 @@
+﻿using System.Linq.Expressions;
+
+using PSMobile.core.Entities;
+using PSMobile.infrastructure.Repositories;
+
+namespace PSMobile.core.Interfaces;
+public interface IReadRepository<T> where T : Entity
+{
+    Task<PaginatedResult<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+                                                  List<Expression<Func<T, object>>>? includes = null,
+                                                  int pageNumber = 1,
+                                                  int pageSize = 10);
+
+    Task<T> GetByIdAsync(
+        Expression<Func<T, bool>>? filter = null,
+        List<Expression<Func<T, object>>>? includes = null);
+
+}
+
+

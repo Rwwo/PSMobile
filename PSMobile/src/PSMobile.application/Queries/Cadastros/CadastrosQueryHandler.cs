@@ -1,15 +1,18 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+
+using AutoMapper;
 
 using MediatR;
 
 using PSMobile.core.Interfaces;
+using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.application.Queries.Cadastros;
 
 public class CadastrosQueryHandler
-    : IRequestHandler<GetAllCadastrosQuery, List<core.Entities.Cadastros>>
+    : IRequestHandler<GetAllCadastrosQuery, PaginatedResult<core.Entities.Cadastros>>
     , IRequestHandler<GetCadastrosByCadKeyQuery, core.Entities.Cadastros>
-    , IRequestHandler<GetAllCustomColumnCadastrosQuery, List<core.Entities.Cadastros>>
+    , IRequestHandler<GetAllCustomColumnCadastrosQuery, PaginatedResult<core.Entities.Cadastros>>
 {
     private readonly IUnitOfWork _uow;
     private readonly IMapper _map;
@@ -20,12 +23,27 @@ public class CadastrosQueryHandler
         _map = map;
     }
 
-    public async Task<List<core.Entities.Cadastros>> Handle(GetAllCadastrosQuery request, CancellationToken cancellationToken)
-        => await _uow.CadastroRepository.GetAllAsync();
+    public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetAllCadastrosQuery request, CancellationToken cancellationToken)
+    {
+        return await _uow.CadastroRepository.GetAllAsync(null, null, request.PageNumber, request.PageSize);
+    }
 
-    public async Task<List<core.Entities.Cadastros>> Handle(GetAllCustomColumnCadastrosQuery request, CancellationToken cancellationToken)
-        => await _uow.CadastroRepository.GetAllCustomColumnAsync(request.Custom);
+    public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetAllCustomColumnCadastrosQuery request, CancellationToken cancellationToken)
+    {
+        var toLower = request.Custom.ToLower();
+
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => (c.cad_nome.ToLower().Contains(toLower) ||
+                                                                        c.cad_cnpj.ToLower().Contains(toLower) ||
+                                                                        c.cad_razao.ToLower().Contains(toLower)
+                                                                        );
+
+        return await _uow.CadastroRepository.GetAllAsync(filter, null, request.PageNumber, request.PageSize);
+    }
 
     public async Task<core.Entities.Cadastros> Handle(GetCadastrosByCadKeyQuery request, CancellationToken cancellationToken)
-        => await _uow.CadastroRepository.GetByCadKeyAsync(request.CadKey);
+    {
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.cad_key == request.CadKey;
+
+        return await _uow.CadastroRepository.GetByIdAsync(filter);
+    }
 }

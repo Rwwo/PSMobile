@@ -39,7 +39,7 @@
                 <MudItem xs="12" sm="6">
                     <MudTextField Label="CNPJ"
                                   @bind-Value="InputModel.Cnpj"
-                                  Mask="@(new PatternMask("00.000.000/0000-00"))"
+                                  OnBlur="ValidarNumeroDocumento"
                                   For="@(() => InputModel.Cnpj)"
                                   Clearable />
                 </MudItem>
@@ -124,21 +124,21 @@
                             <MudGrid Class="mb-2 pa-3">
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Telefone 1"
-                                                  Mask="@(new PatternMask("(00) 00000-0000"))"
+                                                  OnBlur="ValidarNumeroTelefone"
                                                   @bind-Value="InputModel.Fone1"
                                                   Clearable />
                                 </MudItem>
 
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Telefone 2"
-                                                  Mask="@(new PatternMask("(00) 00000-0000"))"
+                                                  OnBlur="ValidarNumeroTelefone"
                                                   @bind-Value="InputModel.Fone2"
                                                   Clearable />
                                 </MudItem>
 
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Telefone 3"
-                                                  Mask="@(new PatternMask("(00) 00000-0000"))"
+                                                  OnBlur="ValidarNumeroTelefone"
                                                   @bind-Value="InputModel.Fone3"
                                                   Clearable />
                                 </MudItem>
@@ -151,7 +151,7 @@
 
                                 <MudItem xs="12" sm="4">
                                     <MudTextField Label="Telefone de Contato"
-                                                  Mask="@(new PatternMask("(00) 00000-0000"))"
+                                                  OnBlur="ValidarNumeroTelefone"
                                                   @bind-Value="InputModel.FoneContato"
                                                   Clearable />
                                 </MudItem>

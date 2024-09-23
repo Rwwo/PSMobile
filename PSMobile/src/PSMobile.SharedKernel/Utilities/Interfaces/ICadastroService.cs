@@ -1,12 +1,9 @@
 ﻿using PSMobile.core.Entities;
+using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Common.Dtos;
-using PSMobile.SharedKernel.Utilities.Services;
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
-public interface ICadastroService
+public interface ICadastroService : IBaseReadService<Cadastros>, IBaseWriteService<Cadastros, CadastroInputModel>
 {
-    Task<Result<bool>> DeleteAsync(int cadKey);
-    Task<List<Cadastros>> GetAllAsync();
-    Task<List<Cadastros>> GetByCustomColumnAsync(string custom);
-    Task<Result<Cadastros>> GravarAsync(CadastroInputModel cadastro);
+    Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1);
 }

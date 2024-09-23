@@ -10,10 +10,11 @@ public abstract class MyBaseComponent : ComponentBase
 {
     [Inject] protected ILocalNavigationService ServiceLocal { get; set; } = null!;
     [Inject] protected ISnackbar Snackbar { get; set; } = null!;
-    [Inject] protected IApiService ApiService { get; set; } = null!;
+    [Inject] protected IUowAPI UowAPI { get; set; } = null!;
     [Inject] protected IJSRuntime JSRuntime { get; set; } = default!;
     [Inject] protected NavigationManager Navigation { get; set; } = null!;
     [Inject] protected IDialogService DialogService { get; set; } = null!;
+    [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
 
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;

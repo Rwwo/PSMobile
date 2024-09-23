@@ -4,7 +4,7 @@ using PSMobile.infrastructure.Context;
 
 namespace PSMobile.infrastructure.Repositories;
 
-public class FuncionariosRepository : Repository<Funcionarios>, IFuncionariosRepository
+public class FuncionariosRepository : ReadRepository<Funcionarios>, IFuncionariosRepository
 {
     public FuncionariosRepository(AppDbContext context)
         : base(context) { }

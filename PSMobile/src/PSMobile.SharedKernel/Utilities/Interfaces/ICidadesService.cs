@@ -2,7 +2,8 @@
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
-public interface IApiService
+public interface ICidadesService : IBaseReadService<Cidades>
 {
-    Task<List<Cidades>> CidadesGetAllAsync();
+
 }
+

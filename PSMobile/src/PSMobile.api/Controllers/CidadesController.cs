@@ -4,6 +4,7 @@ using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.application.Queries.Cidades;
 using System.Net;
+using PSMobile.application.Queries.Funcionarios;
 
 namespace PSMobile.api.Controllers;
 
@@ -21,9 +22,8 @@ public class CidadesController : MainController
 
     // Rota para buscar todas as cidades
     [HttpGet("all")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAllCidadesQuery query)
     {
-        var query = new GetAllCidadesQuery();
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }

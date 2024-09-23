@@ -22,12 +22,12 @@ public static class CadastroExtensions
             Obs = Cadastro.cad_obs,
 
             CadCliDesconto = Cadastro.CadastroCliente.CadastroCredito.cad_cli_desconto,
-            CliLimiteTotal = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limitetotal,
-            CliLimiteMensal = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limitemensal,
-            CliLimiteParcelas = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limiteparcelas,
-            CliRendaComprovada = Cadastro.CadastroCliente.CadastroCredito.cad_cli_rendacomprovada,
-            CliComprovanteRenda = Cadastro.CadastroCliente.CadastroCredito.cad_cli_comprovanterenda,
-            CliRenda = Cadastro.CadastroCliente.CadastroCredito.cad_cli_renda,
+            CliLimiteTotal = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limitetotal ??0,
+            CliLimiteMensal = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limitemensal ?? 0,
+            CliLimiteParcelas = Cadastro.CadastroCliente.CadastroCredito.cad_cli_limiteparcelas ?? 0,
+            CliRendaComprovada = Cadastro.CadastroCliente.CadastroCredito.cad_cli_rendacomprovada ?? 0,
+            CliComprovanteRenda = Cadastro.CadastroCliente.CadastroCredito.cad_cli_comprovanterenda ?? "",
+            CliRenda = Cadastro.CadastroCliente.CadastroCredito.cad_cli_renda ?? 0,
 
             Cep = Cadastro.CadastroEndereco.cad_cep,
             Endereco = Cadastro.CadastroEndereco.cad_endereco,

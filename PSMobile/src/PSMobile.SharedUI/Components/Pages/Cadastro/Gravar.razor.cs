@@ -1,10 +1,8 @@
 ﻿using MudBlazor;
-using PSMobile.SharedKernel.Common;
 using Microsoft.AspNetCore.Components.Forms;
-using PSMobile.SharedKernel.Common.Dtos;
-using PSMobile.SharedKernel.Utilities.Interfaces;
-using Microsoft.AspNetCore.Components;
 using PSMobile.core.Entities;
+using PSMobile.SharedKernel.Common;
+using PSMobile.SharedKernel.Common.Dtos;
 using PSMobile.SharedKernel.Common.Dtos.Extensions;
 
 namespace PSMobile.SharedUI.Components.Pages.Cadastro;
@@ -12,20 +10,20 @@ public class GravarCadastroPage : MyBaseComponent
 {
     public CadastroInputModel InputModel { get; set; } = new();
     public Cadastros? CurrentCadastro { get; set; } = new();
-    [Inject] private ICadastroService CadService { get; set; } = null!;
-    public List<Cidades> Cidades { get; set; } = new();
+    public List<Cidades> Cidades { get; set; } = null!;
     public Cidades? Cidade { get; set; } = null;
     public bool IsEditing { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        Cidades = await ApiService.CidadesGetAllAsync();
+        var data = await UowAPI.CidadesService.GetAllAsync(10000, 1);
+        Cidades = data.Items;
 
         CurrentCadastro = ServiceLocal.Cadastro;
 
         if (CurrentCadastro is null)
             return;
-        
+
         IsEditing = true;
         InputModel = CurrentCadastro.ToCadastrosInputModel();
         if (InputModel.CidCodigo is not null)
@@ -64,7 +62,25 @@ public class GravarCadastroPage : MyBaseComponent
 
 
     }
+    public void ValidarNumeroTelefone()
+    {
+        if (InputModel.Fone1 is not null)
+            InputModel.Fone1 = PSSysService.PSFormatarFone(InputModel.Fone1);
 
+        if (InputModel.Fone2 is not null)
+            InputModel.Fone2 = PSSysService.PSFormatarFone(InputModel.Fone2);
+
+        if (InputModel.Fone3 is not null)
+            InputModel.Fone3 = PSSysService.PSFormatarFone(InputModel.Fone3);
+
+        if (InputModel.FoneContato is not null)
+            InputModel.FoneContato = PSSysService.PSFormatarFone(InputModel.FoneContato);
+    }
+    public void ValidarNumeroDocumento()
+    {
+        if (InputModel.Cnpj is not null)
+            InputModel.Cnpj = PSSysService.PSFormatarCNPJ(InputModel.Cnpj);
+    }
     public async Task OnValidSubmitAsync(EditContext editContext)
     {
         try
@@ -80,7 +96,7 @@ public class GravarCadastroPage : MyBaseComponent
                 }
 
 
-                var result = await CadService.GravarAsync(model);
+                var result = await UowAPI.CadastroService.GravarAsync(model);
 
                 if (result.IsSuccess)
                 {
@@ -89,16 +105,14 @@ public class GravarCadastroPage : MyBaseComponent
                     else
                         Snackbar.Add("Cadastro adicionado com sucesso!", Severity.Success);
 
-
+                    ServiceLocal.LimparCliente();
                     Navigation.NavigateTo("/cadastro");
                 }
                 else
                 {
                     HandleError(result.Errors);
                 }
-
             }
-
         }
         catch (Exception ex)
         {

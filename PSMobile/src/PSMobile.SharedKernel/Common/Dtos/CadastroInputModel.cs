@@ -38,12 +38,12 @@ public class CadastroInputModel
     public string? Obs { get; set; } = null;
 
     // Informações Financeiras
-    public decimal? CliLimiteTotal { get; set; } = null;
-    public decimal? CliLimiteMensal { get; set; } = null;
-    public int? CliLimiteParcelas { get; set; } = null;
-    public decimal? CliRendaComprovada { get; set; } = null;
-    public string? CliComprovanteRenda { get; set; } = null;
-    public decimal? CliRenda { get; set; } = null;
+    public decimal? CliLimiteTotal { get; set; } = 0;
+    public decimal? CliLimiteMensal { get; set; } = 0;
+    public int? CliLimiteParcelas { get; set; } = 0;
+    public decimal? CliRendaComprovada { get; set; } = 0;
+    public string? CliComprovanteRenda { get; set; } = string.Empty;
+    public decimal? CliRenda { get; set; } = 0;
     public int CadCliDiasTolerancia { get; set; } = 0;
     public int CadCliLiberado { get; set; } = 1;
 

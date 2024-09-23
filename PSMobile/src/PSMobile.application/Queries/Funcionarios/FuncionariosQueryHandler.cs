@@ -6,12 +6,13 @@ using AutoMapper;
 using MediatR;
 
 using PSMobile.core.Interfaces;
+using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.application.Queries.Funcionarios;
 
 public class FuncionariosQueryHandler
-    : IRequestHandler<GetAllFuncionariosQuery, List<core.Entities.Funcionarios>>
-    , IRequestHandler<GetFuncionariosByNomeQuery, List<core.Entities.Funcionarios>>
+    : IRequestHandler<GetAllFuncionariosQuery, PaginatedResult<core.Entities.Funcionarios>>
+    , IRequestHandler<GetFuncionariosByNomeQuery, PaginatedResult<core.Entities.Funcionarios>>
     , IRequestHandler<GetFuncionarioByKeyQuery, core.Entities.Funcionarios>
 {
     private readonly IUnitOfWork _uow;
@@ -23,17 +24,17 @@ public class FuncionariosQueryHandler
         _map = map;
     }
 
-    public async Task<List<core.Entities.Funcionarios>> Handle(GetFuncionariosByNomeQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<core.Entities.Funcionarios>> Handle(GetFuncionariosByNomeQuery request, CancellationToken cancellationToken)
     {
         // Ajusta o filtro para garantir a comparação insensível a maiúsculas e minúsculas
         Expression<Func<core.Entities.Funcionarios, bool>> filtro = c => c.fun_nome.ToLower().Contains(request.PartialName.ToLower());
 
-        return await _uow.FuncionariosRepository.GetAllAsync(filtro);
+        return await _uow.FuncionariosRepository.GetAllAsync(filtro, null, request.PageNumber, request.PageSize);
     }
 
-    public async Task<List<core.Entities.Funcionarios>> Handle(GetAllFuncionariosQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<core.Entities.Funcionarios>> Handle(GetAllFuncionariosQuery request, CancellationToken cancellationToken)
     {
-        return await _uow.FuncionariosRepository.GetAllAsync();
+        return await _uow.FuncionariosRepository.GetAllAsync(null, null, request.PageNumber, request.PageSize);
     }
 
     public async Task<core.Entities.Funcionarios> Handle(GetFuncionarioByKeyQuery request, CancellationToken cancellationToken)

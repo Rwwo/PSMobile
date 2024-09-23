@@ -29,20 +29,22 @@
     {
         <MudGrid>
             <MudItem xs="12">
-                <MudDataGrid Items="@Cadastros"
-                             Filterable="false"
-                             SortMode="@SortMode.Single"
+                <MudDataGrid @ref="dataGrid" 
+                             T="Cadastros" 
+                             ServerData="ServerReload"
                              Striped="IsStriped"
                              Hover="IsHover"
                              Dense="IsDense"
                              Bordered="IsBordered"
-                             QuickFilter="new Func<Cadastros, bool>(Search)">
+                             Filterable="false">
+
                     <ToolBarContent>
                         <MudText Typo="Typo.h6">Clientes</MudText>
                         <MudSpacer />
-                        <MudTextField @bind-Value="searchString" Placeholder="Procurar..." Adornment="Adornment.Start" Immediate="true"
+                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
                     </ToolBarContent>
+
                     <Columns>
                         <PropertyColumn Property="x => x.cad_nome" Title="Nome Cadastro" />
                         <PropertyColumn Property="x => x.cad_razao" Title="Razão Social" />
@@ -50,7 +52,6 @@
                             <CellTemplate>
                                 <MudStack Row Class="gap-2">
                                     <EditButton Disabled="false" OnClick="@(() => GoToUpdate(context.Item))" />
-                                    <DeleteButton Disabled="false" OnClick="@(() => DeleteAsync(context.Item))" />
                                 </MudStack>
                             </CellTemplate>
                         </TemplateColumn>

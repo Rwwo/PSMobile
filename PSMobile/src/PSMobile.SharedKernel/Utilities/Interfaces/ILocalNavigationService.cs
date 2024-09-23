@@ -5,5 +5,7 @@ namespace PSMobile.SharedKernel.Utilities.Interfaces;
 public interface ILocalNavigationService
 {
     Cadastros? Cadastro { get; }
-    void SetarCliente(Cadastros input);
+
+    void LimparCliente();
+    void SetarCliente(Cadastros? input);
 }

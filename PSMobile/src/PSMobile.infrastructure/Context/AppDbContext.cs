@@ -15,6 +15,9 @@ public class AppDbContext : DbContext
     public DbSet<Cadastros> Cadastros { get; set; }
     public DbSet<Cidades> Cidades { get; set; }
     public DbSet<Funcionarios> Funcionarios { get; set; }
+    public DbSet<Pedidos> Pedidos { get; set; }
+    public DbSet<PedidosFormasPagamento> PedidosFormasPagamento { get; set; }
+    public DbSet<PedidosItens> PedidosItens { get; set; }
     public DbSet<Ufs> Ufs { get; set; }
 
     private const string CONST_DATA_CADASTRO = "DataCadastro";
@@ -44,8 +47,6 @@ public class AppDbContext : DbContext
                 entry.Property(CONST_DATA_CADASTRO).IsModified = false;
                 entry.Property(CONST_DATA_MODIFICACAO).CurrentValue = DateTime.Now;
             }
-
-
         }
 
         return await base.SaveChangesAsync(cancellationToken);
