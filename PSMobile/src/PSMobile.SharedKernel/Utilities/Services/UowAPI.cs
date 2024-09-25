@@ -10,6 +10,13 @@ public class UowAPI : IUowAPI
         _HttpClient = httpClient;
     }
 
+    private CadastroService? _CadastroService;
+    public ICadastroService CadastroService
+    {
+        get => _CadastroService ??= new CadastroService(_HttpClient);
+    }
+
+
     private CidadesService? _CidadesService;
     public ICidadesService CidadesService
     {
@@ -22,11 +29,24 @@ public class UowAPI : IUowAPI
         get => _FuncionariosService ??= new FuncionariosService(_HttpClient);
     }
 
-    private CadastroService? _CadastroService;
-    public ICadastroService CadastroService
+    private GeraisService? _GeraisService;
+    public IGeraisService GeraisService
     {
-        get => _CadastroService ??= new CadastroService(_HttpClient);
+        get => _GeraisService ??= new GeraisService(_HttpClient);
     }
+
+    private ProdutosEmpresasService? _ProdutosEmpresasService;
+    public IProdutosEmpresasService ProdutosEmpresasService
+    {
+        get => _ProdutosEmpresasService ??= new ProdutosEmpresasService(_HttpClient);
+    }
+
+    private PedidoService? _PedidoService;
+    public IPedidoService PedidoService
+    {
+        get => _PedidoService ??= new PedidoService(_HttpClient);
+    }
+
 
 }
 

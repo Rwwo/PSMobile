@@ -11,9 +11,9 @@ namespace PSMobile.api.Controllers;
 [ApiController]
 public abstract class MainController : ControllerBase
 {
-    private readonly INotify _notifier;
+    private readonly INotificador _notifier;
 
-    protected MainController(INotify notifier)
+    protected MainController(INotificador notifier)
     {
         _notifier = notifier;
     }
@@ -59,6 +59,6 @@ public abstract class MainController : ControllerBase
 
     protected void NotificarErro(string mensagem)
     {
-        _notifier.Handle(new Notify(mensagem));
+        _notifier.Handle(new Notificacao(mensagem));
     }
 }

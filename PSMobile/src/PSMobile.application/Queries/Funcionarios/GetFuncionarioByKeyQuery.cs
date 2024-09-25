@@ -1,13 +1,17 @@
 ﻿using MediatR;
 
+using PSMobile.infrastructure.Repositories;
+
 namespace PSMobile.application.Queries.Funcionarios;
 
-public class GetFuncionarioByKeyQuery : IRequest<core.Entities.Funcionarios>
+public class GetFuncionarioByKeyQuery : BaseQueyLimits, IRequest<PaginatedResult<core.Entities.Funcionarios>>
 {
-    public int FunKey { get; set; }
-    public GetFuncionarioByKeyQuery(int funKey)
+    public int FunKey { get; private set; }
+    public GetFuncionarioByKeyQuery(int funKey, int pageNumber = 1, int pageSize = 10)
     {
         FunKey = funKey;
+        PageNumber = pageNumber;
+        PageSize = pageSize;
     }
 
 }

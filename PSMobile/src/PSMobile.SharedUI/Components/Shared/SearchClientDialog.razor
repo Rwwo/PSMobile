@@ -1,0 +1,130 @@
+@using PSMobile.SharedKernel.Utilities.Interfaces
+@using PSMobile.core.Entities
+@using PSMobile.infrastructure.Repositories
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-3 mb-n1" />
+            Pesquisar Cliente
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12">
+                <MudDataGrid @ref="dataGrid"
+                             T="Cadastros"
+                             ServerData="ServerReload"
+                             Striped="true"
+                             Hover="true"
+                             Dense="true"
+                             Bordered="true"
+                             Filterable="false"
+                             RowClick="OnRowClick">
+
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Clientes</MudText>
+                        <MudSpacer />
+                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+
+                    <Columns>
+                        <PropertyColumn Property="x => x.cad_nome" Title="Nome Cadastro" />
+                        <PropertyColumn Property="x => x.cad_cnpj" Title="CPF/CNPJ" />
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager T="Cadastros" />
+                    </PagerContent>
+                </MudDataGrid>
+            </MudItem>
+        </MudGrid>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Inject] IDialogService DialogService { get; set; } = null!;
+
+    [Inject] private IUowAPI UowAPI { get; set; } = null!;
+
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    public MudDataGrid<Cadastros> dataGrid;
+
+    private string searchString { get; set; } = string.Empty;
+
+    [Parameter] public Cadastros Cliente { get; set; } = null!;
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void SelectCustomer()
+    {
+        //In a real world scenario this bool would probably be a service to delete the item from api/database
+        Snackbar.Add("Cliente Selecionado", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(Cliente));
+    }
+
+    private async Task OnRowClick(DataGridRowClickEventArgs<Cadastros> args)
+    {
+        Cliente = args.Item;
+        await ConfirmAsync();
+
+    }
+
+    private async Task ConfirmAsync()
+    {
+        var parameters = new DialogParameters<ConfirmDialog>
+    {
+        { x => x.ContentText, $"Você confirma a seleção de cliente {Cliente.cad_nome}?" },
+        { x => x.Cliente , Cliente},
+        { x => x.ButtonText, "Sim" },
+        { x => x.Color, Color.Success }
+    };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Confirmar Seleção", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            // Se o cliente for confirmado, feche o diálogo de seleção e retorne o cliente
+            Snackbar.Add("Cliente Selecionado", Severity.Success);
+            MudDialog.Close(DialogResult.Ok(Cliente));
+        }
+    }
+
+
+    public async Task<GridData<Cadastros>> ServerReload(GridState<Cadastros> state)
+    {
+        int pageSize = dataGrid.RowsPerPage == 0 ? 10 : dataGrid.RowsPerPage;
+        int pageNumber = dataGrid.CurrentPage == 0 ? 1 : dataGrid.CurrentPage;
+
+        PaginatedResult<Cadastros> dados;
+
+        if (string.IsNullOrEmpty(searchString))
+        {
+            dados = await UowAPI.CadastroService.GetAllAsync(pageSize, pageNumber);
+        }
+        else
+        {
+            dados = await UowAPI.CadastroService.GetByCustomColumnAsync(searchString, pageSize, pageNumber);
+        }
+
+        return new GridData<Cadastros>
+            {
+                TotalItems = dados.TotalItems,
+                Items = dados.Items
+            };
+    }
+
+
+    public Task OnSearch(string text)
+    {
+        searchString = text;
+        return dataGrid.ReloadServerData();
+    }
+}

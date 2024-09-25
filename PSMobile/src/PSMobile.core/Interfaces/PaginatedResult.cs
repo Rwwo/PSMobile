@@ -22,4 +22,9 @@ public class PaginatedResult<T>
 
     // Indica se há uma próxima página
     public bool HasNextPage => PageNumber < TotalPages;
+
+    public static PaginatedResult<T> Empty(int pageNumber, int pageSize)
+    {
+        return new PaginatedResult<T>(new List<T>(), pageNumber, pageSize, 0);
+    }
 }

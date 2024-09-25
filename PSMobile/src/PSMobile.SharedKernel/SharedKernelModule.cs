@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 using MudBlazor.Services;
+using MudExtensions.Services;
 
 using PSMobile.SharedKernel.Utilities.Interfaces;
 using PSMobile.SharedKernel.Utilities.Services;
@@ -27,15 +22,12 @@ public static class SharedKernelModule
 
         services.AddScoped<IUowAPI, UowAPI>();
 
-        services.AddScoped<IFuncionariosService, FuncionariosService>();
-        services.AddScoped<ICadastroService, CadastroService>();
-
         services.AddScoped<IPssysValidacoesService, PssysValidacoesService>();
-
 
         services.AddSingleton<ILocalNavigationService, LocalNavigationService>();
 
-        
+        services.AddMudExtensions();
+
         services.AddMudServices(config =>
         {
             config.SnackbarConfiguration.MaxDisplayedSnackbars = 10;

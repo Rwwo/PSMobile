@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 using PSMobile.application.Commands.Cadastros;
 using PSMobile.application.Queries.Cadastros;
-using PSMobile.application.Queries.Funcionarios;
 using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Common.Dtos;
 
@@ -18,7 +17,7 @@ namespace PSMobile.api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public CadastrosController(IMediator mediator, INotify notificador)
+        public CadastrosController(IMediator mediator, INotificador notificador)
             : base(notificador)
         {
             _mediator = mediator;
@@ -33,18 +32,27 @@ namespace PSMobile.api.Controllers
         }
 
         // Rota para buscar cadastro por chave
-        [HttpGet("{cad_key:int}")]
-        public async Task<IActionResult> GetByCadKey(int cad_key)
+        [HttpGet("{cadKey:int}")]
+        public async Task<IActionResult> GetByCadKey(int cadKey, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var query = new GetCadastrosByCadKeyQuery(cad_key);
+            var query = new GetCadastrosByCadKeyQuery(cadKey, pageSize, pageNumber);
             var result = await _mediator.Send(query);
             return CustomResponse(HttpStatusCode.OK, result);
         }
 
         // Rota para buscar cadastros por coluna personalizada
-        [HttpGet("custom")]
-        public async Task<IActionResult> GetByCustomColumn([FromQuery] GetAllCustomColumnCadastrosQuery query)
+        [HttpGet("custom/{custom}")]
+        public async Task<IActionResult> GetByCustomColumn(string custom, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
+            var query = new GetAllCustomColumnCadastrosQuery(custom, pageNumber, pageSize);
+            var result = await _mediator.Send(query);
+            return CustomResponse(HttpStatusCode.OK, result);
+        }
+
+        [HttpGet("numdoc/{numdoc}")]
+        public async Task<IActionResult> GetByNumDoc(string numdoc, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            var query = new GetCadastrosByNumDocQuery(numdoc, pageNumber, pageSize);
             var result = await _mediator.Send(query);
             return CustomResponse(HttpStatusCode.OK, result);
         }

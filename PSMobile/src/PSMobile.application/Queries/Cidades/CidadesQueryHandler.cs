@@ -28,7 +28,15 @@ public class CidadesQueryHandler
             e => e.Ufs
         };
 
-        var dados = await _uow.CidadesRepository.GetAllAsync(null, includes, request.PageNumber, request.PageSize);
+        Expression<Func<core.Entities.Cidades, object>> order = o => o.cid_nome;
+
+        var dados = await _uow.CidadesRepository.GetAllAsync(null, 
+                                                             includes,
+                                                             null,
+                                                             null,
+                                                             true, 
+                                                             request.PageNumber,
+                                                             request.PageSize);
         return dados;
     }
 }

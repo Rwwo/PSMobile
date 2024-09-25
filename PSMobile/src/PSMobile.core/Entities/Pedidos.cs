@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using MediatR.NotificationPublishers;
+
 namespace PSMobile.core.Entities;
 
 [Table("pedidos")]
@@ -47,8 +49,17 @@ public class Pedidos : BaseEntity
     public DateTime? ped_datafin { get; set; }
     public decimal? ped_valoripi { get; set; }
 
+    public Funcionarios? Funcionario { get; set; } = null;
+    public Cadastros? Cliente { get; set; } = null;
     public ICollection<PedidosItens>? PedidosItens { get; set; } = null;
     public ICollection<PedidosFormasPagamento>? PedidosFormasPagamento { get; set; } = null;
+
+
+    public bool IsOpen => ped_lancado == 0 && ped_exc == 0 && ped_finalizado == 0;
+    public bool IsFatured => ped_lancado == 1 && ped_exc == 0;
+    public bool IsDeleted => ped_exc == 1;
+    public bool IsFinished => ped_finalizado == 1 && ped_lancado == 0 && ped_exc == 0;
+
 
     public override void Deletar()
     {

@@ -35,12 +35,23 @@ public class UnitOfWork : IUnitOfWork
         get => _FuncionariosRepository ??= new FuncionariosRepository(_context);
     }
 
+    private GeraisRepository? _GeraisRepository;
+    public IGeraisRepository GeraisRepository
+    {
+        get => _GeraisRepository ??= new GeraisRepository(_context);
+    }
+
     public PedidosRepository? _PedidosRepository;
     public IPedidosRepository PedidosRepository
     {
         get => _PedidosRepository ??= new PedidosRepository(_context);
     }
 
+    private ProdutosEmpresasRepository? _ProdutosEmpresasRepository;
+    public IProdutosEmpresasRepository ProdutosEmpresasRepository
+    {
+        get => _ProdutosEmpresasRepository ??= new ProdutosEmpresasRepository(_context);
+    }
 
     public async Task CommitAsync()
     {

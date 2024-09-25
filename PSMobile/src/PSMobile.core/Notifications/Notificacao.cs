@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PSMobile.core.Notifications;
-public class Notify
+public class Notificacao
 {
 
-    public Notify(string message)
+    public Notificacao(string message)
     {
         Message = message;
     }

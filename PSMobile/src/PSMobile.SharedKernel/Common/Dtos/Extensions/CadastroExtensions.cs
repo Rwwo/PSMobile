@@ -1,7 +1,6 @@
 ﻿using PSMobile.core.Entities;
 
 namespace PSMobile.SharedKernel.Common.Dtos.Extensions;
-
 public static class CadastroExtensions
 {
     public static CadastroInputModel ToCadastrosInputModel(this Cadastros Cadastro)

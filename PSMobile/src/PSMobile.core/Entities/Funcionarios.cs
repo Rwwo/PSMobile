@@ -49,6 +49,11 @@ public class Funcionarios : BaseEntity
     public decimal? fun_ven_comissao_prazo { get; set; } = null;
     public decimal? fun_comissaoparceiro { get; set; } = null;
 
+    public override string ToString()
+    {
+        return $"{fun_nome}";
+    }
+
     public override void Deletar()
     {
         this.fun_exc = 1;

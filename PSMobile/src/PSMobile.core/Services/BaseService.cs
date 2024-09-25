@@ -10,9 +10,9 @@ using PSMobile.core.Notifications;
 namespace PSMobile.core.Services;
 public abstract class BaseService
 {
-    private readonly INotify _notificador;
+    private readonly INotificador _notificador;
 
-    public BaseService(INotify notificador)
+    public BaseService(INotificador notificador)
     {
         _notificador = notificador;
     }
@@ -27,7 +27,7 @@ public abstract class BaseService
 
     protected void Notificar(string mensagem)
     {
-        _notificador.Handle(new Notify(mensagem));
+        _notificador.Handle(new Notificacao(mensagem));
     }
 
     protected bool ExecutarValidacao<TV, TE>(TV validacao, TE entidade)

@@ -27,9 +27,10 @@ public class FuncionariosService : IFuncionariosService
     }
 
 
-    public async Task<Funcionarios> GetByIdAsync(int id)
+    public async Task<PaginatedResult<Funcionarios>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
-        return await _httpClient.GetFromJsonAsync<Funcionarios>($"api/Funcionarios/{id}");
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/Funcionarios/{id}{query}");
     }
 }
 

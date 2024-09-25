@@ -55,19 +55,6 @@ public class IndexCadastroPage : MyBaseComponent
         Navigation.NavigateTo($"/cadastro/gravar");
     }
 
-    public bool Search(Cadastros Cliente)
-    {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
-
-        if (Cliente.cad_nome is null)
-            return false;
-
-        if (Cliente.cad_nome.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        return false;
-    }
 }
 
 

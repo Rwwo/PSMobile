@@ -2,21 +2,21 @@
 
 namespace PSMobile.core.Notifications;
 
-public class Notificador : INotify
+public class Notificador : INotificador
 {
-    private List<Notify> _notificacoes;
+    private List<Notificacao> _notificacoes;
 
     public Notificador()
     {
-        _notificacoes = new List<Notify>();
+        _notificacoes = new List<Notificacao>();
     }
 
-    public void Handle(Notify notificacao)
+    public void Handle(Notificacao notificacao)
     {
         _notificacoes.Add(notificacao);
     }
 
-    public List<Notify> GetNotify()
+    public List<Notificacao> GetNotify()
     {
         return _notificacoes;
     }

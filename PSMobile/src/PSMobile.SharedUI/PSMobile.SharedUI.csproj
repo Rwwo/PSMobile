@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Pages\Pedido\" />
     <Folder Include="Components\Shared\ThirdComponents\Enuns\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>

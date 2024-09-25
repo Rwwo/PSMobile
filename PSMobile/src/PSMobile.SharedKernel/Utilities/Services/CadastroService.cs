@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 
+using MudBlazor;
+
 using PSMobile.core.Entities;
 using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Common.Dtos;
@@ -20,16 +22,24 @@ public class CadastroService : ICadastroService
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
         return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/all{query}");
     }
+    public async Task<PaginatedResult<Cadastros>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
+    {
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/{id}{query}");
+    }
 
     public async Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1)
     {
-        var query = $"custom?Custom={custom}&PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/{query}");
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/custom/{custom}{query}");
     }
-    public async Task<Cadastros> GetByIdAsync(int id)
+
+    public async Task<PaginatedResult<Cadastros>> GetByDocNumberAsync(string NumDoc, int pageSize = 10, int pageNumber = 1)
     {
-        return await _httpClient.GetFromJsonAsync<Cadastros>($"api/Cadastros/{id}");
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/numdoc/{NumDoc}{query}");
     }
+
 
     public async Task<Result<Cadastros>> GravarAsync(CadastroInputModel cadastro)
     {

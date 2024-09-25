@@ -19,9 +19,10 @@ public class CidadesService : ICidadesService
         return await _httpClient.GetFromJsonAsync<PaginatedResult<Cidades>>($"api/Cidades/all{query}");
     }
 
-    public async Task<Cidades> GetByIdAsync(int id)
+    public async Task<PaginatedResult<Cidades>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
-        return await _httpClient.GetFromJsonAsync<Cidades>($"api/Cidades/{id}");
+        var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cidades>>($"api/Cidades/{id}{query}");
     }
 }
 

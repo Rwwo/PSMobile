@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PSMobile.core.Entities;
 
@@ -35,6 +36,8 @@ public class Cadastros : BaseEntity
     public CadastroEndereco CadastroEndereco { get; set; }
     public CadastroEndereco CadastroEnderecoEntrega { get; set; }
     public CadastroEndereco CadastroEnderecoCorrespondencia { get; set; }
+
+    public ICollection<Pedidos>? Pedidos { get; } = null;
 
     public override void Deletar()
     {

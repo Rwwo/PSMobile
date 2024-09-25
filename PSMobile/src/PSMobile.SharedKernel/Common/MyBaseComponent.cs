@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Microsoft.Maui.Devices;
 
 using MudBlazor;
 
+using PSMobile.core.Entities;
+using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Common;
@@ -16,6 +19,7 @@ public abstract class MyBaseComponent : ComponentBase
     [Inject] protected IDialogService DialogService { get; set; } = null!;
     [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
 
+    
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;
     protected bool IsStriped { get; private set; } = true;
@@ -57,6 +61,16 @@ public abstract class MyBaseComponent : ComponentBase
     {
         Snackbar.Add(message, Severity.Warning);
     }
+    public bool IsMobile => IsMobileDevice();
+    private bool IsMobileDevice()
+    {
+        if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+        {
+            return true;
+        }
+        return false;
+    }
+
 
 }
 

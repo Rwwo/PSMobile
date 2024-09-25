@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.application.Queries.Funcionarios;
 using System.Net;
@@ -13,7 +12,7 @@ public class FuncionariosController : MainController
 {
     private readonly IMediator _mediator;
 
-    public FuncionariosController(IMediator mediator, INotify notificador)
+    public FuncionariosController(IMediator mediator, INotificador notificador)
         : base(notificador)
     {
         _mediator = mediator;
@@ -21,25 +20,27 @@ public class FuncionariosController : MainController
 
     // Rota para buscar todos os funcionários
     [HttpGet("all")]
-    public async Task<IActionResult> GetAll([FromQuery] GetAllFuncionariosQuery query)
+    public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 50)
     {
+        var query = new GetAllFuncionariosQuery(pageNumber, pageSize);
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }
 
     // Rota para buscar funcionários por nome
-    [HttpGet("search-by-name")]
-    public async Task<IActionResult> GetFuncionariosByName([FromQuery] GetFuncionariosByNomeQuery query)
+    [HttpGet("search-by-name/{partialName}")]
+    public async Task<IActionResult> GetFuncionariosByName(string partialName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
+        var query = new GetFuncionariosByNomeQuery(partialName, pageNumber, pageSize);
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }
 
     // Rota para buscar funcionário por ID
-    [HttpGet("{funKey:int}")]
-    public async Task<IActionResult> GetFuncionariosById(int funKey)
+    [HttpGet("{funKey}")]
+    public async Task<IActionResult> GetFuncionariosById(int funKey, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetFuncionarioByKeyQuery(funKey);
+        var query = new GetFuncionarioByKeyQuery(funKey, pageNumber, pageSize);
         var result = await _mediator.Send(query);
         return CustomResponse(HttpStatusCode.OK, result);
     }

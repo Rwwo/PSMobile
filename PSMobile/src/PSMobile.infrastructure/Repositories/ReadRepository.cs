@@ -4,6 +4,7 @@ using PSMobile.core.Entities;
 using PSMobile.core.Exceptions;
 using PSMobile.core.Interfaces;
 using PSMobile.infrastructure.Context;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace PSMobile.infrastructure.Repositories;
 public class ReadRepository<T> : IReadRepository<T> where T : Entity
@@ -17,45 +18,46 @@ public class ReadRepository<T> : IReadRepository<T> where T : Entity
         _dbSet = context.Set<T>();
     }
 
-    public async Task<PaginatedResult<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
-                                                              List<Expression<Func<T, object>>>? includes = null,
-                                                              int pageNumber = 1,
-                                                              int pageSize = 10)
+    public async Task<PaginatedResult<T>> GetAllAsync(
+    Expression<Func<T, bool>>? filter = null,
+    List<Expression<Func<T, object>>>? includes = null,
+    List<Func<IQueryable<T>, IIncludableQueryable<T, object>>>? thenIncludes = null,
+    Expression<Func<T, object>>? orderBy = null,
+    bool ascending = true,
+    int pageNumber = 1,
+    int pageSize = 10)
     {
-        try
+        IQueryable<T> query = _context.Set<T>();
+
+        // Aplica o filtro, se houver
+        if (filter != null)
+            query = query.Where(filter);
+
+        // Aplica os includes
+        if (includes != null)
         {
-            var query = _dbSet.AsNoTracking();
-
-            // Aplica os includes se houver
-            if (includes != null)
-            {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
-            }
-
-            // Aplica o filtro se houver
-            if (filter != null)
-            {
-                query = query.Where(filter);
-            }
-
-            // Obtém o número total de itens sem paginação
-            var totalItems = await query.CountAsync();
-
-            // Aplica a paginação
-            var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
-
-            // Retorna o resultado paginado de forma assíncrona
-            return new PaginatedResult<T>(items, totalItems, pageNumber, pageSize);
+            foreach (var include in includes)
+                query = query.Include(include);
         }
-        catch (Exception ex)
+
+        // Aplica os ThenIncludes
+        if (thenIncludes != null)
         {
-            HandleException(ex);
-            return new PaginatedResult<T>(new List<T>(), 0, pageNumber, pageSize);
-
+            foreach (var thenInclude in thenIncludes)
+                query = thenInclude(query);
         }
+
+        // Ordenação
+        if (orderBy != null)
+        {
+            query = ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);
+        }
+
+        // Paginação
+        int totalItems = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        return new PaginatedResult<T>(items, totalItems, pageNumber, pageSize);
     }
 
 

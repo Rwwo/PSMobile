@@ -1,0 +1,206 @@
+@page "/pedidos/gravar"
+@using PSMobile.SharedKernel.Common.Dtos.Extensions
+@inherits GravarPedidoPage
+
+<MudContainer Class="mt-4">
+
+    <MudText Typo="Typo.h4">Pedido</MudText>
+
+    <BackButton Href="/pedidos"
+                Text="Voltar Pedidos" />
+
+    <MudPaper Class="pa-2">
+        <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync">
+            <DataAnnotationsValidator />
+
+            <MudGrid Class="cursor-default">
+                <MudItem xs="12" sm="12" Class="d-flex align-center">
+                    <MudStepperExtended @ref="_stepper"
+                                        Class="mud-width-full" ContentStyle="min-height: 400px"
+                                        Linear="_linear" Vertical="_vertical"
+                                        Variant="_variant"
+                                        Color="_color"
+                                        Animation="_animation" ShowPreviousButton="_showPreviousButton"
+                                        ShowNextButton="_showNextButton" ShowSkipButton="_showSkipButton"
+                                        ShowStepResultIndicator="_showStepResultIndicator" HeaderBadgeView="_headerBadgeView"
+                                        HeaderTextView="_headerTextView"
+                                        PreventStepChangeAsync="new Func<StepChangeDirection, int, Task<bool>>(CheckChange)"
+                                        MobileView="false" IconActionButtons="_iconActionButtons"
+                                        Loading="_loading" HeaderSize="_headerSize"
+                                        LocalizedStrings="GetLocalizedStrings()"
+                                        StepperActionsJustify="_stepperActionsJustify">
+
+
+                        <ChildContent>
+
+                            <MudStepExtended Icon="@Icons.Material.Filled.Approval"
+                                             Title="Informações Pedido"
+                                             StatusChanged="StatusChanged"
+                                             Optional="true">
+                                <ChildContent>
+                                    <MudForm @ref="_form">
+                                        <MudStack>
+                                            <MudGrid Spacing="1">
+                                                <MudItem xs="11" sm="11" md="11">
+                                                    <MudTextField T="string"
+                                                                  Label="CPF/CNPJ"
+                                                                  @bind-Value="InputModel.Cliente.cad_cnpj"
+                                                                  OnBlur="ValidarNumeroDocumento"
+                                                                  For="@(() => InputModel.Cliente.cad_cnpj)"
+                                                                  Variant="Variant.Text"
+                                                                  HelperText="Nº do Documento"
+                                                                  Clearable />
+                                                </MudItem>
+                                                <MudItem xs="1" sm="1" md="1" Class="d-flex align-center">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="@SearchCustomer"></MudIconButton>
+                                                </MudItem>
+                                            </MudGrid>
+
+                                            <MudItem xs="12" sm="12" md="12">
+                                                <MudTextField T="string"
+                                                              @bind-Value="InputModel.Cliente.cad_nome"
+                                                              Label="Nome"
+                                                              Variant="Variant.Text"
+                                                              HelperText="Nome do Cliente Selecionado"
+                                                              ReadOnly="true" />
+                                            </MudItem>
+
+                                            <MudDivider DividerType="DividerType.Middle" Class="my-6" />
+
+                                            <MudItem xs="12" sm="12" md="12">
+                                                <MudAutocomplete T="Funcionarios"
+                                                                 Label="Vendedor"
+                                                                 @bind-Value="InputModel.Funcionario"
+                                                                 HelperText="Selecione o Vendedor - Caso necessário"
+                                                                 SearchFunc="@SearchEmployee"
+                                                                 Clearable />
+                                            </MudItem>
+
+                                        </MudStack>
+                                    </MudForm>
+                                </ChildContent>
+                            </MudStepExtended>
+
+                            <MudStepExtended Title="Produtos" Icon="@Icons.Material.Filled.MoreVert" Optional="true">
+                                <ChildContent>
+                                    <MudStack Row="false">
+                                        <MudItem xs="12" md="12" sm="12">
+
+                                            @if (IsMobile)
+                                            {
+                                                @foreach (var item in InputModel.PedidoItens.OrderBy(t => t.pedite_item))
+                                                {
+                                                    <MudItem xs="12" sm="6" md="4" Class="mb-2">
+                                                        <MudCard>
+                                                            <MudCardContent>
+                                                                <MudText><strong>Item:</strong> @item.pedite_item</MudText>
+                                                                <MudText><strong>Código:</strong> @item.pedite_pro_codigo</MudText>
+                                                                <MudText><strong>Referência:</strong> @item.Produto.pro_reduzido</MudText>
+                                                                <MudText><strong>Tipo:</strong> @item.IsTipo</MudText>
+                                                                <MudText><strong>Descrição:</strong> @item.pedite_nome</MudText>
+                                                                <MudText><strong>Unitário:</strong>  @item.pedite_valorunitario.ToMonetaryString()</MudText>
+                                                                <MudText><strong>Desconto:</strong>  @item.pedite_desconto.ToMonetaryString()</MudText>
+                                                                <MudText><strong>SubTotal:</strong>  @item.pedite_subtotal.ToMonetaryString()</MudText>
+                                                                <MudText><strong>Qtde:</strong>      @item.pedite_qtd</MudText>
+                                                                <MudText><strong>Total:</strong>     @item.pedite_total.ToMonetaryString()</MudText>
+                                                            </MudCardContent>
+                                                        </MudCard>
+                                                    </MudItem>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <MudDataGrid Items="@InputModel.PedidoItens.OrderBy(t=>t.pedite_item)"
+                                                             Striped="IsStriped"
+                                                             Hover="IsHover"
+                                                             Dense="IsDense"
+                                                             Bordered="IsBordered"
+                                                             ColumnResizeMode="ResizeMode.Column">
+                                                    <Columns>
+                                                        <PropertyColumn Property="x => x.pedite_item" Title="Item" />
+                                                        <PropertyColumn Property="x => x.pedite_pro_codigo" Title="Código" />
+                                                        <PropertyColumn Property="x => x.Produto.pro_reduzido" Title="Referência" />
+                                                        <PropertyColumn Property="x => x.IsTipo" Title="Tipo" />
+                                                        <PropertyColumn Property="x => x.pedite_fun_key" Title="Func." />
+                                                        <PropertyColumn Property="x => x.pedite_nome" CellStyle="width: 100px; overflow-x: hidden; white-space: nowrap;" Title="Descrição" />
+                                                        <PropertyColumn Property="x => x.pedite_valorunitario" Title="Unit." Format="C2" />
+                                                        <PropertyColumn Property="x => x.pedite_desconto" Title="Desconto" Format="C2" />
+                                                        <PropertyColumn Property="x => x.pedite_subtotal" Title="SubTotal" Format="C2" />
+                                                        <PropertyColumn Property="x => x.pedite_qtd" Title="Qtde" Format="N" />
+                                                        <PropertyColumn Property="x => x.pedite_total" Title="Total" Format="C2" />
+                                                    </Columns>
+                                                    <PagerContent>
+                                                        <MudDataGridPager PageSizeOptions="@PageSizeOptionsString"
+                                                                          RowsPerPageString="@RowsPerPageString"
+                                                                          InfoFormat="@InfoFormatString"
+                                                                          T="PedidosItens" />
+                                                    </PagerContent>
+                                                </MudDataGrid>
+                                            }
+                                        </MudItem>
+                                        <MudItem xs="12" md="12" sm="12">
+                                            <MudCard Elevation="1">
+                                                <MudText><strong>Total:</strong>     @InputModel.PedidoItens.Sum(t => t.pedite_total).ToMonetaryString()</MudText>
+                                            </MudCard>
+                                        </MudItem>
+                                    </MudStack>
+
+                                </ChildContent>
+
+                            </MudStepExtended>
+
+                            <MudStepExtended Icon="@Icons.Material.Filled.Money" Title="Dados Pedido">
+
+                                <ChildContent>
+                                    <MudForm @ref="_form2">
+                                        <MudStack>
+                                            <MudTextField T="string" Label="Card Number" Variant="_variant" Required="true" />
+                                            <MudStack Row="true">
+                                                <MudTextField T="string" Label="Expire Date" Variant="_variant" Required="true" />
+                                                <MudTextField T="string" Label="CVC" Variant="_variant" Required="true" />
+                                            </MudStack>
+                                        </MudStack>
+                                    </MudForm>
+                                </ChildContent>
+
+                            </MudStepExtended>
+
+                            @if (_addResultStep)
+                            {
+                                <MudStepExtended Icon="@Icons.Material.Filled.Alarm" Title="Result Step" IsResultStep="true">
+                                    <ChildContent>
+
+                                        <div class="d-flex flex-column align-center justify-center" style="height: 200px">
+                                            <MudIconButton Icon="@Icons.Material.Filled.DoneAll"
+                                                           Size="Size.Large"
+                                                           Variant="Variant.Filled"
+                                                           Color="Color.Success" />
+
+                                            <MudText>Your reservation successfully completed.</MudText>
+
+                                        </div>
+
+                                    </ChildContent>
+                                </MudStepExtended>
+                            }
+                        </ChildContent>
+
+                        <ActionContent>
+                            @if (!_stepper.IsAllStepsCompleted() && _showCustomButton)
+                            {
+                                <MudButton Color="Color.Secondary"
+                                           Variant="_variant"
+                                           OnClick="@(() => Snackbar.Add("Custom cancel button clicked.", Severity.Info))">
+                                    Cancel
+                                </MudButton>
+                            }
+                            @* <MudSpacer /> *@
+                        </ActionContent>
+
+                    </MudStepperExtended>
+                </MudItem>
+            </MudGrid>
+
+        </EditForm>
+    </MudPaper>
+</MudContainer>

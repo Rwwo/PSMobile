@@ -6,4 +6,6 @@ namespace PSMobile.SharedKernel.Utilities.Interfaces;
 public interface ICadastroService : IBaseReadService<Cadastros>, IBaseWriteService<Cadastros, CadastroInputModel>
 {
     Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1);
+    Task<PaginatedResult<Cadastros>> GetByDocNumberAsync(string NumDoc, int pageSize = 10, int pageNumber = 1);
 }
+
