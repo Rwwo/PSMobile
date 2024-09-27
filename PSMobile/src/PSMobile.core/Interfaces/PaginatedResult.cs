@@ -1,4 +1,4 @@
-﻿namespace PSMobile.infrastructure.Repositories;
+﻿namespace PSMobile.core.Interfaces;
 
 public class PaginatedResult<T>
 {

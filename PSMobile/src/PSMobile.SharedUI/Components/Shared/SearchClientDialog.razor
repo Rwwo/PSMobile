@@ -1,6 +1,4 @@
-@using PSMobile.SharedKernel.Utilities.Interfaces
-@using PSMobile.core.Entities
-@using PSMobile.infrastructure.Repositories
+@using PSMobile.core.Interfaces
 @inject ISnackbar Snackbar
 
 <MudDialog>
@@ -81,7 +79,6 @@
         var parameters = new DialogParameters<ConfirmDialog>
     {
         { x => x.ContentText, $"Você confirma a seleção de cliente {Cliente.cad_nome}?" },
-        { x => x.Cliente , Cliente},
         { x => x.ButtonText, "Sim" },
         { x => x.Color, Color.Success }
     };

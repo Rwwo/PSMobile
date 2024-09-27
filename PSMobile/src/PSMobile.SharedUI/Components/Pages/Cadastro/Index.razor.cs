@@ -1,7 +1,7 @@
 ﻿using MudBlazor;
 
 using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
+using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Common;
 
 namespace PSMobile.SharedUI.Components.Pages.Cadastro;
@@ -11,14 +11,6 @@ public class IndexCadastroPage : MyBaseComponent
     public MudDataGrid<Cadastros> dataGrid;
     public string searchString = "";
 
-    protected async override Task OnInitializedAsync()
-    {
-        IsLoading = true;
-        IsLoading = false;
-
-        await InvokeAsync(StateHasChanged);
-        await base.OnInitializedAsync();
-    }
     public async Task<GridData<Cadastros>> ServerReload(GridState<Cadastros> state)
     {
         int pageSize = dataGrid.RowsPerPage == 0 ? 10 : dataGrid.RowsPerPage;

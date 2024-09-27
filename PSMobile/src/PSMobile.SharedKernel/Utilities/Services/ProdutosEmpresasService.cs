@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 
 using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
+using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Services;

@@ -9,4 +9,3 @@ public class GeraisRepository : ReadRepository<Gerais>, IGeraisRepository
     public GeraisRepository(AppDbContext context)
         : base(context) { }
 }
-

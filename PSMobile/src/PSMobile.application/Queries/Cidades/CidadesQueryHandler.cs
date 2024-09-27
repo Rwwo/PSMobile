@@ -6,7 +6,6 @@ using AutoMapper;
 using MediatR;
 
 using PSMobile.core.Interfaces;
-using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.application.Queries.Cidades;
 
@@ -30,11 +29,11 @@ public class CidadesQueryHandler
 
         Expression<Func<core.Entities.Cidades, object>> order = o => o.cid_nome;
 
-        var dados = await _uow.CidadesRepository.GetAllAsync(null, 
+        var dados = await _uow.CidadesRepository.GetAllAsync(null,
                                                              includes,
                                                              null,
                                                              null,
-                                                             true, 
+                                                             true,
                                                              request.PageNumber,
                                                              request.PageSize);
         return dados;

@@ -2,7 +2,7 @@
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
-public interface IGeraisService : IBaseReadService<Gerais>
+public interface IGeraisService : IBaseReadServiceAll<Gerais>
 {
 
 }

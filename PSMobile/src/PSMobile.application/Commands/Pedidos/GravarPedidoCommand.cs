@@ -1,11 +1,11 @@
 ﻿using MediatR;
 
-using PSMobile.application.Commands.Cadastros;
-using PSMobile.SharedKernel.Common.Dtos;
+using PSMobile.core.InputModel;
+using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.application.Commands.Pedidos;
 
-public class GravarPedidoCommand : IRequest<core.Entities.Pedidos>
+public class GravarPedidoCommand : IRequest<PedidosGravarRetornoFuncao>
 {
     public PedidoInputModel PedidoInputModel { get; private set; }
 

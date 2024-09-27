@@ -12,5 +12,6 @@ public class EmpresasConfiguration : IEntityTypeConfiguration<Empresas>
         builder.ToTable("empresas");
 
         builder.HasKey(x => x.emp_key);
+
     }
 }

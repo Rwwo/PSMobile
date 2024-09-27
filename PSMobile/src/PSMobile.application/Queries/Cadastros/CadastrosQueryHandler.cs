@@ -5,7 +5,6 @@ using AutoMapper;
 using MediatR;
 
 using PSMobile.core.Interfaces;
-using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.application.Queries.Cadastros;
@@ -29,9 +28,11 @@ public class CadastrosQueryHandler
 
     public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetAllCadastrosQuery request, CancellationToken cancellationToken)
     {
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.CadastroCliente.cad_cli_exc == 0;
+
         Expression<Func<core.Entities.Cadastros, object>> order = o => o.cad_key;
 
-        return await _uow.CadastroRepository.GetAllAsync(null,
+        return await _uow.CadastroRepository.GetAllAsync(filter,
                                                         null,
                                                         null,
                                                         order,
@@ -44,9 +45,10 @@ public class CadastrosQueryHandler
     {
         var toLower = request.Custom.ToLower();
 
-        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => (c.cad_nome.ToLower().Contains(toLower) ||
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.CadastroCliente.cad_cli_exc == 0 &&
+                                                                        (c.cad_nome.ToLower().Contains(toLower) ||
                                                                         (c.cad_cnpj.ToLower().Contains(toLower) || c.cad_cnpj.ToLower().Equals(toLower)) ||
-                                                                        c.cad_razao.ToLower().Contains(toLower)
+                                                                         c.cad_razao.ToLower().Contains(toLower)
                                                                         );
         Expression<Func<core.Entities.Cadastros, object>> order = o => o.cad_key;
 
@@ -62,7 +64,8 @@ public class CadastrosQueryHandler
 
     public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetCadastrosByCadKeyQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.cad_key == request.CadKey;
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.CadastroCliente.cad_cli_exc == 0 &&
+                                                                       c.cad_key == request.CadKey;
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
                                                 null,
@@ -75,7 +78,8 @@ public class CadastrosQueryHandler
 
     public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetCadastrosByNumDocQuery request, CancellationToken cancellationToken)
     {
-        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.cad_cnpj.Equals(_psservice.PSFormatarCNPJ(request.NumDoc));
+        Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.CadastroCliente.cad_cli_exc == 0 &&
+                                                                       c.cad_cnpj.Equals(_psservice.PSFormatarCNPJ(request.NumDoc));
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
                                         null,

@@ -4,8 +4,10 @@ using AutoMapper;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore;
+
 using PSMobile.core.Interfaces;
-using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.application.Queries.Gerais;
 
@@ -23,7 +25,7 @@ public class GetAllGeraisQueryHandler
 
     public async Task<PaginatedResult<core.Entities.Gerais>> Handle(GetAllGeraisQuery request, CancellationToken cancellationToken)
     {
-
+        
         var includes = new List<Expression<Func<core.Entities.Gerais, object>>>
         {
             e => e.Empresa

@@ -28,8 +28,9 @@ public class PedidosItens : BaseEntity
     public DateTime? pedite_dataval { get; set; }
     public int? pedite_estoque_emp_key { get; set; }
 
-    public Pedidos Pedido { get; set; } = null!;
-    public Produtos Produto { get; set; } = null!;
+    public Pedidos? Pedido { get; set; }  = null;
+    public Produtos? Produto { get; set; } = null;
+
     public string IsTipo => pedite_servico == 1 ? "Serviço" : "Produto";
 
     public override void Deletar()

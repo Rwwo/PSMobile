@@ -41,11 +41,26 @@ public class UnitOfWork : IUnitOfWork
         get => _GeraisRepository ??= new GeraisRepository(_context);
     }
 
+    public PdvsRepository? _PdvsRepository;
+    public IPdvsRepository PdvsRepository
+    {
+        get => _PdvsRepository ??= new PdvsRepository(_context);
+    }
+
+
     public PedidosRepository? _PedidosRepository;
     public IPedidosRepository PedidosRepository
     {
         get => _PedidosRepository ??= new PedidosRepository(_context);
     }
+
+
+    public PedidosItemRepository? _PedidosItemRepository;
+    public IPedidosItemRepository PedidosItemRepository
+    {
+        get => _PedidosItemRepository ??= new PedidosItemRepository(_context);
+    }
+
 
     private ProdutosEmpresasRepository? _ProdutosEmpresasRepository;
     public IProdutosEmpresasRepository ProdutosEmpresasRepository

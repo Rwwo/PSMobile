@@ -3,4 +3,20 @@
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<MudCard>
+    <MudCardHeader>
+        <MudText Typo="Typo.h5"><strong>Empresa:</strong> @Empr.emp_nome</MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudText><strong>CNPJ:</strong> @Empr.emp_cnpj</MudText>
+        <MudText><strong>Razão Social:</strong> @Empr.emp_razao</MudText>
+        <MudText><strong>Responsável:</strong> @Empr.emp_responsavel</MudText>
+        <MudText><strong>Telefone do Responsável:</strong> @Empr.emp_foneresponsavel</MudText>
+        <MudText><strong>E-mail:</strong> @Empr.emp_email</MudText>
+        <MudText><strong>Endereço:</strong> @Empr.emp_endereco, @Empr.emp_numero</MudText>
+        <MudText><strong>Bairro:</strong> @Empr.emp_bairro</MudText>
+        <MudText><strong>CEP:</strong> @Empr.emp_cep</MudText>
+    </MudCardContent>
+</MudCard>
+
+

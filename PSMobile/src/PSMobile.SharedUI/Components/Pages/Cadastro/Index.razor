@@ -7,7 +7,7 @@
     @* <MudText Typo="Typo.h4" Class="mb-4">Cadastros</MudText> *@
 
     <!-- Botão de Voltar -->
-    <BackButton Href="/" 
+    <BackButton Href="/"
                 Text="Voltar" />
 
     <!-- Botão de Adicionar Cliente - Sempre Habilitado -->
@@ -15,55 +15,43 @@
                Text="Novo Cliente" />
 
 
-    <!-- Indicador de carregamento separado -->
-    @if (IsLoading)
-    {
-        <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-            <div class="text-center">
-                <MudProgressCircular Indeterminate="true" />
-                <MudText Typo="Typo.body1" Class="mt-2">Buscando Dados...</MudText>
-            </div>
-        </div>
-    }
-    else
-    {
-        <MudGrid>
-            <MudItem xs="12">
-                <MudDataGrid @ref="dataGrid" 
-                             T="Cadastros" 
-                             ServerData="ServerReload"
-                             Striped="IsStriped"
-                             Hover="IsHover"
-                             Dense="IsDense"
-                             Bordered="IsBordered"
-                             Filterable="false">
+    <MudGrid>
+        <MudItem xs="12">
+            <MudDataGrid @ref="dataGrid"
+                         T="Cadastros"
+                         ServerData="ServerReload"
+                         Striped="IsStriped"
+                         Hover="IsHover"
+                         Dense="IsDense"
+                         Bordered="IsBordered"
+                         Filterable="false">
 
-                    <ToolBarContent>
-                        <MudText Typo="Typo.h6">Clientes</MudText>
-                        <MudSpacer />
-                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-                    </ToolBarContent>
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Clientes</MudText>
+                    <MudSpacer />
+                    <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                </ToolBarContent>
 
-                    <Columns>
-                        <PropertyColumn Property="x => x.cad_nome" Title="Nome Cadastro" />
-                        <PropertyColumn Property="x => x.cad_razao" Title="Razão Social" />
-                        <TemplateColumn>
-                            <CellTemplate>
-                                <MudStack Row Class="gap-2">
-                                    <EditButton Disabled="false" OnClick="@(() => GoToUpdate(context.Item))" />
-                                </MudStack>
-                            </CellTemplate>
-                        </TemplateColumn>
-                    </Columns>
-                    <PagerContent>
-                        <MudDataGridPager PageSizeOptions="@PageSizeOptionsString"
-                                          RowsPerPageString="@RowsPerPageString"
-                                          InfoFormat="@InfoFormatString"
-                                          T="Cadastros" />
-                    </PagerContent>
-                </MudDataGrid>
-            </MudItem>
-        </MudGrid>
-    }
+                <Columns>
+                    <PropertyColumn Property="x => x.cad_nome" Title="Nome Cadastro" />
+                    <PropertyColumn Property="x => x.cad_razao" Title="Razão Social" />
+                    <TemplateColumn>
+                        <CellTemplate>
+                            <MudStack Row Class="gap-2">
+                                <EditButton Disabled="false" OnClick="@(() => GoToUpdate(context.Item))" />
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+                <PagerContent>
+                    <MudDataGridPager PageSizeOptions="@PageSizeOptionsString"
+                                      RowsPerPageString="@RowsPerPageString"
+                                      InfoFormat="@InfoFormatString"
+                                      T="Cadastros" />
+                </PagerContent>
+            </MudDataGrid>
+        </MudItem>
+    </MudGrid>
+
 </MudContainer>

@@ -4,8 +4,6 @@ using Microsoft.Maui.Devices;
 
 using MudBlazor;
 
-using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Common;

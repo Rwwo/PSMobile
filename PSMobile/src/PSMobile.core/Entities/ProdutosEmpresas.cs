@@ -10,7 +10,7 @@ public class ProdutosEmpresas : Entity
     public int proemp_key { get; set; }
     public int proemp_pro_key { get; set; }
     public int proemp_emp_key { get; set; }
-    public decimal? proemp_custo { get; set; }
+    public decimal? proemp_custo { get; set; } = 0;
     public decimal? proemp_customedio { get; set; }
     public decimal? proemp_margem { get; set; }
     public decimal proemp_valor { get; set; }

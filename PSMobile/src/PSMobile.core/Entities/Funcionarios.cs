@@ -11,7 +11,7 @@ public class Funcionarios : BaseEntity
     public short? fun_tipoven { get; set; }
     public string? fun_cpf { get; set; } = null;
     public string? fun_sexo { get; set; } = null;
-    public string fun_nome { get; set; } = null!;
+    public string? fun_nome { get; set; } =null;
     public string? fun_email { get; set; } = null;
     public string? fun_rg { get; set; } = null;
     public string? fun_orgao { get; set; } = null;
@@ -48,6 +48,9 @@ public class Funcionarios : BaseEntity
     public decimal? fun_ven_comissao_captacao { get; set; } = null;
     public decimal? fun_ven_comissao_prazo { get; set; } = null;
     public decimal? fun_comissaoparceiro { get; set; } = null;
+
+
+    public ICollection<Pedidos>? Pedidos { get; set; } = null;
 
     public override string ToString()
     {

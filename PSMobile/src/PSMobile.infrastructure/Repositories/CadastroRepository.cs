@@ -4,6 +4,8 @@ using PSMobile.infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System.Data;
+using MediatR;
+using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.infrastructure.Repositories;
 
@@ -20,7 +22,7 @@ public class CadastroRepository : ReadRepository<Cadastros>, ICadastroRepository
     object DBNullOrValue(string? value) => value ?? (object)DBNull.Value;
 
 
-    public async Task<Cadastros> GravarAsync(Cadastros entity)
+    public async Task<ClienteGravarRetornoFuncao> GravarAsync(Cadastros entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
@@ -130,7 +132,7 @@ public class CadastroRepository : ReadRepository<Cadastros>, ICadastroRepository
                 new NpgsqlParameter("_cad_ieisento", DbType.Int32) { Value = 0}
             };
 
-            await _context.Database.ExecuteSqlRawAsync(
+            var ret = await _context.Database.ExecuteSqlRawAsync(
                 @"SELECT public.clientes_gravar(
                     @key, 
                     @cnpj, 
@@ -233,7 +235,7 @@ public class CadastroRepository : ReadRepository<Cadastros>, ICadastroRepository
                 )",
                 parameters);
 
-            return entity;
+            return new ClienteGravarRetornoFuncao(ret);
         }
         catch (Exception ex)
         {

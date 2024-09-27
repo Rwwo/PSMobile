@@ -9,6 +9,7 @@ public interface IUowAPI
     IFuncionariosService FuncionariosService { get; }
     ICadastroService CadastroService { get; }
     IPedidoService PedidoService { get; }
+    IPedidoItemService PedidoItemService { get; }
     IProdutosEmpresasService ProdutosEmpresasService { get; }
 }
 

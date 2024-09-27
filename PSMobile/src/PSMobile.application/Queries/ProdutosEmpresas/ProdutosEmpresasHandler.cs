@@ -6,7 +6,6 @@ using MediatR;
 
 using PSMobile.core.Interfaces;
 using PSMobile.core.Services;
-using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.application.Queries.ProdutosEmpresas;
 
@@ -34,7 +33,8 @@ public class ProdutosEmpresasHandler
             return PaginatedResult<core.Entities.ProdutosEmpresas>.Empty(request.PageNumber, request.PageSize);
         }
 
-        Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => (c.proemp_emp_key == request.EmpKey);
+        Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => c.proemp_exc == 0 &&
+                                                                              (c.proemp_emp_key == request.EmpKey);
 
         var includes = new List<Expression<Func<core.Entities.ProdutosEmpresas, object>>>
         {
@@ -59,9 +59,12 @@ public class ProdutosEmpresasHandler
     {
         var toLower = request.Custom;
 
-        Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => (c.proemp_emp_key == request.EmpKey
+        Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => c.proemp_exc == 0 &&
+                                                                              (c.proemp_emp_key == request.EmpKey
                                                                                 &&
                                                                                 (
+                                                                                    c.Produto.pro_exc == 0 &&
+
                                                                                     c.Produto.pro_codigo.Contains(toLower) ||
                                                                                     c.Produto.pro_codigo == toLower ||
 

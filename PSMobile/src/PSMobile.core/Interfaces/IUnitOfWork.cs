@@ -6,7 +6,9 @@ public interface IUnitOfWork
     ICidadesRepository CidadesRepository { get; }
     IFuncionariosRepository FuncionariosRepository { get; }
     IGeraisRepository GeraisRepository { get; }
+    IPdvsRepository PdvsRepository { get; }
     IPedidosRepository PedidosRepository { get; }
+    IPedidosItemRepository PedidosItemRepository { get; }
     IProdutosEmpresasRepository ProdutosEmpresasRepository { get; }
     Task CommitAsync();
 }

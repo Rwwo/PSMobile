@@ -29,10 +29,12 @@ public static class InfrastructureModule
         services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
         //services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
 
+        /*
         services.AddScoped<ICadastroRepository, CadastroRepository>();
         services.AddScoped<ICidadesRepository, CidadesRepository>();
         services.AddScoped<IFuncionariosRepository, FuncionariosRepository>();
         services.AddScoped<IUFsRepository, UFsRepository>();
+        */
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -42,7 +44,7 @@ public static class InfrastructureModule
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             options.EnableSensitiveDataLogging();
-            options.LogTo(Console.WriteLine, LogLevel.Warning);
+            options.LogTo(Console.WriteLine, LogLevel.Trace);
         });
 
 

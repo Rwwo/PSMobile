@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-using PSMobile.infrastructure.Repositories;
+using PSMobile.core.Interfaces;
 
 namespace PSMobile.application.Queries.Pedidos;
 

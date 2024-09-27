@@ -48,5 +48,10 @@ public class UowAPI : IUowAPI
     }
 
 
+    private PedidoItemService? _PedidoItemService;
+    public IPedidoItemService PedidoItemService
+    {
+        get => _PedidoItemService ??= new PedidoItemService(_HttpClient);
+    }
 }
 

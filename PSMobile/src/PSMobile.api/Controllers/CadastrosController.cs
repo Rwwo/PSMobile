@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using PSMobile.application.Commands.Cadastros;
 using PSMobile.application.Queries.Cadastros;
+using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
-using PSMobile.SharedKernel.Common.Dtos;
 
 namespace PSMobile.api.Controllers
 {
@@ -25,8 +25,9 @@ namespace PSMobile.api.Controllers
 
         // Rota para buscar todos os cadastros
         [HttpGet("all")]
-        public async Task<IActionResult> GetAll([FromQuery] GetAllCadastrosQuery query)
+        public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, int pageSize = 10)
         {
+            var query = new GetAllCadastrosQuery(pageNumber, pageSize);
             var result = await _mediator.Send(query);
             return CustomResponse(HttpStatusCode.OK, result);
         }

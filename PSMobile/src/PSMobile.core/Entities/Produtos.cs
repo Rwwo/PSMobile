@@ -94,6 +94,6 @@ public class Produtos : Entity
     public int? pro_col_key { get; set; }
     public short pro_ecommerce { get; set; }
 
-    public ProdutosEmpresas ProdutosEmpresas { get; set; } = null!;
+    public ProdutosEmpresas? ProdutosEmpresas { get; set; } 
 
 }

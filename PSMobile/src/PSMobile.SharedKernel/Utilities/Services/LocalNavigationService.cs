@@ -1,13 +1,22 @@
 ﻿using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
+using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Services;
 
 public class LocalNavigationService : ILocalNavigationService
 {
+    public Empresas EmpresaAtual { get; set; }
     public PaginatedResult<Gerais> Gerais { get; set; } = null!;
-    public void SetarGerais(PaginatedResult<Gerais>? input) => Gerais = input;
+    public void SetarGerais(PaginatedResult<Gerais> input)
+    {
+        Gerais = input;
+
+        if (Gerais?.Items.Count > 0)
+            EmpresaAtual = Gerais.Items[0].Empresa;
+
+    }
+
 
 
     public Pedidos? Pedido { get; private set; } = null;
@@ -16,6 +25,7 @@ public class LocalNavigationService : ILocalNavigationService
 
 
     public Cadastros? Cadastro { get; private set; } = null;
+
     public void SetarCliente(Cadastros? input) => Cadastro = input;
     public void LimparCliente() => Cadastro = null;
 }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PSMobile.core\PSMobile.core.csproj" />
+    <ProjectReference Include="..\PSMobile.infrastructure\PSMobile.infrastructure.csproj" />
     <ProjectReference Include="..\PSMobile.SharedKernel\PSMobile.SharedKernel.csproj" />
   </ItemGroup>
 

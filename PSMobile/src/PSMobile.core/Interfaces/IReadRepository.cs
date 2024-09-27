@@ -3,7 +3,6 @@
 using Microsoft.EntityFrameworkCore.Query;
 
 using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
 
 namespace PSMobile.core.Interfaces;
 public interface IReadRepository<T> where T : Entity

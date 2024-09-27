@@ -1,9 +1,10 @@
 ﻿using PSMobile.core.Entities;
+using PSMobile.core.InputModel;
 
 namespace PSMobile.SharedKernel.Common.Dtos.Extensions;
 public static class CadastroExtensions
 {
-    public static CadastroInputModel ToCadastrosInputModel(this Cadastros Cadastro)
+    public static CadastroInputModel ToInputModel(this Cadastros Cadastro)
     {
         var inputModel = new CadastroInputModel
         {

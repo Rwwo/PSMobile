@@ -4,12 +4,13 @@ using AutoMapper;
 using MediatR;
 
 using PSMobile.core.Interfaces;
+using PSMobile.core.ReturnFunctions;
 using PSMobile.SharedKernel.Common.Dtos.Extensions;
 
 namespace PSMobile.application.Commands.Cadastros;
 
 public class CadastroCommandHandler :
-      IRequestHandler<GravarCadastroCommand, core.Entities.Cadastros>
+      IRequestHandler<GravarCadastroCommand, ClienteGravarRetornoFuncao>
 {
     private readonly IUnitOfWork _uow;
     private readonly IMapper _mapper;
@@ -20,9 +21,9 @@ public class CadastroCommandHandler :
     }
 
 
-    public async Task<core.Entities.Cadastros> Handle(GravarCadastroCommand request, CancellationToken cancellationToken)
+    public async Task<ClienteGravarRetornoFuncao> Handle(GravarCadastroCommand request, CancellationToken cancellationToken)
     {
-        var cliente = request.Cliente.ToCadastros();
+        var cliente = request.Cliente.ToModel();
 
         return await _uow.CadastroRepository.GravarAsync(cliente);
     }

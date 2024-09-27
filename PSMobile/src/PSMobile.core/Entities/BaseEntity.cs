@@ -10,3 +10,8 @@ public abstract class Entity
 {
 
 }
+
+public abstract class InputModel
+{
+
+}

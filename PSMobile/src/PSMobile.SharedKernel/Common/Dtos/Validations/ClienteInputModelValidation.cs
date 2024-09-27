@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 
+using PSMobile.core.InputModel;
+
 namespace PSMobile.SharedKernel.Common.Dtos.Validations;
 
 public class ClienteInputModelValidation : AbstractValidator<CadastroInputModel>

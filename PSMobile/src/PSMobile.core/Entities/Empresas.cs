@@ -99,4 +99,5 @@ public class Empresas : Entity
     public int? emp_tefplug_filial { get; set; }
     public int? emp_nfce5949serie { get; set; }
     public int? emp_nfce5949inicial { get; set; }
+
 }

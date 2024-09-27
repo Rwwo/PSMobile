@@ -14,15 +14,18 @@ public class AppDbContext : DbContext
     }
     public DbSet<Cadastros> Cadastros { get; set; }
     public DbSet<Cidades> Cidades { get; set; }
+    public DbSet<Empresas> Empresas { get; set; }
     public DbSet<FormasPagamento> FormasPagamento { get; set; }
     public DbSet<Funcionarios> Funcionarios { get; set; }
     public DbSet<Gerais> Gerais { get; set; }
     public DbSet<Pedidos> Pedidos { get; set; }
     public DbSet<PedidosFormasPagamento> PedidosFormasPagamento { get; set; }
     public DbSet<PedidosItens> PedidosItens { get; set; }
+    public DbSet<Pdvs> Pdvs { get; set; }
     public DbSet<Produtos> Produtos { get; set; }
     public DbSet<ProdutosEmpresas> ProdutosEmpresas { get; set; }
     public DbSet<Ufs> Ufs { get; set; }
+
 
     private const string CONST_DATA_CADASTRO = "DataCadastro";
     private const string CONST_DATA_MODIFICACAO = "DataModificacao";

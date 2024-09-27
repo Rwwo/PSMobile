@@ -3,8 +3,8 @@
 using MudBlazor;
 
 using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
-using PSMobile.SharedKernel.Common.Dtos;
+using PSMobile.core.InputModel;
+using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Responses;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 

@@ -27,27 +27,23 @@ public class ReadRepository<T> : IReadRepository<T> where T : Entity
     int pageNumber = 1,
     int pageSize = 10)
     {
-        IQueryable<T> query = _context.Set<T>();
+        IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
-        // Aplica o filtro, se houver
         if (filter != null)
             query = query.Where(filter);
 
-        // Aplica os includes
         if (includes != null)
         {
             foreach (var include in includes)
                 query = query.Include(include);
         }
 
-        // Aplica os ThenIncludes
         if (thenIncludes != null)
         {
             foreach (var thenInclude in thenIncludes)
                 query = thenInclude(query);
         }
 
-        // Ordenação
         if (orderBy != null)
         {
             query = ascending ? query.OrderBy(orderBy) : query.OrderByDescending(orderBy);

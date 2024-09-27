@@ -1,12 +1,13 @@
 ﻿using PSMobile.core.Entities;
-using PSMobile.infrastructure.Repositories;
+using PSMobile.core.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
 public interface ILocalNavigationService
 {
-    PaginatedResult<Gerais>? Gerais { get; }
-    void SetarGerais(PaginatedResult<Gerais>? input);
+    Empresas EmpresaAtual { get; set; }
+    PaginatedResult<Gerais> Gerais { get; }
+    void SetarGerais(PaginatedResult<Gerais> input);
 
     Cadastros? Cadastro { get; }
     void LimparCliente();
@@ -14,6 +15,7 @@ public interface ILocalNavigationService
 
 
     Pedidos? Pedido { get; }
+
     void LimparPedido();
     void SetarPedido(Pedidos? input);
 }

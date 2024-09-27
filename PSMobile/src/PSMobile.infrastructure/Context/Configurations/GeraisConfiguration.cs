@@ -15,6 +15,6 @@ public class GeraisConfiguration : IEntityTypeConfiguration<Gerais>
 
         builder.HasOne(t => t.Empresa)
             .WithOne()
-            .HasForeignKey<Gerais>(c => c.ger_emp_key);
+            .HasForeignKey<Gerais>(c => c.ger_emp_key);            
     }
 }

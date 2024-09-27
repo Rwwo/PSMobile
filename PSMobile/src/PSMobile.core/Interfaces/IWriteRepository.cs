@@ -1,8 +1,6 @@
-﻿using PSMobile.core.Entities;
+﻿namespace PSMobile.core.Interfaces;
 
-namespace PSMobile.core.Interfaces;
-
-public interface IWriteRepository<T> where T : Entity
+public interface IWriteRepository<T, Q> where T : class where Q : class
 {    
-    abstract Task<T> GravarAsync(T entity);
+    abstract Task<Q> GravarAsync(T entity);
 }

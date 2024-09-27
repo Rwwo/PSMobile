@@ -154,7 +154,7 @@ public class Gerais : Entity
     // public short ger_sped_entradaspordataemissao { get; set; }
     // public byte[]? ger_rest_iconelivre { get; set; }
     // public byte[]? ger_rest_iconeocupado { get; set; }
-    // public short ger_exigirdadosvale { get; set; }
+     public short ger_exigirdadosvale { get; set; }
     // public short ger_finalizarvenda_desconto { get; set; }
     // public short ger_finalizarvenda_acrescimo { get; set; }
     // public int? ger_exibirreferencia { get; set; }
@@ -381,6 +381,8 @@ public class Gerais : Entity
     // public short ger_exibirdataalteracaovalores { get; set; }
     // public int? ger_compensacao_forpag_codigo { get; set; }
 
-    public Empresas Empresa { get; set; }
+    public Empresas? Empresa { get; set; }
+
+
 
 }

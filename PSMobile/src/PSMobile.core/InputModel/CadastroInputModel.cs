@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 
-namespace PSMobile.SharedKernel.Common.Dtos;
+namespace PSMobile.core.InputModel;
 
-public class CadastroInputModel
+public class CadastroInputModel : PSMobile.core.Entities.InputModel
 {
     public CultureInfo _ptBR = CultureInfo.GetCultureInfo("pt-BR");
 
@@ -17,7 +17,7 @@ public class CadastroInputModel
     public string? Razao { get; set; } = null;
     public string? Ie { get; set; } = null;
     public string? Im { get; set; } = null;
-    public string? Ist { get; set; }= null;
+    public string? Ist { get; set; } = null;
 
     // Dados de Contato
     public string? Fone1 { get; set; } = null;

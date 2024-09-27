@@ -1,10 +1,11 @@
 ﻿using MediatR;
 
-using PSMobile.SharedKernel.Common.Dtos;
+using PSMobile.core.InputModel;
+using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.application.Commands.Cadastros;
 
-public class GravarCadastroCommand : IRequest<core.Entities.Cadastros>
+public class GravarCadastroCommand : IRequest<ClienteGravarRetornoFuncao>
 {
     public CadastroInputModel Cliente { get; private set; }
 

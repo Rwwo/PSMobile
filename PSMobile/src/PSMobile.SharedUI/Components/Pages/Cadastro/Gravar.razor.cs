@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Components.Forms;
 using PSMobile.core.Entities;
 using PSMobile.SharedKernel.Common;
-using PSMobile.SharedKernel.Common.Dtos;
 using PSMobile.SharedKernel.Common.Dtos.Extensions;
+using PSMobile.core.InputModel;
 
 namespace PSMobile.SharedUI.Components.Pages.Cadastro;
 public class GravarCadastroPage : MyBaseComponent
@@ -25,7 +25,7 @@ public class GravarCadastroPage : MyBaseComponent
             return;
 
         IsEditing = true;
-        InputModel = CurrentCadastro.ToCadastrosInputModel();
+        InputModel = CurrentCadastro.ToInputModel();
         if (InputModel.CidCodigo is not null)
             Cidade = Cidades.SingleOrDefault(t => t.cid_codigo == InputModel.CidCodigo);
 
