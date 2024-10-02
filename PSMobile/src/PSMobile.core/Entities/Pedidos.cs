@@ -51,7 +51,7 @@ public class Pedidos : BaseEntity
     public Funcionarios? Funcionario { get; set; } = new();
     public Cadastros? Cliente { get; set; } = new();
     public ICollection<PedidosItens>? PedidosItens { get; set; } = new List<PedidosItens>();
-    public ICollection<PedidosFormasPagamento>? PedidosFormasPagamento { get; set; } = new List<PedidosFormasPagamento>();
+    //public ICollection<PedidosFormasPagamento>? PedidosFormasPagamento { get; set; } = new List<PedidosFormasPagamento>();
 
 
     public bool IsOpen => ped_lancado == 0 && ped_exc == 0 && ped_finalizado == 0;

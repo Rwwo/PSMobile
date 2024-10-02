@@ -23,6 +23,12 @@ public class UowAPI : IUowAPI
         get => _CidadesService ??= new CidadesService(_HttpClient);
     }
 
+    private FormasPagamentosService? _FormasPagamentosService;
+    public IFormasPagamentosService FormasPagamentosService
+    {
+        get => _FormasPagamentosService ??= new FormasPagamentosService(_HttpClient);
+    }
+
     private FuncionariosService? _FuncionariosService;
     public IFuncionariosService FuncionariosService
     {
@@ -35,10 +41,16 @@ public class UowAPI : IUowAPI
         get => _GeraisService ??= new GeraisService(_HttpClient);
     }
 
-    private ProdutosEmpresasService? _ProdutosEmpresasService;
-    public IProdutosEmpresasService ProdutosEmpresasService
+    private PdvService? _PdvService;
+    public IPdvService PdvService
     {
-        get => _ProdutosEmpresasService ??= new ProdutosEmpresasService(_HttpClient);
+        get => _PdvService ??= new PdvService(_HttpClient);
+    }
+
+    private PedidoItemService? _PedidoItemService;
+    public IPedidoItemService PedidoItemService
+    {
+        get => _PedidoItemService ??= new PedidoItemService(_HttpClient);
     }
 
     private PedidoService? _PedidoService;
@@ -48,10 +60,11 @@ public class UowAPI : IUowAPI
     }
 
 
-    private PedidoItemService? _PedidoItemService;
-    public IPedidoItemService PedidoItemService
+
+    private ProdutosEmpresasService? _ProdutosEmpresasService;
+    public IProdutosEmpresasService ProdutosEmpresasService
     {
-        get => _PedidoItemService ??= new PedidoItemService(_HttpClient);
+        get => _ProdutosEmpresasService ??= new ProdutosEmpresasService(_HttpClient);
     }
 }
 

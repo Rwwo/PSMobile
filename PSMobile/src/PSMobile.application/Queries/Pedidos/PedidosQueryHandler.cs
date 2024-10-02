@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 using PSMobile.core.Interfaces;
 using System.Linq;
+using PSMobile.core.Entities;
 
 namespace PSMobile.application.Queries.Pedidos;
 public class PedidosQueryHandler
@@ -35,14 +36,16 @@ public class PedidosQueryHandler
         {
             e => e.Cliente,
             e => e.Funcionario,
-            e => e.PedidosItens,
-            e => e.PedidosFormasPagamento
+            //e => e.PedidosItens,
+            //e => e.PedidosFormasPagamento
         };
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
             query => query.Include(e => e.PedidosItens)
-                          .ThenInclude(i => i.Produto)
+                          .ThenInclude(i => i.Produto),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
         };
 
         Expression<Func<core.Entities.Pedidos, object>> order = o => o.ped_key;
@@ -69,14 +72,16 @@ public class PedidosQueryHandler
         {
             e => e.Cliente,
             e => e.Funcionario,
-            e => e.PedidosItens,
-            e => e.PedidosFormasPagamento
+            //e => e.PedidosItens,
+            //e => e.PedidosFormasPagamento
         };
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
             query => query.Include(e => e.PedidosItens)
-                          .ThenInclude(i => i.Produto)
+                          .ThenInclude(i => i.Produto),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
         };
 
 
@@ -97,18 +102,21 @@ public class PedidosQueryHandler
         Expression<Func<core.Entities.Pedidos, bool>> filtro = c => c.ped_exc == 0 &&
                                                                     (c.ped_key == request.PedKey && c.ped_emp_key == request.EmpKey);
 
+
         var includes = new List<Expression<Func<core.Entities.Pedidos, object>>>
         {
             e => e.Cliente,
             e => e.Funcionario,
-            e => e.PedidosItens,
-            e => e.PedidosFormasPagamento
+            //e => e.PedidosItens,
+            //e => e.PedidosFormasPagamento
         };
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
             query => query.Include(e => e.PedidosItens)
-                          .ThenInclude(i => i.Produto)
+                          .ThenInclude(i => i.Produto),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
         };
 
 

@@ -29,6 +29,13 @@ public class UnitOfWork : IUnitOfWork
     }
 
 
+    private FormasPagamentosRepository? _FormasPagamentosRepository;
+    public IFormasPagamentosRepository FormasPagamentosRepository
+    {
+        get => _FormasPagamentosRepository ??= new FormasPagamentosRepository(_context);
+    }
+
+
     private FuncionariosRepository? _FuncionariosRepository;
     public IFuncionariosRepository FuncionariosRepository
     {

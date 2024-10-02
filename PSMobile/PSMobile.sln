@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSMobile.Mobile", "src\PSMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSMobile.Web", "src\PSMobile.Web\PSMobile.Web.csproj", "{BE8B1ADF-A115-403A-8AAF-98E1E35BFFFF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PSMobile.api.Tests", "src\PSMobile.api.Tests\PSMobile.api.Tests.csproj", "{5A485658-EC15-41B9-9A3E-5BEC805173E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PSMobile.api.Tests", "src\PSMobile.api.Tests\PSMobile.api.Tests.csproj", "{5A485658-EC15-41B9-9A3E-5BEC805173E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

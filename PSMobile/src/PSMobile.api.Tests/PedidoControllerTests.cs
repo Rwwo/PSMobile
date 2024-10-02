@@ -68,7 +68,7 @@ public class PedidoControllerTests
     public async Task Post_GravarPedido_DeveRetornarBadRequest_QuandoModelInvalida()
     {
         // Arrange
-        var pedidoInputModel = new PedidoInputModel();
+        var pedidoInputModel = new PedidoAtualizarInputModel();
         _controller.ModelState.AddModelError("Nome", "O Nome é obrigatório");
 
         // Act
@@ -84,14 +84,10 @@ public class PedidoControllerTests
     public async Task Post_GravarPedido_DeveRetornarOk_QuandoModelValida()
     {
         // Arrange
-        var pedidoInputModel = new PedidoInputModel
+        var pedidoInputModel = new PedidoAtualizarInputModel
         {
-            //_ped_nome = "Teste"
-            Cliente = new Cadastros()
-            {
-                cad_key = 555,
-                cad_nome = "Rubens"
-            }
+            _ped_emp_key = 1,
+            _ped_numero = 5432,
         };
 
         var mockResponse = new PedidosGravarRetornoFuncao("55|55");

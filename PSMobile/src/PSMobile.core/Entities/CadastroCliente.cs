@@ -6,6 +6,7 @@ public class CadastroCliente : BaseEntity
     public short? cad_cli_exc { get; set; } = null;
     public DateTime? cad_cli_dataexc { get; set; } = null;
     public int cad_cli_usu { get; set; }
+    public string? cad_cli_mensagem { get; set; } 
     public string? cad_cli_comput { get; set; } = "";
     public DateTime? cad_cli_datamud { get; set; } = null;
     public DateTime? cad_cli_datacad { get; set; } = null;

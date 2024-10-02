@@ -2,6 +2,5 @@
 
 namespace PSMobile.core.Interfaces;
 
-public interface IUFsRepository : IReadRepository<Ufs>
-{
-}
+public interface IUFsRepository : IReadRepository<Ufs>;
+

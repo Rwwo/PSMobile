@@ -27,7 +27,7 @@ public class Pdvs : Entity
     public int? pdv_tefpdv { get; set; }
     public string? pdv_sinc { get; set; }
     public int? pdv_numerocaixa { get; set; }
-    public short pdv_emitenfe { get; set; }
+    public int pdv_emitenfe { get; set; }
     public short pdv_emitirespelhonfe { get; set; }
 
 }

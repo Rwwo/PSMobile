@@ -1,19 +1,13 @@
 @page "/pedidos/gravar"
 @inherits GravarPedidoPage
 
-@if (PedidoInputModel._ped_numero == 0)
-{
-    <MudText Typo="Typo.h4">Pedido</MudText>
-}
-else
-{
-    <MudText Typo="Typo.h4">Pedido - @PedidoInputModel._ped_numero - @PedidoInputModel._ped_nome</MudText>
-}
+<PsTitle Title="Edição Pedidos" />
 
-<BackButton Href="/pedidos"
-            Text="Voltar Pedidos" />
+<PsPageHeader Icon="@Icons.Material.Filled.ShoppingCart"
+              Title="@PedidoInputModel.PedidoNome"
+              ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage" />
 
-<MudPaper Class="pa-2">
+<MudPaper Class="mt-2 pa-2">
     <EditForm Model="@PedidoInputModel" OnValidSubmit="OnValidSubmitAsync">
         <DataAnnotationsValidator />
 
@@ -72,6 +66,11 @@ else
                                                           HelperText="Nome do Cliente Selecionado"
                                                           ReadOnly="true" />
                                         </MudItem>
+
+                                        @if (!string.IsNullOrEmpty(PedidoInputModel.Cliente?.CadastroCliente?.cad_cli_mensagem))
+                                        {
+                                            <MudAlert Severity="Severity.Error">@PedidoInputModel.Cliente?.CadastroCliente?.cad_cli_mensagem</MudAlert>
+                                        }
 
                                         <MudDivider DividerType="DividerType.Middle" Class="my-6" />
 
@@ -166,21 +165,194 @@ else
                                 </MudStack>
 
                             </ChildContent>
-
                         </MudStepExtended>
 
                         <MudStepExtended Icon="@Icons.Material.Filled.Money" Title="Dados Pedido">
-
                             <ChildContent>
+
                                 <MudForm @ref="_form2">
-                                    <MudStack>
-                                        <MudItem xs="12" md="12" sm="12">
-                                            <MudCard Elevation="1">
-                                                <MudText><strong>Total:</strong>     @PedidoInputModel.CurrentPedido.PedidosItens.Sum(t => t.pedite_total).ToMonetaryString()</MudText>
+
+                                    @if (IsBothNFE_NFCe)
+                                    {
+                                        <MudContainer Class="my-4 px-4">
+                                            <MudCard Class="px-2 mb-4">
+                                                <MudCardContent>
+                                                    @if (_loading)
+                                                    {
+                                                        <MudSkeleton Animation="Animation.Wave" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudGrid Class="align-center">
+                                                            <MudItem xs="12" sm="9" md="9" lg="9">
+                                                                <MudText Typo="Typo.h5" Style="font-weight: bold">Total do Pedido: @PedidoInputModel?.TotalPedido.ToMonetaryString()</MudText>
+                                                            </MudItem>
+                                                            <MudItem xs="12" sm="3" md="3" lg="3" Class="d-flex justify-end">
+                                                                <MudTabs Elevation="0" Rounded="true" Outlined="true" TabPanelClass="px-6" @bind-ActivePanelIndex="@_index" MinimumTabWidth="100%">
+                                                                    <MudTabPanel Text="NFCe" ID='"panel_0"'></MudTabPanel>
+                                                                    <MudTabPanel Text="NFE" ID='"panel_1"'></MudTabPanel>
+                                                                </MudTabs>
+                                                            </MudItem>
+                                                        </MudGrid>
+                                                    }
+                                                </MudCardContent>
                                             </MudCard>
-                                        </MudItem>
-                                    </MudStack>
+
+                                            @if (_index == 0)
+                                            {
+                                                <MudGrid Spacing="2">
+                                                    <!-- Card Esquerdo: Descontos e Total -->
+                                                    <MudItem xs="12" sm="12" md="6" lg="6">
+                                                        <MudCard>
+                                                            <MudCardContent>
+                                                                <MudStack Spacing="2">
+                                                                    <!-- Campo Desconto % -->
+                                                                    <MudNumericField Label="(-) Desconto %:"
+                                                                                     Min="0" Max="100"
+                                                                                     Variant="Variant.Text"
+                                                                                     HideSpinButtons="true"
+                                                                                     @bind-Value="@PedidoInputModel.DescontoPercentual"
+                                                                                     OnBlur="@ApagarFormasExistentesAsync"
+                                                                                     Disabled="@PedidoInputModel.DescontoReais.HasValue"
+                                                                                     Clearable />
+
+                                                                    <!-- Campo Desconto R$ -->
+                                                                    <MudNumericField Label="(-) Desconto R$:"
+                                                                                     Min="0" Max="@PedidoInputModel.TotalPedido"
+                                                                                     HideSpinButtons="true"
+                                                                                     OnBlur="@ApagarFormasExistentesAsync"
+                                                                                     Variant="Variant.Text"
+                                                                                     Disabled="@PedidoInputModel.DescontoPercentual.HasValue"
+                                                                                     @bind-Value="@PedidoInputModel.DescontoReais"
+                                                                                     Culture="@PedidoInputModel._ptBR"
+                                                                                     Clearable />
+
+                                                                    <!-- Total a Pagar -->
+                                                                    <MudText Typo="Typo.h5"
+                                                                             Style="font-weight: bold">
+                                                                        Total a Pagar: @PedidoInputModel?.TotalPedidoComDesconto.ToMonetaryString()
+                                                                    </MudText>
+                                                                </MudStack>
+                                                            </MudCardContent>
+                                                        </MudCard>
+                                                    </MudItem>
+
+                                                    <!-- Card Direito: Formas de Pagamento e Botões -->
+                                                    <MudItem xs="12" sm="12" md="6" lg="6">
+                                                        <MudCard>
+                                                            <MudCardContent>
+                                                                <MudDivider Class="my-2" />
+                                                                <MudStack Spacing="2">
+                                                                    <!-- Lista de Formas de Pagamento -->
+                                                                    <CascadingValue Name="Options" Value="@FormasPagamentoPaginated.Items">
+                                                                        @foreach (var opt in PedidoInputModel.CurrentPedido.PedidosFormasPagamento)
+                                                                        {
+                                                                            <FormaPagamento Options="@FormasPagamentoPaginated.Items"
+                                                                                            Data="@opt"
+                                                                                            OnEyeFishClick="@(() =>ViewParcelasPagamento(opt))"
+                                                                                            OnDeleteClick="@(() => DeleteFormaPagamento(opt))" />
+                                                                        }
+                                                                    </CascadingValue>
+
+
+                                                                    <!-- Botão Adicionar Forma de Pagamento -->
+                                                                    <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                                                               IconSize="Size.Large"
+                                                                               Variant="Variant.Outlined"
+                                                                               FullWidth="true"
+                                                                               Class="mt-2 border-dashed border-2 mud-border-secundary"
+                                                                               Color="Color.Primary"
+                                                                               @onclick="@NewFormasPagamentos">
+                                                                        Adicionar Forma Pagamento
+                                                                    </MudButton>
+
+                                                                    <!-- Botão Finalizar Pedido -->
+                                                                    <MudButton StartIcon="@Icons.Material.Outlined.ArrowOutward"
+                                                                               IconSize="Size.Large"
+                                                                               Variant="Variant.Filled"
+                                                                               Color="Color.Success"
+                                                                               FullWidth="true"
+                                                                               Class="mt-2"
+                                                                               @onclick="@FinalizarPedido">
+                                                                        Finalizar Pedido
+                                                                    </MudButton>
+                                                                </MudStack>
+                                                            </MudCardContent>
+                                                        </MudCard>
+                                                    </MudItem>
+                                                </MudGrid>
+
+                                            }
+                                            else
+                                            {
+                                                @if (!PedidoInputModel.HasClient)
+                                                {
+                                                    <MudAlert Severity="Severity.Warning">Para NFE, é necessário informar um cliente cadastrado.</MudAlert>
+                                                }
+                                                else
+                                                {
+                                                    @if (PedidoInputModel.IsClientInvalid.Item1)
+                                                    {
+                                                        @foreach (var item in PedidoInputModel.IsClientInvalid.Item2)
+                                                        {
+                                                            @if (item == PedidoInputModel.IsClientInvalid.Item2.FirstOrDefault())
+                                                            {
+                                                                <MudAlert Class="mt-1 mb-1" Severity="Severity.Error">@item</MudAlert>
+                                                                continue;
+                                                            }
+                                                            <MudAlert Class="mt-1 mb-1" Severity="Severity.Warning">@item</MudAlert>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudGrid>
+                                                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                                                <MudSelect Variant="Variant.Outlined"
+                                                                           T="TipoRetirada"
+                                                                           @bind-Value="@PedidoInputModel._ped_retira"
+                                                                           Label="Retirada"
+                                                                           Required="true"
+                                                                           RequiredError="Informe!"
+                                                                           AdornmentColor="Color.Primary">
+
+                                                                    @foreach (TipoRetirada retirada in Enum.GetValues<TipoRetirada>())
+                                                                    {
+                                                                        <MudSelectItem Value="@retirada">@retirada.GetDescription()</MudSelectItem>
+                                                                    }
+                                                                </MudSelect>
+                                                            </MudItem>
+
+                                                            @if (PedidoInputModel.ClientIsContribuinte)
+                                                            {
+                                                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                                                    <MudSelect Variant="Variant.Outlined"
+                                                                               T="TipoVenda"
+                                                                               @bind-Value="@PedidoInputModel._ped_iddest"
+                                                                               Label="Retirada"
+                                                                               Required="true"
+                                                                               RequiredError="Informe!"
+                                                                               AdornmentColor="Color.Primary">
+
+                                                                        @foreach (TipoVenda venda in Enum.GetValues<TipoVenda>())
+                                                                        {
+                                                                            <MudSelectItem Value="@venda">@venda.GetDescription()</MudSelectItem>
+                                                                        }
+                                                                    </MudSelect>
+                                                                </MudItem>
+                                                            }
+
+                                                        </MudGrid>
+                                                    }
+                                                }
+                                            }
+                                        </MudContainer>
+                                    }
+                                    else
+                                    {
+                                        <MudText>Painel do NFCE</MudText>
+                                    }
                                 </MudForm>
+
                             </ChildContent>
 
                         </MudStepExtended>
@@ -203,6 +375,7 @@ else
                                 </ChildContent>
                             </MudStepExtended>
                         }
+
                     </ChildContent>
 
                     <ActionContent>

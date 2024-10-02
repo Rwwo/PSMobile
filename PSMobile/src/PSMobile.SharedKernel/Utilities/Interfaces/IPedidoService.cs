@@ -11,3 +11,4 @@ public interface IPedidoService : IBaseReadServiceWithEmpKey<Pedidos>, IBaseWrit
     Task<PaginatedResult<Pedidos>> GetByPedKeyAsync(int empKey, int pedKey, int pageSize = 10, int pageNumber = 1);
 }
 
+

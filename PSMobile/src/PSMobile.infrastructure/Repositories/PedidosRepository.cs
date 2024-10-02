@@ -67,4 +67,39 @@ public class PedidosRepository : ReadRepository<Pedidos>, IPedidosRepository
         }
     }
 
+    public async Task<PedidosAtualizarRetornoFuncao> AtualizarAsync(PedidoAtualizarInputModel entity)
+    {
+        if (entity == null)
+            throw new ArgumentNullException(nameof(entity));
+        try
+        {
+            var parameters = new[]
+            {
+                new NpgsqlParameter("_ped_numero", DbType.Int32) { Value = entity._ped_numero },
+                new NpgsqlParameter("_ped_emp_key", DbType.Int32) { Value = entity._ped_emp_key },
+                new NpgsqlParameter("_ped_tipodocemitir", DbType.Int32) { Value = entity._ped_tipodocemitir},
+                new NpgsqlParameter("_ped_retira", DbType.Int32) { Value = entity._ped_retira },
+                new NpgsqlParameter("_ped_iddest", DbType.Int32) { Value = entity._ped_iddest },
+                new NpgsqlParameter("_ped_consumidorfinal", DbType.Int32) { Value = entity._ped_consumidorfinal },
+            };
+
+            var exec = await _context.Database.SqlQueryRaw<bool>(
+            @"
+            SELECT public.pedidos_gravar_atualizar(
+                            @_ped_numero,
+                            @_ped_emp_key,
+                            @_ped_tipodocemitir,
+                            @_ped_retira,
+                            @_ped_iddest,
+                            @_ped_consumidorfinal
+                        )",
+            parameters).ToListAsync();
+
+            return new PedidosAtualizarRetornoFuncao(exec.FirstOrDefault());
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Erro ao gravar cliente: {ex.Message}", ex);
+        }
+    }
 }

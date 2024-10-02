@@ -1,6 +1,8 @@
+@using PSMobile.SharedKernel.Common
 @using PSMobile.core.InputModel
 @using PSMobile.core.Interfaces
 @inject ISnackbar Snackbar
+@inherits MyBaseComponent
 
 <MudDialog>
     <TitleContent>
@@ -36,6 +38,9 @@
                         <PropertyColumn Property="x => x.proemp_qtd" Title="Estoque" Format="N" />
                         <PropertyColumn Property="x => x.proemp_valor" Title="Valor" Format="C2" />
                     </Columns>
+                    <NoRecordsContent>
+                        @(GetNotFoundMessage(searchString))
+                    </NoRecordsContent>
                     <PagerContent>
                         <MudDataGridPager T="ProdutosEmpresas" />
                     </PagerContent>
@@ -113,21 +118,22 @@
     }
 
 
+
     public async Task<GridData<ProdutosEmpresas>> ServerReload(GridState<ProdutosEmpresas> state)
     {
         int pageSize = dataGrid.RowsPerPage == 0 ? 10 : dataGrid.RowsPerPage;
         int pageNumber = dataGrid.CurrentPage == 0 ? 1 : dataGrid.CurrentPage;
 
-        PaginatedResult<ProdutosEmpresas> dados;
+        PaginatedResult<ProdutosEmpresas> dados = PaginatedResult<ProdutosEmpresas>.Empty(1,10);
 
-        if (string.IsNullOrEmpty(searchString))
-        {
-            dados = await UowAPI.ProdutosEmpresasService.GetAllAsync(Empr.emp_key, pageSize, pageNumber);
-        }
-        else
+        if (!string.IsNullOrEmpty(searchString))
         {
             dados = await UowAPI.ProdutosEmpresasService.GetAllAsync(Empr.emp_key, searchString, pageSize, pageNumber);
         }
+        //else
+        //{
+        //    dados = await UowAPI.ProdutosEmpresasService.GetAllAsync(Empr.emp_key, pageSize, pageNumber);
+        //}
 
         return new GridData<ProdutosEmpresas>
             {

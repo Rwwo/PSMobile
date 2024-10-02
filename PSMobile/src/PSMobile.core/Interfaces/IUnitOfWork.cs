@@ -4,6 +4,7 @@ public interface IUnitOfWork
 {
     ICadastroRepository CadastroRepository { get; }
     ICidadesRepository CidadesRepository { get; }
+    IFormasPagamentosRepository FormasPagamentosRepository { get; }
     IFuncionariosRepository FuncionariosRepository { get; }
     IGeraisRepository GeraisRepository { get; }
     IPdvsRepository PdvsRepository { get; }

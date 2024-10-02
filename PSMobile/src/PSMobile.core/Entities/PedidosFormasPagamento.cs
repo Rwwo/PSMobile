@@ -13,6 +13,7 @@ public class PedidosFormasPagamento : Entity
     public decimal pedforpag_valor { get; set; }
     public short pedforpag_lancado { get; set; }
 
-    public FormasPagamento FormaPagamento { get; set; } = null!;
+    public FormasPagamento? FormaPagamento { get; set; } = null;
     public Pedidos Pedido { get; set; } = null!;
+    public ICollection<PedidosFormasPagamentoParcelas>? PedidosFormasPagamentoParcelas { get; set; } = null;
 }

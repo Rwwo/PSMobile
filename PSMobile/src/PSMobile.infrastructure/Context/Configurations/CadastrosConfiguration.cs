@@ -33,6 +33,7 @@ public class CadastrosConfiguration : IEntityTypeConfiguration<Cadastros>
         {
             cliente.Property(c => c.cad_cli_naturalidade).HasColumnName("cad_cli_naturalidade");
             cliente.Property(c => c.cad_cli_exc).HasColumnName("cad_cli_exc");
+            cliente.Property(c => c.cad_cli_mensagem).HasColumnName("cad_cli_mensagem");
             cliente.Property(c => c.cad_cli_dataexc).HasColumnName("cad_cli_dataexc");
             cliente.Property(c => c.cad_cli_usu).HasColumnName("cad_cli_usu");
             cliente.Property(c => c.cad_cli_comput).HasColumnName("cad_cli_comput");

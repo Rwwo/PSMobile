@@ -41,4 +41,10 @@ public class FormasPagamento : Entity
 
     public ICollection<PedidosFormasPagamento> PedidosFormasPagamento { get; } = null!;
 
+    public override string ToString()
+    {
+        return $"{forpag_codigo} - {forpag_nome}";
+
+    }
+
 }

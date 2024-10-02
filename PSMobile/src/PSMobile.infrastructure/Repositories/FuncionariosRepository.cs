@@ -9,3 +9,9 @@ public class FuncionariosRepository : ReadRepository<Funcionarios>, IFuncionario
     public FuncionariosRepository(AppDbContext context)
         : base(context) { }
 }
+
+public class FormasPagamentosRepository : ReadRepository<FormasPagamento>, IFormasPagamentosRepository
+{
+    public FormasPagamentosRepository(AppDbContext context)
+        : base(context) { }
+}

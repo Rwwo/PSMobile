@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using System.Linq;
+
+using Microsoft.AspNetCore.Components.Forms;
 
 using MudBlazor;
 
@@ -6,6 +8,7 @@ using MudExtensions;
 using MudExtensions.Utilities;
 
 using PSMobile.core.Entities;
+using PSMobile.core.Extensions;
 using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
@@ -44,13 +47,21 @@ public class GravarPedidoPage : MyBaseComponent
     public Size _headerSize = Size.Medium;
     public StepperActionsJustify _stepperActionsJustify = StepperActionsJustify.SpaceBetween;
 
+
+    public int _index;
+
     #endregion
 
     public PedidoInputModel PedidoInputModel { get; set; }
     public PaginatedResult<PedidosItens> PedidosItensPaginated { get; set; }
-    public PaginatedResult<Funcionarios> Funcionarios { get; set; }
+    public PaginatedResult<Funcionarios> FuncionariosPaginated { get; set; }
+    public PaginatedResult<Pdvs> PdvsPaginated { get; set; }
+    public PaginatedResult<FormasPagamento> FormasPagamentoPaginated { get; set; }
+
+
 
     private int emp_key = 0;
+    public bool IsBothNFE_NFCe { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,7 +69,11 @@ public class GravarPedidoPage : MyBaseComponent
 
         PedidoInputModel = new PedidoInputModel(emp_key);
 
-        Funcionarios = await UowAPI.FuncionariosService.GetAllAsync(1000, 1);
+        PdvsPaginated = await UowAPI.PdvService.GetAllAsync(emp_key, 1000, 1);
+        FuncionariosPaginated = await UowAPI.FuncionariosService.GetAllAsync(1000, 1);
+        FormasPagamentoPaginated = await UowAPI.FormasPagamentosService.GetAllAsync(100, 1);
+
+        IsBothNFE_NFCe = PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0;
 
         await InvokeAsync(StateHasChanged);
         await base.OnInitializedAsync();
@@ -80,6 +95,10 @@ public class GravarPedidoPage : MyBaseComponent
                     SetarDadosCliente(ret.Items[0]);
             }
         }
+        else
+        {
+            PedidoInputModel.Cliente = new();
+        }
     }
 
     private void SetarDadosCliente(Cadastros Cliente)
@@ -87,6 +106,94 @@ public class GravarPedidoPage : MyBaseComponent
         PedidoInputModel.Cliente = Cliente;
     }
 
+    public void FinalizarPedido()
+    {
+        if (PedidoInputModel.CanFinish)
+        {
+            Snackbar.Add("Pode Finalizar", Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add("Não Pode Finalizar", Severity.Error);
+        }
+
+    }
+    public async void NewFormasPagamentos()
+    {
+        if (PedidoInputModel.SaldoRestante == 0)
+        {
+            Snackbar.Add("Não existe mais saldo restante para pagto.", Severity.Warning);
+            return;
+        }
+
+        var aux = PedidoInputModel.CurrentPedido.PedidosFormasPagamento.ToList();
+
+        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Clear();
+
+        foreach (var item in aux)
+        {
+            var newForPagAux = new PedidosFormasPagamento()
+            {
+                pedforpag_forpag_codigo = item.pedforpag_forpag_codigo,
+                pedforpag_ped_key = PedidoInputModel.CurrentPedido.ped_key,
+                pedforpag_lancado = 0,
+                pedforpag_valor = item.pedforpag_valor,
+                PedidosFormasPagamentoParcelas = item.PedidosFormasPagamentoParcelas,
+                FormaPagamento = item.FormaPagamento
+            };
+
+            PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Add(newForPagAux);
+        }
+
+        var newForPag = new PedidosFormasPagamento()
+        {
+            pedforpag_ped_key = PedidoInputModel.CurrentPedido.ped_key,
+            pedforpag_lancado = 0,
+            pedforpag_valor = PedidoInputModel.SaldoRestante
+        };
+
+        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Add(newForPag);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async void ApagarFormasExistentesAsync()
+    {
+        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Clear();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async Task<DialogResult> ViewParcelasPagamento(PedidosFormasPagamento input)
+    {
+        var parameters = new DialogParameters<FormaPagamentoParcelasDialog>()
+        {
+            { c=> c.Data , input }
+        };
+
+        DialogOptions _options = new()
+        {
+            MaxWidth = MaxWidth.Large,
+            FullScreen = IsMobile,
+            CloseButton = true,
+            CloseOnEscapeKey = true
+        };
+
+        var dialog = await DialogService.ShowAsync<FormaPagamentoParcelasDialog>("Visualizar Parcelas", parameters, _options);
+        var dialogResult = await dialog.Result;
+
+        if (!dialogResult.Canceled)
+        {
+            input.PedidosFormasPagamentoParcelas = (List<PedidosFormasPagamentoParcelas>)dialogResult.Data;
+            return DialogResult.Ok(true);
+        }
+
+        return DialogResult.Cancel();
+
+    }
+    public async void DeleteFormaPagamento(PedidosFormasPagamento input)
+    {
+        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Remove(input);
+        await InvokeAsync(StateHasChanged);
+    }
 
     public async Task SearchProduct()
     {
@@ -106,6 +213,8 @@ public class GravarPedidoPage : MyBaseComponent
     {
         var dadoPedido = await UowAPI.PedidoService.GetByPedKeyAsync(emp_key, pedKey);
         PedidoInputModel.CurrentPedido = dadoPedido.Items.FirstOrDefault();
+
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task<Result<PedidosGravarRetornoFuncao>> GravarPedidoAsync()
@@ -207,9 +316,9 @@ public class GravarPedidoPage : MyBaseComponent
 
         // if text is null or empty, show complete list
         if (string.IsNullOrEmpty(value))
-            return Funcionarios.Items;
+            return FuncionariosPaginated.Items;
 
-        return Funcionarios.Items.Where(x => x.fun_nome.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+        return FuncionariosPaginated.Items.Where(x => x.fun_nome.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
     public StepperLocalizedStrings GetLocalizedStrings()
@@ -316,6 +425,8 @@ public class GravarPedidoPage : MyBaseComponent
             PedidoInputModel._ped_key = result.Data._ped_key;
 
             await AtualizarPedidoLocal(result.Data._ped_key);
+
+
 
         }
         catch (Exception ex)

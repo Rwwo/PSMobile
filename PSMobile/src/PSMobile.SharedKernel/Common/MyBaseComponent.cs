@@ -54,6 +54,10 @@ public abstract class MyBaseComponent : ComponentBase
             };
         });
     }
+    protected string GetNotFoundMessage(string searchString)
+    {
+        return (string.IsNullOrEmpty(searchString)) ? "Utilize a busca para realizar a consulta" : "Nenhum item encontrado.";
+    }
 
     private void ShowDetails(string message)
     {
@@ -67,6 +71,11 @@ public abstract class MyBaseComponent : ComponentBase
             return true;
         }
         return false;
+    }
+
+    public void GoToHomePage()
+    {
+        Navigation.NavigateTo($"/");
     }
 
 

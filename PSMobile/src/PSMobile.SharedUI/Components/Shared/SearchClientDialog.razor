@@ -46,10 +46,10 @@
 </MudDialog>
 
 @code {
-    [Inject] IDialogService DialogService { get; set; } = null!;
 
     [Inject] private IUowAPI UowAPI { get; set; } = null!;
 
+    [Inject] IDialogService DialogService { get; set; } = null!;
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
 
     public MudDataGrid<Cadastros> dataGrid;

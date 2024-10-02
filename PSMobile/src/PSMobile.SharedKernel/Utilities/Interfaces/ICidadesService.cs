@@ -2,7 +2,4 @@
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
-public interface ICidadesService : IBaseReadServiceAll<Cidades>
-{
-
-}
+public interface ICidadesService : IBaseReadServiceAll<Cidades>;

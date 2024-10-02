@@ -1,0 +1,284 @@
+@using PSMobile.SharedKernel.Common
+@inherits MyBaseComponent
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Search" Class="mr-3 mb-n1" />
+            Visualizar Parcelas
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm Class="ml-2">
+            <MudGrid Spacing="2">
+                <!-- Primeira linha: Campos numéricos -->
+                <MudItem xs="12">
+                    <MudStack Row="true" Spacing="2">
+                        <MudItem xs="6" md="3">
+                            <MudNumericField @bind-Value="DiasInicio"
+                                             HideSpinButtons="true"
+                                             InputMode="InputMode.numeric"
+                                             Label="Dia 1ª"
+                                             Min="1"
+                                             Max="31"
+                                             Immediate="true" />
+                        </MudItem>
+                        <MudItem xs="6" md="3">
+                            <MudNumericField @bind-Value="DiasIntervalo"
+                                             HideSpinButtons="true"
+                                             InputMode="InputMode.numeric"
+                                             Label="Intervalo"
+                                             Min="1"
+                                             Max="31"
+                                             Immediate="true" />
+                        </MudItem>
+
+                        <MudItem xs="6" md="3">
+                            <MudNumericField Value="TotalParcelas"
+                                             Label="Total"
+                                             InputMode="InputMode.numeric"
+                                             T="Int32"
+                                             Min="1"
+                                             Max="@MaxTotalParcelas"
+                                             HelperText="@HelperMaxTotalParcelas"
+                                             ValueChanged="x => HandleQtdeParcelasChanged(x)"
+                                             Immediate="true" />
+                        </MudItem>
+
+                        <MudItem xs="6" md="3">
+                            <MudFab StartIcon="@Icons.Material.Filled.Save"
+                                    Color="Color.Primary"
+                                    OnClick="@SaveParcelas" />
+                        </MudItem>
+                    </MudStack>
+                </MudItem>
+
+                <!-- Segunda linha: Parcelas com scroll -->
+                <MudItem xs="12">
+                    <MudStack>
+                        <MudDivider />
+                        @foreach (var item in Parcelas)
+                        {
+                            <MudCard Elevation="4" Class="m-1" Style="border-radius: 10px; padding: 16px;">
+                                <MudGrid Spacing="1">
+                                    <MudItem xs="3">
+                                        <MudTextField Label="Título"
+                                                      Typo="Typo.subtitle1"
+                                                      Style="font-weight: bold; color: #3f51b5;"
+                                                      Value="@item.pedforpagpar_titulo"
+                                                      ReadOnly />
+                                    </MudItem>
+                                    <MudItem xs="6">
+                                        <MudDatePicker Label="Data Vencimento"
+                                                       Date="item.pedforpagpar_dataven"
+                                                       AutoClose="true"
+                                                       PickerVariant="PickerVariant.Dialog"
+                                                       DateChanged="@(newDate => HandleDataVencChangedAsync(item, newDate))" />
+                                    </MudItem>
+                                    <MudItem xs="3" Style="text-align: right;">
+                                        <MudTextField Label="Valor (R$)"
+                                                      Typo="Typo.subtitle1"
+                                                      T="decimal"
+                                                      Style="font-weight: bold;"
+                                                      InputMode="InputMode.numeric"
+                                                      Format="C2"
+                                                      Value="@item.pedforpagpar_valor"
+                                                      ValueChanged="@(newValue => HandleValorChangedAsync(item, newValue))"
+                                                      Required />
+                                    </MudItem>
+                                </MudGrid>
+                            </MudCard>
+                        }
+                    </MudStack>
+                </MudItem>
+
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
+
+    public int DiasInicio { get; set; }
+    public int DiasIntervalo { get; set; }
+    public int TotalParcelas { get; set; } 
+
+    public int MaxTotalParcelas { get; set; }
+    public string HelperMaxTotalParcelas => $"Valor entre 1 e {MaxTotalParcelas}";
+
+    private async Task Cancel() => await HandleExitAsync();
+
+    [Parameter]
+    [EditorRequired]
+    public PedidosFormasPagamento Data { get; set; }
+
+    public List<PedidosFormasPagamentoParcelas> Parcelas { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        DiasInicio = Data.FormaPagamento.forpag_diasinicio;
+        DiasIntervalo = Data.FormaPagamento.forpag_diasintervalo;
+        MaxTotalParcelas = Data.FormaPagamento.forpag_parcelas;
+
+        Parcelas = Data.PedidosFormasPagamentoParcelas.ToList();
+        TotalParcelas = Parcelas.Count();
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task HandleExitAsync()
+    {
+        if (Parcelas.Count >= 1)
+        {
+            MudDialog.Close(DialogResult.Ok(Parcelas));
+        }
+
+        MudDialog.Cancel();
+    }
+
+    private async Task HandleValorChangedAsync(PedidosFormasPagamentoParcelas item, decimal? newValue)
+    {
+        try
+        {
+            if (!newValue.HasValue || item.pedforpagpar_valor == newValue)
+                return;
+
+            var novoValor = newValue.Value;
+
+            var confirmed = await ConfirmarAlteracaoAsync("Será recalculado os valores das demais parcelas");
+            if (!confirmed)
+                return;
+
+            var index = Parcelas.IndexOf(item);
+
+            var valorPedido = Data.pedforpag_valor;
+            var parcelasAnteriores = Parcelas.GetRange(0, index);
+            var valorParcelasAnteriores = parcelasAnteriores.Sum(s => s.pedforpagpar_valor);
+
+            var valorAnteriorMaisAtual = valorParcelasAnteriores + novoValor;
+
+            var restanteParcelas = Parcelas.Count - (index + 1);
+            var valorARaterar = valorPedido - valorAnteriorMaisAtual;
+
+            var valorRateado = restanteParcelas > 0 ? valorARaterar / restanteParcelas : 0;
+
+            for (int i = index; i < Parcelas.Count; i++)
+            {
+                var novoItem = Parcelas[i];
+                if (i == index)
+                {
+                    novoItem.pedforpagpar_valor = novoValor;
+                    continue;
+                }
+
+                novoItem.pedforpagpar_valor = valorRateado;
+            }
+
+            // Ajustar a última parcela para cobrir diferenças de arredondamento.
+            decimal somaParcelas = Parcelas.Sum(p => p.pedforpagpar_valor);
+            decimal diferenca = valorPedido - somaParcelas;
+
+            Parcelas[^1].pedforpagpar_valor += diferenca; // Ajusta a última parcela para cobrir a diferença.
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+
+    private async Task HandleDataVencChangedAsync(PedidosFormasPagamentoParcelas item, DateTime? newDate)
+    {
+        try
+        {
+            if (!newDate.HasValue || item.pedforpagpar_dataven == newDate)
+                return;
+
+            var novaData = newDate.Value;
+
+            var confirmed = await ConfirmarAlteracaoAsync("Você deseja alterar as datas futuras?");
+
+            if (!confirmed)
+                return;
+
+            var index = Parcelas.IndexOf(item);
+
+            for (int i = index; i < Parcelas.Count; i++)
+            {
+                var novoItem = Parcelas[i];
+                if (i == index)
+                {
+                    novoItem.pedforpagpar_dataven = novaData;
+                    continue;
+                }
+
+                novoItem.pedforpagpar_dataven = Parcelas[i - 1].pedforpagpar_dataven.Value.AddDays(Data.FormaPagamento.forpag_diasintervalo);
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+
+    }
+
+    private async Task<bool> ConfirmarAlteracaoAsync(string ContextText)
+    {
+        await Task.Delay(100);
+
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { x => x.ContentText, ContextText },
+            { x => x.ButtonText, "Sim" },
+            { x => x.Color, Color.Success }
+        };
+
+        var options = new DialogOptions() { CloseOnEscapeKey = true };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Atenção", parameters, options);
+        var result = await dialog.Result;
+
+        return !result.Canceled;
+    }
+
+
+    public void HandleQtdeParcelasChanged(int newValue)
+    {
+        TotalParcelas = newValue;
+
+        var valor = decimal.Divide(Data.pedforpag_valor, newValue);
+        var agora = DateTime.Now;
+        var dataInicial = new DateTime(agora.Year, agora.Month, DiasInicio);
+
+        Parcelas.Clear();
+        for (int i = 1; i <= newValue; i++)
+        {
+            var novaParcela = new PedidosFormasPagamentoParcelas
+                {
+                    pedforpagpar_dataven = dataInicial,
+                    pedforpagpar_forpag_codigo = Data.FormaPagamento.forpag_codigo,
+                    pedforpagpar_parcela = i,
+                    pedforpagpar_parcelas = newValue,
+                    pedforpagpar_pedforpag_key = Data.pedforpag_key,
+                    pedforpagpar_titulo = $"CF0000-{i}/{newValue}",
+                    pedforpagpar_valor = valor,
+                };
+
+            Parcelas.Add(novaParcela);
+
+            dataInicial = dataInicial.AddDays(DiasIntervalo); // Corrigido o incremento da data
+        }
+    }
+
+    private void SaveParcelas()
+    {
+        MudDialog.Close(DialogResult.Ok(Parcelas));
+    }
+}

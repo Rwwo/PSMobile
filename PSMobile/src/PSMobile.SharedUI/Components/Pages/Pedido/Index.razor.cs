@@ -67,4 +67,9 @@ public class IndexPedidosPage : MyBaseComponent
         ServiceLocal.SetarPedido(input);
         Navigation.NavigateTo($"/pedidos/editar");
     }
+
+    public void GoToAddPedido()
+    {
+        Navigation.NavigateTo($"/pedidos/gravar");
+    }
 }

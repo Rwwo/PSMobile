@@ -5,7 +5,6 @@ namespace PSMobile.core.InputModel;
 
 public class CadastroInputModel : PSMobile.core.Entities.InputModel
 {
-    public CultureInfo _ptBR = CultureInfo.GetCultureInfo("pt-BR");
 
     // Dados de Identificação e Básicos
     public int Key { get; set; }

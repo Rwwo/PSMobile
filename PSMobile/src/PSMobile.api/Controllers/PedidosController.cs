@@ -54,7 +54,7 @@ public class PedidosController : MainController
     }
 
     [HttpPost("gravar-pedido")]
-    public async Task<IActionResult> Post([FromBody] PedidoInputModel entity)
+    public async Task<IActionResult> PostGravar([FromBody] PedidoInputModel entity)
     {
         if (!ModelState.IsValid)
         {
@@ -66,6 +66,23 @@ public class PedidosController : MainController
         }
 
         var command = new GravarPedidoCommand(entity);
+        var result = await _mediator.Send(command);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
+    [HttpPost("atualizar-pedido")]
+    public async Task<IActionResult> Post([FromBody] PedidoAtualizarInputModel entity)
+    {
+        if (!ModelState.IsValid)
+        {
+            var messages = ModelState
+                .SelectMany(ms => ms.Value.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(messages);
+        }
+
+        var command = new AtualizarPedidoCommand(entity);
         var result = await _mediator.Send(command);
         return CustomResponse(HttpStatusCode.OK, result);
     }

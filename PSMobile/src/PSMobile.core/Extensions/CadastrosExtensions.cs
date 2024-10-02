@@ -1,4 +1,6 @@
-﻿using PSMobile.core.Entities;
+﻿using MediatR.NotificationPublishers;
+
+using PSMobile.core.Entities;
 
 namespace PSMobile.core.Extensions;
 
@@ -135,5 +137,31 @@ public static class CadastrosExtensions
         credito.cad_cli_renda = updatedData.cad_cli_renda;
         credito.cad_cli_juros = updatedData.cad_cli_juros;
         credito.cad_cli_liberado = updatedData.cad_cli_liberado;
+    }
+
+
+    public static (bool, List<string>) ValidarClienteParaEmissaoDeNFE(this Cadastros? cadastros)
+    {
+        List<string> retorno = new() { "Para emissão de NFe é necessário informar os seguintes campos no cadastro deste cliente." };
+
+        if (cadastros.cad_key == 0)
+            return (false, retorno);
+
+        if (cadastros.CadastroEndereco?.cad_endereco.IsEmpty() ?? true)
+            retorno.Add("Endereço do cliente não cadastrado;");
+
+        if (cadastros.CadastroEndereco?.cad_bairro.IsEmpty() ?? true)
+            retorno.Add("Bairro do cliente não cadastrado;");
+
+        if (cadastros.CadastroEndereco?.cad_cep.IsEmpty() ?? true)
+            retorno.Add("CEP do cliente não cadastrado;");
+
+        if (cadastros.CadastroEndereco?.cad_cid_codigo is null)
+            retorno.Add("Cidade do cliente não cadastrada;");
+
+        if (cadastros.CadastroEndereco?.cad_ufs_codigo is null)
+            retorno.Add("Estado do cliente não cadastrado;");
+
+        return retorno.Count() > 1 ? (true, retorno) : (false, retorno);
     }
 }

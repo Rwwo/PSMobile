@@ -1,0 +1,132 @@
+<MudForm Class="ml-2">
+    <MudGrid Spacing="2">
+        <MudItem xs="12" md="6">
+            <MudAutocomplete MaxItems="50"
+                             T="FormasPagamento"
+                             SearchFunc="@SearchFormaPagamentoAsync"
+                             Dense="true"
+                             Margin="Margin.Dense"
+                             Variant="Variant.Outlined"
+                             ShowProgressIndicator="true"
+                             Class="mb-2"
+                             Value="@Data.FormaPagamento"
+                             ValueChanged="(FormasPagamento newValue) => HandleFormaPagamentoChanged(newValue)"
+                             Label="Forma Pagamento"
+                             Required="true"
+                             RequiredError="Informe!"
+                             AdornmentColor="Color.Primary" />
+        </MudItem>
+
+        <MudItem xs="8" md="4">
+            <MudNumericField Label="Valor R$:"
+                             T="Decimal"
+                             Min="0"
+                             HideSpinButtons="true"
+                             Variant="Variant.Text"
+                             Value="@Data.pedforpag_valor"
+                             ValueChanged="(decimal newValue) => AtualizarValorFormaPagamentoAsync(newValue)"
+                             Clearable />
+        </MudItem>
+
+        <MudItem xs="4" md="2">
+            <MudStack Row="true" Spacing="1">
+
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Size="Size.Medium"
+                               OnClick="@HandleDeleteClick" />
+
+                @if (IsEyeDisable)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye"
+                                   Size="Size.Medium"
+                                   OnClick="@HandleViewParcelasClick" />
+                }
+            </MudStack>
+        </MudItem>
+
+    </MudGrid>
+</MudForm>
+
+@code
+{
+    [Parameter]
+    [EditorRequired]
+    public List<FormasPagamento> Options { get; set; } = new();
+
+    [Parameter]
+    public PedidosFormasPagamento Data { get; set; }
+
+    public bool IsEyeDisable => Data.FormaPagamento?.forpag_parcelas > 1;
+
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnEyeFishClick { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback<Guid> OnDeleteClick { get; set; }
+
+    private async Task HandleViewParcelasClick()
+    {
+        await OnEyeFishClick.InvokeAsync();
+    }
+
+    private async Task HandleDeleteClick()
+    {
+        await OnDeleteClick.InvokeAsync();
+    }
+
+    private async Task AtualizarValorFormaPagamentoAsync(decimal input)
+    {
+        Data.pedforpag_valor = input;
+        AtualizarParcelas();
+    }
+
+    private async Task<IEnumerable<FormasPagamento>> SearchFormaPagamentoAsync(string value, CancellationToken cancellationToken)
+    {
+        await Task.Delay(0);
+
+        if (string.IsNullOrEmpty(value))
+            return Options;
+
+        return Options.Where(d => d.forpag_codigo.ToString().Contains(value) || d.forpag_nome.Contains(value));
+    }
+
+    private void HandleFormaPagamentoChanged(FormasPagamento newValue)
+    {
+        Data.FormaPagamento = newValue;
+        Data.pedforpag_forpag_codigo = newValue.forpag_codigo;
+
+        // Atualiza as parcelas com base no valor da forma de pagamento
+        AtualizarParcelas();
+    }
+
+    private void AtualizarParcelas()
+    {
+        int DiasInicio = Data.FormaPagamento.forpag_diasinicio == 0 ? 1 : Data.FormaPagamento.forpag_diasinicio;
+        int DiasIntervalo = Data.FormaPagamento.forpag_diasintervalo == 0 ? 1 : Data.FormaPagamento.forpag_diasintervalo;
+        int MaxTotalParcelas = Data.FormaPagamento.forpag_parcelas;
+
+        var agora = DateTime.Now;
+        var dataInicial = agora;
+
+        if (MaxTotalParcelas > 1)
+            dataInicial = new DateTime(agora.Year, agora.Month, DiasInicio);
+
+        Data.PedidosFormasPagamentoParcelas = new List<PedidosFormasPagamentoParcelas>()
+        {
+            new PedidosFormasPagamentoParcelas
+            {
+                pedforpagpar_dataven = dataInicial,
+                pedforpagpar_forpag_codigo = Data.FormaPagamento.forpag_codigo,
+                pedforpagpar_parcela = 1,
+                pedforpagpar_parcelas = 1,
+                pedforpagpar_pedforpag_key = Data.pedforpag_key,
+                pedforpagpar_titulo = $"CF0000-{1}/{1}",
+                pedforpagpar_valor = Data.pedforpag_valor,
+                PedidosFormasPagamento = Data
+            }
+        };
+    }
+}

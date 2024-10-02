@@ -1,11 +1,14 @@
 <MudDialog>
     <DialogContent>
         <MudText>@ContentText</MudText>
-        <MudNumericField @bind-Value="Qtde" Label="Quantidade" Min="1" Immediate="true" />
+        <MudNumericField @bind-Value="Qtde" 
+                         Label="Quantidade" 
+                         Min="1" 
+                         Immediate="true" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled"  OnClick="Submit">@ButtonText</MudButton>
     </DialogActions>
 </MudDialog>
 
