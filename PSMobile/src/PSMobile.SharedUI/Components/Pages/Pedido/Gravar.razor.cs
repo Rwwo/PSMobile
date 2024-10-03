@@ -60,6 +60,7 @@ public class GravarPedidoPage : MyBaseComponent
 
     private int emp_key = 0;
     public bool IsBothNFE_NFCe { get; set; } = false;
+    public bool IsOnlyNFCe { get; private set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -71,7 +72,8 @@ public class GravarPedidoPage : MyBaseComponent
         FuncionariosPaginated = await UowAPI.FuncionariosService.GetAllAsync(1000, 1);
         FormasPagamentoPaginated = await UowAPI.FormasPagamentosService.GetAllAsync(100, 1);
 
-        IsBothNFE_NFCe = PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0;
+        IsBothNFE_NFCe = true;// PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0;
+        IsOnlyNFCe = !(PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0);
 
         await InvokeAsync(StateHasChanged);
         await base.OnInitializedAsync();
