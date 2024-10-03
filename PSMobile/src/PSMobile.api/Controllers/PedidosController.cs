@@ -9,7 +9,7 @@ using PSMobile.core.InputModel;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/pedidos")]
 public class PedidosController : MainController
 {
     private readonly IMediator _mediator;
@@ -69,6 +69,42 @@ public class PedidosController : MainController
         var result = await _mediator.Send(command);
         return CustomResponse(HttpStatusCode.OK, result);
     }
+
+    [HttpPost("gravar-pedido-formapagamento")]
+    public async Task<IActionResult> PostGravar([FromBody] List<PedidoFormasPagamentoInputModel> entity)
+    {
+        if (!ModelState.IsValid)
+        {
+            var messages = ModelState
+                .SelectMany(ms => ms.Value.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(messages);
+        }
+
+        var command = new GravarPedidoFormaPagamentoCommand(entity);
+        var result = await _mediator.Send(command);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
+    [HttpDelete("deletar-formapagamento-pedido/pedkey/{pedKey:int}")]
+    public async Task<IActionResult> DeleteFromPedKey(int pedKey)
+    {
+
+        var command = new DeletarFormasPagamentoByPedKeyCommand(pedKey);
+        var result = await _mediator.Send(command);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
+    [HttpDelete("deletar-formapagamento-pedido/pedforpag/{pedForPagKey:int}")]
+    public async Task<IActionResult> DeleteFromPedForPagKey(int pedForPagKey)
+    {
+
+        var command = new DeletarFormasPagamentoByPedForPagKeyCommand(pedForPagKey);
+        var result = await _mediator.Send(command);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
 
     [HttpPost("atualizar-pedido")]
     public async Task<IActionResult> Post([FromBody] PedidoAtualizarInputModel entity)

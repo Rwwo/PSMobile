@@ -1,9 +1,13 @@
-﻿using PSMobile.core.Entities;
-using PSMobile.SharedKernel.Utilities.Services;
+﻿using PSMobile.SharedKernel.Utilities.Services;
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
-public interface IBaseWriteService<T, Q> where T : class
+public interface IBaseWriteService<T, Q> where T : class where Q : class
 {
-    public abstract Task<Result<T>> GravarAsync(Q entity);
+    Task<Result<T>> GravarAsync(Q entity);
+}
+
+public interface IBaseWriteServiceWithDelete<T, Q, R> : IBaseWriteService<T, Q> where T : class where Q : class where R : class
+{
+    Task DeleteAsync(R entity);
 }

@@ -16,7 +16,7 @@ public class PdvService : IPdvService
     public async Task<PaginatedResult<Pdvs>> GetAllAsync(int empKey, int pageSize = 1, int pageNumber = 10000)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Pdvs>>($"api/Pdvs/all/{empKey}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Pdvs>>($"api/v1/pdvs/all/{empKey}{query}");
     }
 
     

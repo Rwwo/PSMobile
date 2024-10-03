@@ -13,18 +13,19 @@ public class PedidoInputModel : PSMobile.core.Entities.InputModel
         _ped_emp_key = ped_emp_key;
     }
 
+    [JsonIgnore] 
     public (bool, List<string>) IsClientInvalid => Cliente.ValidarClienteParaEmissaoDeNFE();
 
-    [JsonIgnore]
+    [JsonIgnore] 
     public Cadastros Cliente { get; set; } = new();
     
     [JsonIgnore]
     public Funcionarios Funcionario { get; set; } = new();
 
-    [JsonIgnore]
+    [JsonIgnore] 
     public Pedidos? CurrentPedido { get; set; } = new();
 
-    [JsonIgnore]
+    [JsonIgnore] 
     public ICollection<PedidosFormasPagamento>? PedidosFormasPagamento { get; set; } = new List<PedidosFormasPagamento>();
 
     public bool HasClient => Cliente.cad_key == 0 ? false : true;
@@ -47,9 +48,9 @@ public class PedidoInputModel : PSMobile.core.Entities.InputModel
     public TipoRetirada _ped_retira { get; set; } = TipoRetirada.EntregaNoCliente;
     public TipoVenda _ped_iddest { get; set; } = TipoVenda.VendaParaConsumidorFinal_UsoEConsumo;
     public int _ped_consumidorfinal { get; set; } = 0;
-
-    public decimal TotalPedido => CurrentPedido?.PedidosItens?.Sum(t => t.pedite_total) ?? 0;
-    public decimal TotalPedidoComDesconto => CalcularVlrFinalPedidoComDesconto() ?? 0;
+    
+    [JsonIgnore] public decimal TotalPedido => CurrentPedido?.PedidosItens?.Sum(t => t.pedite_total) ?? 0;
+    [JsonIgnore] public decimal TotalPedidoComDesconto => CalcularVlrFinalPedidoComDesconto() ?? 0;
 
     public decimal? CalcularVlrFinalPedidoComDesconto()
     {
@@ -66,9 +67,12 @@ public class PedidoInputModel : PSMobile.core.Entities.InputModel
         var ret = TotalPedido - (TotalPedido * DescontoPercentual / 100);
         return ret;
     }
-    public decimal? DescontoReais { get; set; }
-    public decimal? DescontoPercentual { get; set; }
-    public decimal SaldoRestante => CalcularSaldoRestante();
+    
+    [JsonIgnore] public decimal? DescontoReais { get; set; }
+    
+    [JsonIgnore] public decimal? DescontoPercentual { get; set; }
+    
+    [JsonIgnore] public decimal SaldoRestante => CalcularSaldoRestante();
 
     public bool CanFinish => SaldoRestante == 0;
     private decimal CalcularSaldoRestante()

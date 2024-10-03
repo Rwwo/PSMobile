@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
 using MudBlazor.Services;
+
 using MudExtensions.Services;
 
 using PSMobile.SharedKernel.Utilities.Interfaces;
@@ -21,6 +22,7 @@ public static class SharedKernelModule
         });
 
         services.AddSingleton<IUowAPI, UowAPI>();
+
 
         services.AddSingleton<IPssysValidacoesService, PssysValidacoesService>();
 

@@ -191,6 +191,24 @@
         }
     }
 
+    private async Task<bool> ConfirmarAlteracaoAsync(string ContextText)
+    {
+        await Task.Delay(100);
+
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { x => x.ContentText, ContextText },
+            { x => x.ButtonText, "Sim" },
+            { x => x.Color, Color.Success }
+        };
+
+        var options = new DialogOptions() { CloseOnEscapeKey = true };
+
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Atenção", parameters, options);
+        var result = await dialog.Result;
+
+        return !result.Canceled;
+    }
 
     private async Task HandleDataVencChangedAsync(PedidosFormasPagamentoParcelas item, DateTime? newDate)
     {
@@ -217,7 +235,7 @@
                     continue;
                 }
 
-                novoItem.pedforpagpar_dataven = Parcelas[i - 1].pedforpagpar_dataven.Value.AddDays(Data.FormaPagamento.forpag_diasintervalo);
+                novoItem.pedforpagpar_dataven = Parcelas[i - 1].pedforpagpar_dataven.AddDays(Data.FormaPagamento.forpag_diasintervalo);
             }
 
 
@@ -229,24 +247,7 @@
 
     }
 
-    private async Task<bool> ConfirmarAlteracaoAsync(string ContextText)
-    {
-        await Task.Delay(100);
-
-        var parameters = new DialogParameters<ConfirmDialog>
-        {
-            { x => x.ContentText, ContextText },
-            { x => x.ButtonText, "Sim" },
-            { x => x.Color, Color.Success }
-        };
-
-        var options = new DialogOptions() { CloseOnEscapeKey = true };
-
-        var dialog = await DialogService.ShowAsync<ConfirmDialog>("Atenção", parameters, options);
-        var result = await dialog.Result;
-
-        return !result.Canceled;
-    }
+    
 
 
     public void HandleQtdeParcelasChanged(int newValue)

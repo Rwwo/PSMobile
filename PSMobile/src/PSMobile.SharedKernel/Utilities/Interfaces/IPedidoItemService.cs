@@ -1,4 +1,6 @@
-﻿using PSMobile.core.Entities;
+﻿using MediatR;
+
+using PSMobile.core.Entities;
 using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
@@ -9,6 +11,4 @@ public interface IPedidoItemService : IBaseWriteService<PedidosItemGravarRetorno
 {
     Task<PaginatedResult<PedidosItens>> GetAllByNumPedAsync(int empKey, int numPed, int pageSize = 10, int pageNumber = 1);
 }
-
-
 

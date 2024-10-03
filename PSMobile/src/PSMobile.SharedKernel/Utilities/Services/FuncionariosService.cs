@@ -17,20 +17,20 @@ public class FuncionariosService : IFuncionariosService
     public async Task<PaginatedResult<Funcionarios>> GetAllAsync(int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/Funcionarios/all{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/v1/funcionarios/all{query}");
     }
 
     public async Task<PaginatedResult<Funcionarios>> FuncionariosByName(string name, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/Funcionarios/search-by-name/{name}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/v1/funcionarios/search-by-name/{name}{query}");
     }
 
 
     public async Task<PaginatedResult<Funcionarios>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/Funcionarios/{id}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Funcionarios>>($"api/v1/funcionarios/{id}{query}");
     }
 }
 

@@ -8,6 +8,8 @@ public interface IUnitOfWork
     IFuncionariosRepository FuncionariosRepository { get; }
     IGeraisRepository GeraisRepository { get; }
     IPdvsRepository PdvsRepository { get; }
+    IPedidosFormasPagamentoRepository PedidosFormasPagamentoRepository { get; }
+    IPedidosFormasPagamentoParcelasRepository PedidosFormasPagamentoParcelasRepository { get; }
     IPedidosRepository PedidosRepository { get; }
     IPedidosItemRepository PedidosItemRepository { get; }
     IProdutosEmpresasRepository ProdutosEmpresasRepository { get; }

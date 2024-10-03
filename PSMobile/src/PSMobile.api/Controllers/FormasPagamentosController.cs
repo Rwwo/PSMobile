@@ -7,7 +7,7 @@ using PSMobile.application.Queries.FormasPagamentos;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/formaspagamentos")]
 public class FormasPagamentosController : MainController
 {
     private readonly IMediator _mediator;

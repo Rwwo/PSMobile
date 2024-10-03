@@ -16,13 +16,13 @@ public class GeraisService : IGeraisService
     public async Task<PaginatedResult<Gerais>> GetAllAsync(int pageSize = 1, int pageNumber = 10000)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Gerais>>($"api/Gerais/all{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Gerais>>($"api/v1/gerais/all{query}");
     }
 
     public async Task<PaginatedResult<Gerais>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Gerais>>($"api/Gerais/{id}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Gerais>>($"api/v1/gerais/{id}{query}");
     }
 }
 

@@ -7,7 +7,7 @@ using PSMobile.application.Queries.ProdutosEmpresas;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/produtosempresas")]
 public class ProdutosEmpresasController : MainController
 {
     private readonly IMediator _mediator;

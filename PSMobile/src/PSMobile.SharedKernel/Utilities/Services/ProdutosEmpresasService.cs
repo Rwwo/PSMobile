@@ -16,13 +16,13 @@ public class ProdutosEmpresasService : IProdutosEmpresasService
     public async Task<PaginatedResult<ProdutosEmpresas>> GetAllAsync(int empKey, int pageSize = 1, int pageNumber = 10000)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<ProdutosEmpresas>>($"api/ProdutosEmpresas/all/{empKey}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<ProdutosEmpresas>>($"api/v1/produtosempresas/all/{empKey}{query}");
     }
 
     public async Task<PaginatedResult<ProdutosEmpresas>> GetAllAsync(int empKey, string custom, int pageSize = 1, int pageNumber = 10000)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<ProdutosEmpresas>>($"api/ProdutosEmpresas/all/{empKey}/custom/{custom}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<ProdutosEmpresas>>($"api/v1/produtosempresas/all/{empKey}/custom/{custom}{query}");
     }
 
 

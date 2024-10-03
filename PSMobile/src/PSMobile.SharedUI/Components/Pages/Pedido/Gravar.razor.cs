@@ -1,5 +1,4 @@
-﻿using System.Linq;
-
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 using MudBlazor;
@@ -8,7 +7,6 @@ using MudExtensions;
 using MudExtensions.Utilities;
 
 using PSMobile.core.Entities;
-using PSMobile.core.Extensions;
 using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
@@ -52,12 +50,12 @@ public class GravarPedidoPage : MyBaseComponent
 
     #endregion
 
+    [Inject] private ConfirmationDialogService ConfirmationDialogService { get; set; }
     public PedidoInputModel PedidoInputModel { get; set; }
     public PaginatedResult<PedidosItens> PedidosItensPaginated { get; set; }
     public PaginatedResult<Funcionarios> FuncionariosPaginated { get; set; }
     public PaginatedResult<Pdvs> PdvsPaginated { get; set; }
     public PaginatedResult<FormasPagamento> FormasPagamentoPaginated { get; set; }
-
 
 
     private int emp_key = 0;
@@ -80,7 +78,7 @@ public class GravarPedidoPage : MyBaseComponent
 
     }
 
-    public async Task ValidarNumeroDocumento()
+    public async Task ValidatedNumDocAsync()
     {
         var aux = PedidoInputModel.Cliente.cad_cnpj;
 
@@ -92,7 +90,7 @@ public class GravarPedidoPage : MyBaseComponent
                 var ret = await UowAPI.CadastroService.GetByDocNumberAsync(aux);
 
                 if (ret.Items.Count >= 1)
-                    SetarDadosCliente(ret.Items[0]);
+                    SetCustomerData(ret.Items[0]);
             }
         }
         else
@@ -101,12 +99,44 @@ public class GravarPedidoPage : MyBaseComponent
         }
     }
 
-    private void SetarDadosCliente(Cadastros Cliente)
+    private void SetCustomerData(Cadastros Cliente)
     {
         PedidoInputModel.Cliente = Cliente;
     }
 
-    public void FinalizarPedido()
+    public async void SaveFormasPagamentoAsync()
+    {
+        if (PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Any() && PedidoInputModel.CanFinish)
+        {
+            await UowAPI.PedidoFormaPagamentoService.DeleteAsync(PedidoInputModel.CurrentPedido);
+
+            var input = PedidoInputModel.CurrentPedido.PedidosFormasPagamento
+                                                        .Select(x => new PedidoFormasPagamentoInputModel()
+                                                        {
+                                                            pedforpag_forpag_codigo = x.pedforpag_forpag_codigo,
+                                                            pedforpag_ped_key = x.pedforpag_ped_key,
+                                                            pedforpag_valor = x.pedforpag_valor,
+                                                            ParcelasInputModel = x.PedidosFormasPagamentoParcelas.Select(y => new PedidoFormasPagamentoParcelaInputModel()
+                                                            {
+                                                                pedforpagpar_dataven = y.pedforpagpar_dataven,
+                                                                pedforpagpar_forpag_codigo = y.pedforpagpar_forpag_codigo,
+                                                                pedforpagpar_parcela = y.pedforpagpar_parcela,
+                                                                pedforpagpar_parcelas = y.pedforpagpar_parcelas,
+                                                                pedforpagpar_pedforpag_key = y.pedforpagpar_pedforpag_key,
+                                                                pedforpagpar_titulo = y.pedforpagpar_titulo,
+                                                                pedforpagpar_valor = y.pedforpagpar_valor,
+                                                            }).ToList()
+                                                        }).ToList();
+
+            await UowAPI.PedidoFormaPagamentoService.GravarAsync(input);
+        }
+        else
+        {
+            Snackbar.Add("Você precisa completar as formas de pagamento", Severity.Info);
+        }
+    }
+
+    public void FinishPedido()
     {
         if (PedidoInputModel.CanFinish)
         {
@@ -118,7 +148,8 @@ public class GravarPedidoPage : MyBaseComponent
         }
 
     }
-    public async void NewFormasPagamentos()
+
+    public async void NewFormasPagamentosAsync()
     {
         if (PedidoInputModel.SaldoRestante == 0)
         {
@@ -156,13 +187,54 @@ public class GravarPedidoPage : MyBaseComponent
         await InvokeAsync(StateHasChanged);
     }
 
-    public async void ApagarFormasExistentesAsync()
+    public async void DeleteFormasPagamentoAsync()
     {
-        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Clear();
-        await InvokeAsync(StateHasChanged);
+        if (PedidoInputModel.DescontoPercentual.HasValue || PedidoInputModel.DescontoReais.HasValue)
+        {
+            if (PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Count() > 0)
+            {
+                var confirmed = await ConfirmationDialogService.ConfirmAsync("Atenção", "As formas de pagamento serão apagadas");
+                if (!confirmed)
+                    return;
+
+                await UowAPI.PedidoFormaPagamentoService.DeleteAsync(PedidoInputModel.CurrentPedido);
+                await UpdatePedidoInMemoryAsync(PedidoInputModel.CurrentPedido.ped_key);
+            }
+            else
+            {
+                PedidoInputModel.PedidosFormasPagamento.Clear();
+            }
+
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
-    public async Task<DialogResult> ViewParcelasPagamento(PedidosFormasPagamento input)
+    public async Task DeleteFormaPagamentoAsync(PedidosFormasPagamento input)
+    {
+        var confirmationMessage = "Confirma a exclusão da forma de pagamento?";
+        var confirmationResult = await ConfirmationDialogService.ConfirmAsync("Atenção", confirmationMessage);
+
+        if (!confirmationResult)
+        {
+            if (input.pedforpag_key != 0)
+            {
+                // Deletar apenas uma forma de pagamento persistida
+                await UowAPI.PedidoFormaPagamentoService.DeleteAsync(input);
+                await UpdatePedidoInMemoryAsync(PedidoInputModel.CurrentPedido.ped_key);
+            }
+            else
+            {
+                // Remover a forma de pagamento em memória
+                PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Remove(input);
+            }
+
+            // Atualizar a interface
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+
+    public async Task<DialogResult> ViewParcelasFormaPagamentoAsync(PedidosFormasPagamento input)
     {
         var parameters = new DialogParameters<FormaPagamentoParcelasDialog>()
         {
@@ -189,19 +261,13 @@ public class GravarPedidoPage : MyBaseComponent
         return DialogResult.Cancel();
 
     }
-    public async void DeleteFormaPagamento(PedidosFormasPagamento input)
-    {
-        PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Remove(input);
-        await InvokeAsync(StateHasChanged);
-    }
 
-    public async Task SearchProduct()
+    public async Task SearchProductsDialogAsync()
     {
         try
         {
-            await SalvarPedido();
-            await AdicionarProdutoAoPedidoAsync();
-
+            await SavePedidoAsync();
+            await AddNewProductInPedidoAsync();
         }
         catch (Exception ex)
         {
@@ -209,7 +275,7 @@ public class GravarPedidoPage : MyBaseComponent
         }
     }
 
-    private async Task AtualizarPedidoLocal(int pedKey)
+    private async Task UpdatePedidoInMemoryAsync(int pedKey)
     {
         var dadoPedido = await UowAPI.PedidoService.GetByPedKeyAsync(emp_key, pedKey);
         PedidoInputModel.CurrentPedido = dadoPedido.Items.FirstOrDefault();
@@ -217,22 +283,22 @@ public class GravarPedidoPage : MyBaseComponent
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task<Result<PedidosGravarRetornoFuncao>> GravarPedidoAsync()
+    private async Task<Result<PedidosGravarRetornoFuncao>> GravarPedidoServiceAsync()
     {
         return await UowAPI.PedidoService.GravarAsync(PedidoInputModel);
     }
 
-    private async Task AdicionarProdutoAoPedidoAsync()
+    private async Task AddNewProductInPedidoAsync()
     {
-        var dialogResult = await AbrirDialogoDeBuscaDeProdutoAsync();
+        var dialogResult = await OpenSearchProductDialogAsync();
 
         if (!dialogResult.Canceled && dialogResult.Data is AddItemWithQtyInputModel input)
         {
-            await InserirItemAoPedidoAsync(input);
+            await AddProductAsync(input);
         }
     }
 
-    private async Task<DialogResult> AbrirDialogoDeBuscaDeProdutoAsync()
+    private async Task<DialogResult> OpenSearchProductDialogAsync()
     {
         var parameters = new DialogParameters();
 
@@ -248,7 +314,7 @@ public class GravarPedidoPage : MyBaseComponent
         return await dialog.Result;
     }
 
-    private async Task InserirItemAoPedidoAsync(AddItemWithQtyInputModel inputItem)
+    private async Task AddProductAsync(AddItemWithQtyInputModel inputItem)
     {
         var input = new PedidoItemInputModel()
         {
@@ -274,21 +340,19 @@ public class GravarPedidoPage : MyBaseComponent
             _comput = Environment.MachineName,
         };
 
-        var ret = await UowAPI.PedidoItemService.GravarAsync(input);
+        var resultPedidoItemService = await UowAPI.PedidoItemService.GravarAsync(input);
 
-        if (ret.IsSuccess)
+        if (resultPedidoItemService.IsSuccess)
         {
-            await AtualizarPedidoLocal((int)PedidoInputModel._ped_key);
+            await UpdatePedidoInMemoryAsync((int)PedidoInputModel._ped_key);
         }
         else
         {
-            HandleError(ret.Errors);
+            HandleError(resultPedidoItemService.Errors);
         }
     }
 
-
-
-    public async Task SearchCustomer()
+    public async Task SearchCustomerDialogAsync()
     {
         var parameters = new DialogParameters();
 
@@ -305,11 +369,11 @@ public class GravarPedidoPage : MyBaseComponent
 
         if (!result.Canceled && result.Data is Cadastros clienteSelecionado)
         {
-            SetarDadosCliente(clienteSelecionado);
+            SetCustomerData(clienteSelecionado);
         }
     }
 
-    public async Task<IEnumerable<Funcionarios>> SearchEmployee(string value, CancellationToken token)
+    public async Task<IEnumerable<Funcionarios>> SearchEmployeeAsync(string value, CancellationToken token)
     {
         // In real life use an asynchronous function for fetching data from an api.
         await Task.Delay(5, token);
@@ -368,7 +432,7 @@ public class GravarPedidoPage : MyBaseComponent
 
     public async Task<bool> CheckChange(StepChangeDirection direction, int targetIndex)
     {
-        await SalvarPedido();
+        await SavePedidoAsync();
 
         if (_checkValidationBeforeComplete == true)
         {
@@ -413,18 +477,18 @@ public class GravarPedidoPage : MyBaseComponent
         await Task.Delay(5);
     }
 
-    private async Task SalvarPedido()
+    private async Task SavePedidoAsync()
     {
         try
         {
-            var result = await GravarPedidoAsync();
+            var result = await GravarPedidoServiceAsync();
             if (!result.IsSuccess)
                 HandleError(result.Errors);
 
             PedidoInputModel._ped_numero = result.Data._ped_numero;
             PedidoInputModel._ped_key = result.Data._ped_key;
 
-            await AtualizarPedidoLocal(result.Data._ped_key);
+            await UpdatePedidoInMemoryAsync(result.Data._ped_key);
 
 
 

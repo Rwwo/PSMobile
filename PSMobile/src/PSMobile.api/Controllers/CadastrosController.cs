@@ -12,7 +12,7 @@ using PSMobile.core.Interfaces;
 namespace PSMobile.api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/cadastros")]
     public class CadastrosController : MainController
     {
         private readonly IMediator _mediator;

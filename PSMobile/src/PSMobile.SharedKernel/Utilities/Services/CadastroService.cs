@@ -20,24 +20,24 @@ public class CadastroService : ICadastroService
     public async Task<PaginatedResult<Cadastros>> GetAllAsync(int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/all{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/v1/cadastros/all{query}");
     }
     public async Task<PaginatedResult<Cadastros>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/{id}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/v1/cadastros/{id}{query}");
     }
 
     public async Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/custom/{custom}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/v1/cadastros/custom/{custom}{query}");
     }
 
     public async Task<PaginatedResult<Cadastros>> GetByDocNumberAsync(string NumDoc, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/Cadastros/numdoc/{NumDoc}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<Cadastros>>($"api/v1/cadastros/numdoc/{NumDoc}{query}");
     }
 
 
@@ -45,7 +45,7 @@ public class CadastroService : ICadastroService
     {
         cadastro.CliDataCad = DateTime.Now;
 
-        var response = await _httpClient.PostAsJsonAsync("api/Cadastros", cadastro);
+        var response = await _httpClient.PostAsJsonAsync("api/v1/cadastros", cadastro);
         if (response.IsSuccessStatusCode)
         {
             var cadastroResult = await response.Content.ReadFromJsonAsync<Cadastros>();

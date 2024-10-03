@@ -17,12 +17,12 @@ public class FormasPagamentosService : IFormasPagamentosService
     public async Task<PaginatedResult<FormasPagamento>> GetAllAsync(int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<FormasPagamento>>($"api/FormasPagamentos/all{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<FormasPagamento>>($"api/v1/formaspagamentos/all{query}");
     }
 
     public async Task<PaginatedResult<FormasPagamento>> GetByIdAsync(int id, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<FormasPagamento>>($"api/FormasPagamentos/{id}{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<FormasPagamento>>($"api/v1/formaspagamentos/{id}{query}");
     }
 }

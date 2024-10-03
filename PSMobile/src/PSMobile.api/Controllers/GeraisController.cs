@@ -7,7 +7,7 @@ using PSMobile.application.Queries.Gerais;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/gerais")]
 public class GeraisController : MainController
 {
     private readonly IMediator _mediator;

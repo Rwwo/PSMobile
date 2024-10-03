@@ -7,7 +7,7 @@ using PSMobile.application.Queries.Pdvs;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/pdvs")]
 public class PdvsController : MainController
 {
     private readonly IMediator _mediator;

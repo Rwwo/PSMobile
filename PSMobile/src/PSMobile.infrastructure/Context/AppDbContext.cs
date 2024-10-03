@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<Gerais> Gerais { get; set; }
     public DbSet<Pedidos> Pedidos { get; set; }
     public DbSet<PedidosFormasPagamento> PedidosFormasPagamento { get; set; }
+    public DbSet<PedidosFormasPagamentoParcelas> PedidosFormasPagamentoParcelas { get; set; }
     public DbSet<PedidosItens> PedidosItens { get; set; }
     public DbSet<Pdvs> Pdvs { get; set; }
     public DbSet<Produtos> Produtos { get; set; }

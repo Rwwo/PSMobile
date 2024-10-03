@@ -15,5 +15,5 @@ public class PedidosFormasPagamento : Entity
 
     public FormasPagamento? FormaPagamento { get; set; } = null;
     public Pedidos Pedido { get; set; } = null!;
-    public ICollection<PedidosFormasPagamentoParcelas>? PedidosFormasPagamentoParcelas { get; set; } = null;
+    public List<PedidosFormasPagamentoParcelas> PedidosFormasPagamentoParcelas { get; set; } = new();
 }

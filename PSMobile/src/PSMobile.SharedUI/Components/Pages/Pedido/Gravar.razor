@@ -47,14 +47,14 @@
                                                 <MudTextField T="string"
                                                               Label="CPF/CNPJ"
                                                               @bind-Value="PedidoInputModel.Cliente.cad_cnpj"
-                                                              OnBlur="ValidarNumeroDocumento"
+                                                              OnBlur="ValidatedNumDocAsync"
                                                               For="@(() => PedidoInputModel.Cliente.cad_cnpj)"
                                                               Variant="Variant.Text"
                                                               HelperText="Nº do Documento"
                                                               Clearable />
                                             </MudItem>
                                             <MudItem xs="1" sm="1" md="1" Class="d-flex align-center">
-                                                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="@SearchCustomer"></MudIconButton>
+                                                <MudIconButton Icon="@Icons.Material.Filled.Search" OnClick="@SearchCustomerDialogAsync"></MudIconButton>
                                             </MudItem>
                                         </MudGrid>
 
@@ -79,7 +79,7 @@
                                                              Label="Vendedor"
                                                              @bind-Value="PedidoInputModel.Funcionario"
                                                              HelperText="Selecione o Vendedor - Caso necessário"
-                                                             SearchFunc="@SearchEmployee"
+                                                             SearchFunc="@SearchEmployeeAsync"
                                                              Clearable />
                                         </MudItem>
 
@@ -153,7 +153,7 @@
                                         <MudStack Row="true" Justify="Justify.FlexEnd">
                                             <MudFab Color="Color.Primary"
                                                     Size="Size.Medium"
-                                                    @onclick="@SearchProduct"
+                                                    @onclick="@SearchProductsDialogAsync"
                                                     StartIcon="@Icons.Material.Filled.Add" />
 
                                             <MudFab Color="Color.Primary"
@@ -207,25 +207,23 @@
                                                             <MudCardContent>
                                                                 <MudStack Spacing="2">
                                                                     <!-- Campo Desconto % -->
-                                                                    <MudNumericField Label="(-) Desconto %:"
+                                                                    <MudNumericField Label="(-) Desconto em percentual (%):"
                                                                                      Min="0" Max="100"
                                                                                      Variant="Variant.Text"
                                                                                      HideSpinButtons="true"
                                                                                      @bind-Value="@PedidoInputModel.DescontoPercentual"
-                                                                                     OnBlur="@ApagarFormasExistentesAsync"
-                                                                                     Disabled="@PedidoInputModel.DescontoReais.HasValue"
-                                                                                     Clearable />
+                                                                                     OnBlur="@DeleteFormasPagamentoAsync"
+                                                                                     Disabled="@PedidoInputModel.DescontoReais.HasValue" />
 
                                                                     <!-- Campo Desconto R$ -->
-                                                                    <MudNumericField Label="(-) Desconto R$:"
+                                                                    <MudNumericField Label="(-) Desconto em reais (R$):"
                                                                                      Min="0" Max="@PedidoInputModel.TotalPedido"
                                                                                      HideSpinButtons="true"
-                                                                                     OnBlur="@ApagarFormasExistentesAsync"
+                                                                                     OnBlur="@DeleteFormasPagamentoAsync"
                                                                                      Variant="Variant.Text"
                                                                                      Disabled="@PedidoInputModel.DescontoPercentual.HasValue"
                                                                                      @bind-Value="@PedidoInputModel.DescontoReais"
-                                                                                     Culture="@PedidoInputModel._ptBR"
-                                                                                     Clearable />
+                                                                                     Culture="@PedidoInputModel._ptBR" />
 
                                                                     <!-- Total a Pagar -->
                                                                     <MudText Typo="Typo.h5"
@@ -249,22 +247,37 @@
                                                                         {
                                                                             <FormaPagamento Options="@FormasPagamentoPaginated.Items"
                                                                                             Data="@opt"
-                                                                                            OnEyeFishClick="@(() =>ViewParcelasPagamento(opt))"
-                                                                                            OnDeleteClick="@(() => DeleteFormaPagamento(opt))" />
+                                                                                            OnEyeFishClick="@(() =>ViewParcelasFormaPagamentoAsync(opt))"
+                                                                                            OnDeleteClick="@(() => DeleteFormaPagamentoAsync(opt))" />
                                                                         }
                                                                     </CascadingValue>
 
 
-                                                                    <!-- Botão Adicionar Forma de Pagamento -->
-                                                                    <MudButton StartIcon="@Icons.Material.Outlined.Add"
-                                                                               IconSize="Size.Large"
-                                                                               Variant="Variant.Outlined"
-                                                                               FullWidth="true"
-                                                                               Class="mt-2 border-dashed border-2 mud-border-secundary"
-                                                                               Color="Color.Primary"
-                                                                               @onclick="@NewFormasPagamentos">
-                                                                        Adicionar Forma Pagamento
-                                                                    </MudButton>
+                                                                    <!-- MudGrid para adicionar botões lado a lado -->
+                                                                    <MudGrid>
+                                                                        <MudItem xs="9" >
+                                                                            <!-- Botão Adicionar Forma de Pagamento -->
+                                                                            <MudButton StartIcon="@Icons.Material.Outlined.Add"
+                                                                                       IconSize="Size.Large"
+                                                                                       Variant="Variant.Outlined"
+                                                                                       Class="border-dashed border-2 mud-border-secundary"
+                                                                                       Color="Color.Primary"
+                                                                                       @onclick="@NewFormasPagamentosAsync">
+                                                                                Adicionar Forma Pagamento
+                                                                            </MudButton>
+                                                                        </MudItem>
+
+                                                                        <MudItem xs="3" >
+                                                                            <!-- Botão Salvar Pedido -->
+                                                                            <MudButton StartIcon="@Icons.Material.Outlined.Save"
+                                                                                       IconSize="Size.Large"
+                                                                                       Variant="Variant.Filled"
+                                                                                       Color="Color.Info"
+                                                                                       @onclick="@SaveFormasPagamentoAsync">
+                                                                                Salvar
+                                                                            </MudButton>
+                                                                        </MudItem>
+                                                                    </MudGrid>
 
                                                                     <!-- Botão Finalizar Pedido -->
                                                                     <MudButton StartIcon="@Icons.Material.Outlined.ArrowOutward"
@@ -273,7 +286,7 @@
                                                                                Color="Color.Success"
                                                                                FullWidth="true"
                                                                                Class="mt-2"
-                                                                               @onclick="@FinalizarPedido">
+                                                                               @onclick="@FinishPedido">
                                                                         Finalizar Pedido
                                                                     </MudButton>
                                                                 </MudStack>
@@ -306,7 +319,7 @@
                                                     else
                                                     {
                                                         <MudGrid>
-                                                            <MudItem xs="12" sm="12" md="12" lg="12">
+                                                            <MudItem xs="12" sm="12" md="6" lg="6">
                                                                 <MudSelect Variant="Variant.Outlined"
                                                                            T="TipoRetirada"
                                                                            @bind-Value="@PedidoInputModel._ped_retira"
@@ -324,7 +337,7 @@
 
                                                             @if (PedidoInputModel.ClientIsContribuinte)
                                                             {
-                                                                <MudItem xs="12" sm="12" md="12" lg="12">
+                                                                <MudItem xs="12" sm="12" md="6" lg="6">
                                                                     <MudSelect Variant="Variant.Outlined"
                                                                                T="TipoVenda"
                                                                                @bind-Value="@PedidoInputModel._ped_iddest"
@@ -340,6 +353,8 @@
                                                                     </MudSelect>
                                                                 </MudItem>
                                                             }
+
+
 
                                                         </MudGrid>
                                                     }

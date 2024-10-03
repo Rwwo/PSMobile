@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore;
 
 using PSMobile.core.Interfaces;
-using System.Linq;
-using PSMobile.core.Entities;
 
 namespace PSMobile.application.Queries.Pedidos;
 public class PedidosQueryHandler
@@ -45,7 +43,9 @@ public class PedidosQueryHandler
             query => query.Include(e => e.PedidosItens)
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
-                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.FormaPagamento)
         };
 
         Expression<Func<core.Entities.Pedidos, object>> order = o => o.ped_key;
@@ -81,7 +81,9 @@ public class PedidosQueryHandler
             query => query.Include(e => e.PedidosItens)
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
-                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.FormaPagamento)
         };
 
 
@@ -116,7 +118,9 @@ public class PedidosQueryHandler
             query => query.Include(e => e.PedidosItens)
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
-                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas)
+                            .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),
+            query => query.Include(e=>e.PedidosFormasPagamento)
+                            .ThenInclude(i=>i.FormaPagamento)
         };
 
 

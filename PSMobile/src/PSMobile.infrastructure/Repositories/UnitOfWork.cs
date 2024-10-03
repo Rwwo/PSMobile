@@ -54,7 +54,20 @@ public class UnitOfWork : IUnitOfWork
         get => _PdvsRepository ??= new PdvsRepository(_context);
     }
 
+    public PedidosFormasPagamentoRepository? _PedidosFormasPagamentoRepository;
+    public IPedidosFormasPagamentoRepository PedidosFormasPagamentoRepository
+    {
+        get => _PedidosFormasPagamentoRepository ??= new PedidosFormasPagamentoRepository(_context);
+    }
 
+
+    public PedidosFormasPagamentoParcelasRepository? _PedidosFormaPagamentoParcelasRepository;
+    public IPedidosFormasPagamentoParcelasRepository PedidosFormasPagamentoParcelasRepository
+    {
+        get => _PedidosFormaPagamentoParcelasRepository ??= new PedidosFormasPagamentoParcelasRepository(_context);
+    } 
+    
+    
     public PedidosRepository? _PedidosRepository;
     public IPedidosRepository PedidosRepository
     {

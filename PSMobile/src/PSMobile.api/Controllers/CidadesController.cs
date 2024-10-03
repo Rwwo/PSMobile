@@ -7,7 +7,7 @@ using System.Net;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/cidades")]
 public class CidadesController : MainController
 {
     private readonly IMediator _mediator;

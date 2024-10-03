@@ -21,11 +21,11 @@ public class PedidoItemService : IPedidoItemService
     public async Task<PaginatedResult<PedidosItens>> GetAllByNumPedAsync(int empKey, int numPed, int pageSize = 10, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
-        return await _httpClient.GetFromJsonAsync<PaginatedResult<PedidosItens>>($"api/Pedidos/all/{empKey}/{numPed}/items{query}");
+        return await _httpClient.GetFromJsonAsync<PaginatedResult<PedidosItens>>($"api/v1/pedidos/all/{empKey}/{numPed}/items{query}");
     }
     public async Task<Result<PedidosItemGravarRetornoFuncao>> GravarAsync(PedidoItemInputModel entity)
     {
-        var response = await _httpClient.PostAsJsonAsync("api/Pedidos/gravar-pedido-item", entity);
+        var response = await _httpClient.PostAsJsonAsync("api/v1/pedidos/gravar-pedido-item", entity);
         if (response.IsSuccessStatusCode)
         {
             var inputResult = await response.Content.ReadFromJsonAsync<PedidosItemGravarRetornoFuncao>();

@@ -53,6 +53,12 @@ public class UowAPI : IUowAPI
         get => _PedidoItemService ??= new PedidoItemService(_HttpClient);
     }
 
+    private PedidoFormaPagamentoService? _PedidoFormaPagamentoService;
+    public IPedidoFormaPagamentoService PedidoFormaPagamentoService
+    {
+        get => _PedidoFormaPagamentoService ??= new PedidoFormaPagamentoService(_HttpClient);
+    }
+
     private PedidoService? _PedidoService;
     public IPedidoService PedidoService
     {
