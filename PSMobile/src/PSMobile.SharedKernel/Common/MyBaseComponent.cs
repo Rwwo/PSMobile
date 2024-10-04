@@ -17,7 +17,7 @@ public abstract class MyBaseComponent : ComponentBase
     [Inject] protected IDialogService DialogService { get; set; } = null!;
     [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
 
-    
+
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;
     protected bool IsStriped { get; private set; } = true;
@@ -27,6 +27,20 @@ public abstract class MyBaseComponent : ComponentBase
     protected string RowsPerPageString { get; private set; } = "Itens por página";
     protected int[] PageSizeOptionsString { get; private set; } = { 10, 25, 50, 100, int.MaxValue };
     protected string InfoFormatString { get; private set; } = "{first_item}-{last_item} de {all_items}";
+
+    protected void HandleMessageWithDetails(string msg, List<string> ErrorsList)
+    {
+        Snackbar.Add(msg, Severity.Warning, conf =>
+        {
+            conf.Action = "Detalhes";
+            conf.ActionColor = Color.Info;
+            conf.Onclick = snack =>
+            {
+                ShowDetails(string.Join('\n', ErrorsList.ToArray()));
+                return Task.CompletedTask;
+            };
+        });
+    }
 
     protected void HandleError(List<string> ErrosApiService)
     {

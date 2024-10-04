@@ -65,11 +65,12 @@ public class IndexPedidosPage : MyBaseComponent
     public void GoToUpdate(Pedidos input)
     {
         ServiceLocal.SetarPedido(input);
-        Navigation.NavigateTo($"/pedidos/editar");
+        Navigation.NavigateTo($"/pedidos/gravar");
     }
 
     public void GoToAddPedido()
     {
+        ServiceLocal.LimparPedido();
         Navigation.NavigateTo($"/pedidos/gravar");
     }
 }

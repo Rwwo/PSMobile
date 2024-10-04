@@ -15,7 +15,6 @@ public interface ILocalNavigationService
 
 
     Pedidos? Pedido { get; }
-
     void LimparPedido();
     void SetarPedido(Pedidos? input);
 }

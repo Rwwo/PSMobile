@@ -10,3 +10,10 @@ public interface IWriteWithDeleteRepository<T, Q>
 {
     Task DeleteAsync(Q entity);
 }
+
+public interface IWriteWithDeleteKeyRepository<T, Q>
+    : IWriteRepository<T, Q> where T : class where Q : class
+{
+    Task DeleteAsync(int entity_key);
+}
+

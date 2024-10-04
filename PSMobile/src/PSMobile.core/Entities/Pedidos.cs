@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using PSMobile.core.Enums;
+
 
 namespace PSMobile.core.Entities;
 
@@ -36,9 +38,9 @@ public class Pedidos : BaseEntity
     public DateTime? ped_dataimp { get; set; }
     public decimal ped_frete { get; set; } = 0;
     public short ped_vinculado { get; set; }
-    public short ped_retira { get; set; }
-    public short ped_iddest { get; set; }
-    public short ped_tipodocemitir { get; set; }
+    public TipoRetirada ped_retira { get; set; }
+    public TipoVenda ped_iddest { get; set; }
+    public TipoDoc ped_tipodocemitir { get; set; }
     public short ped_consumidorfinal { get; set; }
     public short ped_tabelacusto { get; set; } = 0;
     public decimal? ped_acrescimo { get; set; }

@@ -1,3 +1,4 @@
+@using PSMobile.core.InputModel
 <MudForm Class="ml-2">
     <MudGrid Spacing="2">
         <MudItem xs="12" md="6">
@@ -14,7 +15,8 @@
                              Label="Forma Pagamento"
                              Required="true"
                              RequiredError="Informe!"
-                             AdornmentColor="Color.Primary" />
+                             AdornmentColor="Color.Primary"
+                             Clearable />
         </MudItem>
 
         <MudItem xs="8" md="4">
@@ -23,6 +25,7 @@
                              Min="0"
                              HideSpinButtons="true"
                              Variant="Variant.Text"
+                             OnBlur="OnBlur"
                              Value="@Data.pedforpag_valor"
                              ValueChanged="(decimal newValue) => AtualizarValorFormaPagamentoAsync(newValue)"
                              Clearable />
@@ -49,9 +52,15 @@
 
 @code
 {
+
+
     [Parameter]
     [EditorRequired]
     public List<FormasPagamento> Options { get; set; } = new();
+
+    [Parameter]
+    [EditorRequired]
+    public EventCallback OnBlur { get; set; }
 
     [Parameter]
     public PedidosFormasPagamento Data { get; set; }

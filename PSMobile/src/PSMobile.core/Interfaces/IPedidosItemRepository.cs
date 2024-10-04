@@ -3,5 +3,5 @@ using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.core.Interfaces;
 
-public interface IPedidosItemRepository : IWriteRepository<InputModel.PedidoItemInputModel, PedidosItemGravarRetornoFuncao>, IReadRepository<PedidosItens>
-{ }
+public interface IPedidosItemRepository : IWriteWithDeleteKeyRepository<InputModel.PedidoItemInputModel, PedidosItemGravarRetornoFuncao>, 
+                                        IReadRepository<PedidosItens>;

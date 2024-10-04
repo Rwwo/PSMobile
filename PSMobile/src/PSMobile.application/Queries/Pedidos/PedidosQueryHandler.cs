@@ -40,7 +40,7 @@ public class PedidosQueryHandler
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
-            query => query.Include(e => e.PedidosItens)
+            query => query.Include(e => e.PedidosItens.Where(t=>t.pedite_exc == 0))
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
                             .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),
@@ -78,7 +78,7 @@ public class PedidosQueryHandler
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
-            query => query.Include(e => e.PedidosItens)
+            query => query.Include(e => e.PedidosItens.Where(t=>t.pedite_exc == 0))
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
                             .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),
@@ -115,7 +115,7 @@ public class PedidosQueryHandler
 
         var thenIncludes = new List<Func<IQueryable<core.Entities.Pedidos>, IIncludableQueryable<core.Entities.Pedidos, object>>>
         {
-            query => query.Include(e => e.PedidosItens)
+            query => query.Include(e => e.PedidosItens.Where(t=>t.pedite_exc == 0))
                           .ThenInclude(i => i.Produto),
             query => query.Include(e=>e.PedidosFormasPagamento)
                             .ThenInclude(i=>i.PedidosFormasPagamentoParcelas),

@@ -105,6 +105,15 @@ public class PedidosController : MainController
         return CustomResponse(HttpStatusCode.OK, result);
     }
 
+    [HttpDelete("deletar-pedido-item/{pediteKey:int}")]
+    public async Task<IActionResult> DeleteItemPedido(int pediteKey)
+    {
+
+        var command = new DeletarPedidoItemCommand(pediteKey);
+        var result = await _mediator.Send(command);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
 
     [HttpPost("atualizar-pedido")]
     public async Task<IActionResult> Post([FromBody] PedidoAtualizarInputModel entity)

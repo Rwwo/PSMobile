@@ -77,9 +77,10 @@ public class PedidosRepository : ReadRepository<Pedidos>, IPedidosRepository
             {
                 new NpgsqlParameter("_ped_numero", DbType.Int32) { Value = entity._ped_numero },
                 new NpgsqlParameter("_ped_emp_key", DbType.Int32) { Value = entity._ped_emp_key },
-                new NpgsqlParameter("_ped_tipodocemitir", DbType.Int32) { Value = entity._ped_tipodocemitir},
-                new NpgsqlParameter("_ped_retira", DbType.Int32) { Value = entity._ped_retira },
-                new NpgsqlParameter("_ped_iddest", DbType.Int32) { Value = entity._ped_iddest },
+                new NpgsqlParameter("_ped_finalizado", DbType.Int32) { Value = entity._ped_finalizado },
+                new NpgsqlParameter("_ped_tipodocemitir", DbType.Int32) { Value = (int)entity._ped_tipodocemitir},
+                new NpgsqlParameter("_ped_retira", DbType.Int32) { Value = (int)entity._ped_retira },
+                new NpgsqlParameter("_ped_iddest", DbType.Int32) { Value = (int)entity._ped_iddest },
                 new NpgsqlParameter("_ped_consumidorfinal", DbType.Int32) { Value = entity._ped_consumidorfinal },
             };
 
@@ -88,6 +89,7 @@ public class PedidosRepository : ReadRepository<Pedidos>, IPedidosRepository
             SELECT public.pedidos_gravar_atualizar(
                             @_ped_numero,
                             @_ped_emp_key,
+                            @_ped_finalizado,
                             @_ped_tipodocemitir,
                             @_ped_retira,
                             @_ped_iddest,

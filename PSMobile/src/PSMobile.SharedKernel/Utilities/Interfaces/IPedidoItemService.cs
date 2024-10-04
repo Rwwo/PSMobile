@@ -7,7 +7,7 @@ using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.SharedKernel.Utilities.Interfaces;
 
-public interface IPedidoItemService : IBaseWriteService<PedidosItemGravarRetornoFuncao, PedidoItemInputModel>
+public interface IPedidoItemService : IBaseWriteServiceWithDelete<PedidosItemGravarRetornoFuncao, PedidoItemInputModel, PedidosItens>
 {
     Task<PaginatedResult<PedidosItens>> GetAllByNumPedAsync(int empKey, int numPed, int pageSize = 10, int pageNumber = 1);
 }

@@ -1,5 +1,7 @@
 ﻿using System.Net.Http.Json;
 
+using MediatR;
+
 using PSMobile.core.Entities;
 using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
@@ -17,6 +19,10 @@ public class PedidoItemService : IPedidoItemService
         _httpClient = httpClient;
     }
 
+    public async Task DeleteAsync(PedidosItens entity)
+    {
+        await _httpClient.DeleteAsync($"api/v1/pedidos/deletar-pedido-item/{entity.pedite_key}");
+    }
 
     public async Task<PaginatedResult<PedidosItens>> GetAllByNumPedAsync(int empKey, int numPed, int pageSize = 10, int pageNumber = 1)
     {

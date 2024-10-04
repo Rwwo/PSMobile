@@ -7,6 +7,7 @@ using MudExtensions;
 using MudExtensions.Utilities;
 
 using PSMobile.core.Entities;
+using PSMobile.core.Enums;
 using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
@@ -62,10 +63,11 @@ public class GravarPedidoPage : MyBaseComponent
     public bool IsBothNFE_NFCe { get; set; } = false;
     public bool IsOnlyNFCe { get; private set; }
 
+    public string NomeBotaoFinaliza => PedidoInputModel.DimissEdit ? "Reabrir Pedido" : "Finalizar Pedido";
+
     protected override async Task OnInitializedAsync()
     {
         emp_key = ServiceLocal.EmpresaAtual.emp_key;
-
         PedidoInputModel = new PedidoInputModel(emp_key);
 
         PdvsPaginated = await UowAPI.PdvService.GetAllAsync(emp_key, 1000, 1);
@@ -75,9 +77,18 @@ public class GravarPedidoPage : MyBaseComponent
         IsBothNFE_NFCe = true;// PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0;
         IsOnlyNFCe = !(PdvsPaginated.Items.Where(pdv => pdv.pdv_exc == 0 && pdv.pdv_emitenfe == 1).Count() > 0);
 
-        await InvokeAsync(StateHasChanged);
-        await base.OnInitializedAsync();
+        var input = ServiceLocal.Pedido;
 
+        if (input != null)
+        {
+            await UpdatePedidoInMemoryAsync(input.ped_key);
+        }
+        else
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+
+        await base.OnInitializedAsync();
     }
 
     public async Task ValidatedNumDocAsync()
@@ -104,9 +115,13 @@ public class GravarPedidoPage : MyBaseComponent
     private void SetCustomerData(Cadastros Cliente)
     {
         PedidoInputModel.Cliente = Cliente;
+        PedidoInputModel._ped_cad_key = Cliente.cad_key;
+        PedidoInputModel._ped_nome = Cliente.cad_nome;
+
+        Console.WriteLine(PedidoInputModel);
     }
 
-    public async void SaveFormasPagamentoAsync()
+    public async Task SaveFormasPagamentoAsync()
     {
         if (PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Any() && PedidoInputModel.CanFinish)
         {
@@ -138,17 +153,152 @@ public class GravarPedidoPage : MyBaseComponent
         }
     }
 
-    public void FinishPedido()
+    public async Task GoToUpdate(PedidosItens Item)
     {
-        if (PedidoInputModel.CanFinish)
-        {
-            Snackbar.Add("Pode Finalizar", Severity.Success);
-        }
-        else
-        {
-            Snackbar.Add("Não Pode Finalizar", Severity.Error);
-        }
 
+        var parameters = new DialogParameters<ConfirmQtdDialog>
+        {
+            { x => x.ContentText, $"Edição de quantidade: {Item.Produto.pro_codigo} - {Item.Produto.pro_nome}?" },
+            { x => x.ButtonText, "Sim" },
+            { x => x.Color, Color.Success }
+        };
+
+        var dialog = await DialogService.ShowAsync<ConfirmQtdDialog>("Editar Quantidade", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Snackbar.Add("Produto Atualizado", Severity.Success);
+
+            var itemAdd = new EditItemWithQtyInputModel()
+            {
+                PedidosItens = Item,
+                Qtde = (int)result.Data
+            };
+
+
+            var input = new PedidoItemInputModel()
+            {
+                _item = Item.pedite_item,
+                _pedite_datafab = null,
+                _pedite_dataval = null,
+                _pedite_desconto = 0,
+                _pedite_lote = Item.pedite_lote,
+                _pedite_pro_codigo = Item.pedite_pro_codigo,
+                _pedite_nome = Item.pedite_nome,
+                _pedite_qtd = itemAdd.Qtde,
+                _pedite_subtotal = decimal.Multiply(itemAdd.Qtde, Item.pedite_valorunitario),
+                _pedite_valorunitario = Item.pedite_valorunitario,
+                _custo = 0,
+                _pedite_total = decimal.Multiply(itemAdd.Qtde, Item.pedite_valorunitario),
+                _pro_nome = Item.Produto.pro_nome,
+                _usu = 0,
+                _pedite_fun_key = PedidoInputModel.Funcionario != null ? PedidoInputModel.Funcionario.fun_key : 0,
+
+                _emp_key = ServiceLocal.EmpresaAtual.emp_key,
+                _pedite_ped_key = (int)PedidoInputModel._ped_key,
+                _justificativa = string.Empty,
+                _comput = Environment.MachineName,
+            };
+
+            var resultPedidoItemService = await UowAPI.PedidoItemService.GravarAsync(input);
+
+            if (resultPedidoItemService.IsSuccess)
+            {
+                await UpdatePedidoInMemoryAsync((int)PedidoInputModel._ped_key);
+            }
+            else
+            {
+                HandleError(resultPedidoItemService.Errors);
+            }
+        }
+    }
+
+    //CONTINUAR TESTANDO A EXCLUSÃO DE ITENS DO PEDIDO
+    public async Task DeleteAsync(PedidosItens item)
+    {
+        try
+        {
+            var resultDialog = await ConfirmationDialogService.ConfirmAsync("Confirmar Exclusão", $"Confirma exclusão do item {item.pedite_nome}?");
+
+            if (resultDialog)
+            {
+                await UowAPI.PedidoItemService.DeleteAsync(item);
+                await UpdatePedidoInMemoryAsync(PedidoInputModel.CurrentPedido.ped_key);
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+    public async void FinishPedido()
+    {
+        try
+        {
+            await SaveFormasPagamentoAsync();
+
+            if (!PedidoInputModel.DimissEdit)
+            {
+                if (PedidoInputModel.CanFinish)
+                {
+                    await ExecUpdateFunctionPedido(1);
+                    Snackbar.Add("Pedido liberado para o caixa", Severity.Success);
+                    Navigation.NavigateTo("/pedidos");
+                }
+                else
+                {
+                    var msg = new List<string>
+                    {
+                        "O Pedido não pode ser finalizado",
+                        "Verifique se existem itens no pedido",
+                        "Verifique se não existe saldo para informar formas de pagamento",
+                    };
+                    HandleMessageWithDetails("Atenção", msg);
+                }
+            }
+            else
+            {
+                if (PedidoInputModel.CanFinish)
+                {
+                    await ExecUpdateFunctionPedido(0);
+                    await UpdatePedidoInMemoryAsync(PedidoInputModel.CurrentPedido.ped_key);
+                }
+                else
+                {
+                    Snackbar.Add("Não Pode Finalizar", Severity.Error);
+                }
+            }
+
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+    private async Task ExecUpdateFunctionPedido(int finalizar = 0)
+    {
+        PedidoInputModel._ped_tipodocemitir = _index == 0 ? TipoDoc.NFCe : TipoDoc.NFe;
+
+        var UpdatePedidoInputModel = new PedidoAtualizarInputModel
+        {
+            _ped_emp_key = emp_key,
+            _ped_numero = PedidoInputModel._ped_numero,
+            _ped_finalizado = finalizar,
+            _ped_iddest = PedidoInputModel.CurrentPedido.ped_iddest,
+            _ped_retira = PedidoInputModel.CurrentPedido.ped_retira,
+            _ped_tipodocemitir = PedidoInputModel.CurrentPedido.ped_tipodocemitir,
+            _ped_consumidorfinal = PedidoInputModel.CurrentPedido.ped_consumidorfinal,
+        };
+
+        var returnUpdate = await UowAPI.PedidoService.AtualizarAsync(UpdatePedidoInputModel);
+
+        if (!returnUpdate.IsSuccess)
+        {
+            HandleMessageWithDetails("Atenção", returnUpdate.Errors);
+        }
     }
 
     public async void NewFormasPagamentosAsync()
@@ -216,7 +366,7 @@ public class GravarPedidoPage : MyBaseComponent
         var confirmationMessage = "Confirma a exclusão da forma de pagamento?";
         var confirmationResult = await ConfirmationDialogService.ConfirmAsync("Atenção", confirmationMessage);
 
-        if (!confirmationResult)
+        if (confirmationResult)
         {
             if (input.pedforpag_key != 0)
             {
@@ -230,12 +380,15 @@ public class GravarPedidoPage : MyBaseComponent
                 PedidoInputModel.CurrentPedido.PedidosFormasPagamento.Remove(input);
             }
 
-            // Atualizar a interface
-            await InvokeAsync(StateHasChanged);
         }
+        // Atualizar a interface
+        await InvokeAsync(StateHasChanged);
     }
 
-
+    public async Task Recalcular()
+    {
+        Console.WriteLine(PedidoInputModel.SaldoRestante);
+    }
     public async Task<DialogResult> ViewParcelasFormaPagamentoAsync(PedidosFormasPagamento input)
     {
         var parameters = new DialogParameters<FormaPagamentoParcelasDialog>()
@@ -282,11 +435,22 @@ public class GravarPedidoPage : MyBaseComponent
         var dadoPedido = await UowAPI.PedidoService.GetByPedKeyAsync(emp_key, pedKey);
         PedidoInputModel.CurrentPedido = dadoPedido.Items.FirstOrDefault();
 
+        PedidoInputModel._ped_key = PedidoInputModel.CurrentPedido.ped_key;
+        PedidoInputModel._ped_numero = PedidoInputModel.CurrentPedido.ped_numero;
+        PedidoInputModel.Funcionario = PedidoInputModel.CurrentPedido.Funcionario;
+        PedidoInputModel.Cliente = PedidoInputModel.CurrentPedido.Cliente;
+
+        _index = (PedidoInputModel.CurrentPedido.ped_tipodocemitir == TipoDoc.NFCe) ? 0 : 1;
+
         await InvokeAsync(StateHasChanged);
     }
 
     private async Task<Result<PedidosGravarRetornoFuncao>> GravarPedidoServiceAsync()
     {
+
+        PedidoInputModel._ped_nome = PedidoInputModel.Cliente.cad_nome;
+        PedidoInputModel._ped_cad_key = PedidoInputModel.Cliente.cad_key;
+        PedidoInputModel._ped_fun_key = PedidoInputModel.Funcionario.fun_key != 0 ? PedidoInputModel.Funcionario.fun_key : null;
         return await UowAPI.PedidoService.GravarAsync(PedidoInputModel);
     }
 
@@ -483,6 +647,9 @@ public class GravarPedidoPage : MyBaseComponent
     {
         try
         {
+            if (PedidoInputModel.CurrentPedido.ped_finalizado == 1)
+                return;
+
             var result = await GravarPedidoServiceAsync();
             if (!result.IsSuccess)
                 HandleError(result.Errors);
@@ -490,8 +657,9 @@ public class GravarPedidoPage : MyBaseComponent
             PedidoInputModel._ped_numero = result.Data._ped_numero;
             PedidoInputModel._ped_key = result.Data._ped_key;
 
-            await UpdatePedidoInMemoryAsync(result.Data._ped_key);
+            await ExecUpdateFunctionPedido(0);
 
+            await UpdatePedidoInMemoryAsync(result.Data._ped_key);
 
 
         }

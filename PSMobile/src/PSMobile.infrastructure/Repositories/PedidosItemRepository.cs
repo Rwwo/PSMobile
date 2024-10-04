@@ -84,4 +84,27 @@ public class PedidosItemRepository : ReadRepository<PedidosItens>, IPedidosItemR
             throw new InvalidOperationException($"Erro ao gravar item do pedido: {ex.Message}", ex);
         }
     }
+    public async Task DeleteAsync(int entity_key)
+    {
+
+        try
+        {
+            var parameters = new[]
+            {
+                new NpgsqlParameter("_pedite_key", DbType.Int32){ Value = entity_key }
+            };
+
+            var ret = await _context.Database.SqlQueryRaw<int>(
+                @"
+                SELECT public.pedidositens_excluir(
+	                @_pedite_key
+                )",
+                parameters).ToListAsync();
+
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Erro ao gravar item do pedido: {ex.Message}", ex);
+        }
+    }
 }

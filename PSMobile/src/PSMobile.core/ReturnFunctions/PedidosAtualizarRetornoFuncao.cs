@@ -1,4 +1,6 @@
-﻿namespace PSMobile.core.ReturnFunctions;
+﻿using System.Text.Json.Serialization;
+
+namespace PSMobile.core.ReturnFunctions;
 
 public class PedidosAtualizarRetornoFuncao
 {
@@ -7,4 +9,10 @@ public class PedidosAtualizarRetornoFuncao
         IsSucess = input;
     }
     public bool IsSucess { get; private set; }
+
+    
+    [JsonConstructor]
+    public PedidosAtualizarRetornoFuncao()
+    {
+    }
 }
