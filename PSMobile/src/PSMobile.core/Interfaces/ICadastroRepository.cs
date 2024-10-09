@@ -3,6 +3,4 @@ using PSMobile.core.ReturnFunctions;
 
 namespace PSMobile.core.Interfaces;
 
-public interface ICadastroRepository : IWriteRepository<Cadastros, ClienteGravarRetornoFuncao>, IReadRepository<Cadastros>
-{
-}
+public interface ICadastroRepository : IWriteRepository<Cadastros, ClienteGravarRetornoFuncao>, IReadRepository<Cadastros>;

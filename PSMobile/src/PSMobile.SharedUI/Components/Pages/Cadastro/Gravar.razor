@@ -1,264 +1,258 @@
 @page "/cadastro/gravar"
 @inherits GravarCadastroPage
 
+<PsTitle Title="Clientes" />
 
-<PageTitle>Clientes</PageTitle>
+<PsPageHeader Icon="@Icons.Material.Filled.PeopleAlt"
+              Title="@InputModel.Nome"
+              ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage" />
 
-<MudContainer Class="mt-4">
+<MudPaper Class="mt-2 pa-2">
+    <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync" OnInvalidSubmit="OnInvalidSubmitAsync">
+        <DataAnnotationsValidator />
 
-    <MudText Typo="Typo.h4">Gerenciamento de Clientes</MudText>
+        <MudGrid Class="pa-2">
+            <MudItem xs="12">
+                <MudText Typo="Typo.h5">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
+            </MudItem>
 
-    <BackButton Href="/cadastro"
-                Text="Voltar Clientes" />
+            <!-- Dados de Identificação e Básicos -->
+            <MudItem xs="12">
+                <MudTextField Label="Nome"
+                              @bind-Value="InputModel.Nome"
+                              For="@(() => InputModel.Nome)"
+                              Required="true"
+                              RequiredError="Nome é Obrigatório!"
+                              Clearable />
+            </MudItem>
 
-    <MudPaper Class="pa-2">
+            <MudItem xs="12">
+                <MudTextField Label="Razão Social"
+                              @bind-Value="InputModel.Razao"
+                              Clearable />
+            </MudItem>
 
-        <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync" OnInvalidSubmit="OnInvalidSubmitAsync">
-            <DataAnnotationsValidator />
+            <MudItem xs="12" sm="6">
+                <MudTextField Label="CNPJ"
+                              @bind-Value="InputModel.Cnpj"
+                              OnBlur="ValidarNumeroDocumento"
+                              For="@(() => InputModel.Cnpj)"
+                              Clearable />
+            </MudItem>
 
-            <MudGrid Class="pa-2">
-                <MudItem xs="12">
-                    <MudText Typo="Typo.h5">@((IsEditing ? "Editar" : "Adicionar") + " Cadastro")</MudText>
-                </MudItem>
+            <MudItem xs="12" sm="6">
+                <MudSelect T="string" Label="Sexo" @bind-Value="InputModel.Sexo">
+                    <MudSelectItem Value="@("M")">Masculino</MudSelectItem>
+                    <MudSelectItem Value="@("F")">Feminino</MudSelectItem>
+                </MudSelect>
+            </MudItem>
 
-                <!-- Dados de Identificação e Básicos -->
-                <MudItem xs="12">
-                    <MudTextField Label="Nome"
-                                  @bind-Value="InputModel.Nome"
-                                  For="@(() => InputModel.Nome)"
-                                  Required="true"
-                                  RequiredError="Nome é Obrigatório!"
-                                  Clearable />
-                </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudTextField Label="IE"
+                              @bind-Value="InputModel.Ie"
+                              Clearable />
+            </MudItem>
 
-                <MudItem xs="12">
-                    <MudTextField Label="Razão Social"
-                                  @bind-Value="InputModel.Razao"
-                                  Clearable />
-                </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudTextField Label="IM"
+                              @bind-Value="InputModel.Im"
+                              Clearable />
+            </MudItem>
 
-                <MudItem xs="12" sm="6">
-                    <MudTextField Label="CNPJ"
-                                  @bind-Value="InputModel.Cnpj"
-                                  OnBlur="ValidarNumeroDocumento"
-                                  For="@(() => InputModel.Cnpj)"
-                                  Clearable />
-                </MudItem>
+            <MudItem xs="12" sm="4">
+                <MudTextField Label="IST"
+                              @bind-Value="InputModel.Ist"
+                              Clearable />
+            </MudItem>
 
-                <MudItem xs="12" sm="6">
-                    <MudSelect T="string" Label="Sexo" @bind-Value="InputModel.Sexo">
-                        <MudSelectItem Value="@("M")">Masculino</MudSelectItem>
-                        <MudSelectItem Value="@("F")">Feminino</MudSelectItem>
-                    </MudSelect>
-                </MudItem>
+            <MudSpacer />
 
-                <MudItem xs="12" sm="4">
-                    <MudTextField Label="IE"
-                                  @bind-Value="InputModel.Ie"
-                                  Clearable />
-                </MudItem>
-                
-                <MudItem xs="12" sm="4">
-                    <MudTextField Label="IM"
-                                  @bind-Value="InputModel.Im"
-                                  Clearable />
-                </MudItem>
-                
-                <MudItem xs="12" sm="4">
-                    <MudTextField Label="IST"
-                                  @bind-Value="InputModel.Ist"
-                                  Clearable />
-                </MudItem>
+            <MudItem xs="12">
+                <MudExpansionPanels MultiExpansion="true" Dense="true">
+                    <!-- Endereço -->
+                    <MudExpansionPanel Text="Endereço">
+                        <MudGrid Class="mb-2 pa-3">
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="CEP"
+                                              @bind-Value="InputModel.Cep"
+                                              OnBlur="BuscarPeloCep"
+                                              Mask="@(new PatternMask("00000-000"))" Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="8">
+                                <MudTextField Label="Endereço"
+                                              @bind-Value="InputModel.Endereco"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Bairro"
+                                              @bind-Value="InputModel.Bairro"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Complemento"
+                                              @bind-Value="InputModel.Complemento"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Número"
+                                              @bind-Value="InputModel.Numero"
+                                              Clearable />
+                            </MudItem>
 
-                <MudSpacer />
+                            <MudItem xs="12">
+                                <MudAutocomplete T="Cidades" Label="Selecione uma cidade"
+                                                 @bind-Value="Cidade"
+                                                 SearchFunc="@Search1"
+                                                 ShowProgressIndicator="true"
+                                                 MinCharacters="3"
+                                                 Clearable
+                                                 MaxItems="30">
+                                    <ProgressIndicatorTemplate>
+                                        <MudProgressLinear Size="Size.Small" Indeterminate="true" />
+                                    </ProgressIndicatorTemplate>
+                                </MudAutocomplete>
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
 
-                <MudItem xs="12">
-                    <MudExpansionPanels MultiExpansion="true" Dense="true" >
-                        <!-- Endereço -->
-                        <MudExpansionPanel Text="Endereço" >
-                            <MudGrid Class="mb-2 pa-3">
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="CEP"
-                                                  @bind-Value="InputModel.Cep"
-                                                  OnBlur="BuscarPeloCep"
-                                                  Mask="@(new PatternMask("00000-000"))" Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="8">
-                                    <MudTextField Label="Endereço"
-                                                  @bind-Value="InputModel.Endereco"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Bairro"
-                                                  @bind-Value="InputModel.Bairro"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Complemento"
-                                                  @bind-Value="InputModel.Complemento"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Número"
-                                                  @bind-Value="InputModel.Numero"
-                                                  Clearable />
-                                </MudItem>
+                    <!-- Dados de Contato -->
+                    <MudExpansionPanel Text="Dados de Contato">
+                        <MudGrid Class="mb-2 pa-3">
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Telefone 1"
+                                              OnBlur="ValidarNumeroTelefone"
+                                              @bind-Value="InputModel.Fone1"
+                                              Clearable />
+                            </MudItem>
 
-                                <MudItem xs="12">
-                                    <MudAutocomplete T="Cidades" Label="Selecione uma cidade"
-                                                     @bind-Value="Cidade"
-                                                     SearchFunc="@Search1"
-                                                     ShowProgressIndicator="true"
-                                                     MinCharacters="3"
-                                                     Clearable
-                                                     MaxItems="30">
-                                        <ProgressIndicatorTemplate>
-                                            <MudProgressLinear Size="Size.Small" Indeterminate="true" />
-                                        </ProgressIndicatorTemplate>
-                                    </MudAutocomplete>
-                                </MudItem>
-                            </MudGrid>
-                        </MudExpansionPanel>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Telefone 2"
+                                              OnBlur="ValidarNumeroTelefone"
+                                              @bind-Value="InputModel.Fone2"
+                                              Clearable />
+                            </MudItem>
 
-                        <!-- Dados de Contato -->
-                        <MudExpansionPanel Text="Dados de Contato">
-                            <MudGrid Class="mb-2 pa-3">
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Telefone 1"
-                                                  OnBlur="ValidarNumeroTelefone"
-                                                  @bind-Value="InputModel.Fone1"
-                                                  Clearable />
-                                </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Telefone 3"
+                                              OnBlur="ValidarNumeroTelefone"
+                                              @bind-Value="InputModel.Fone3"
+                                              Clearable />
+                            </MudItem>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Telefone 2"
-                                                  OnBlur="ValidarNumeroTelefone"
-                                                  @bind-Value="InputModel.Fone2"
-                                                  Clearable />
-                                </MudItem>
+                            <MudItem xs="12" sm="8">
+                                <MudTextField Label="Contato"
+                                              @bind-Value="InputModel.Contato"
+                                              Clearable />
+                            </MudItem>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Telefone 3"
-                                                  OnBlur="ValidarNumeroTelefone"
-                                                  @bind-Value="InputModel.Fone3"
-                                                  Clearable />
-                                </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Telefone de Contato"
+                                              OnBlur="ValidarNumeroTelefone"
+                                              @bind-Value="InputModel.FoneContato"
+                                              Clearable />
+                            </MudItem>
 
-                                <MudItem xs="12" sm="8">
-                                    <MudTextField Label="Contato"
-                                                  @bind-Value="InputModel.Contato"
-                                                  Clearable />
-                                </MudItem>
+                            <MudItem xs="12">
+                                <MudTextField Label="Email"
+                                              @bind-Value="InputModel.Email"
+                                              Clearable />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Telefone de Contato"
-                                                  OnBlur="ValidarNumeroTelefone"
-                                                  @bind-Value="InputModel.FoneContato"
-                                                  Clearable />
-                                </MudItem>
+                    <!-- Documentação -->
+                    <MudExpansionPanel Text="Documentação">
+                        <MudGrid Class="mb-2 pa-3">
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="RG"
+                                              @bind-Value="InputModel.Rg"
+                                              Clearable />
+                            </MudItem>
 
-                                <MudItem xs="12">
-                                    <MudTextField Label="Email"
-                                                  @bind-Value="InputModel.Email"
-                                                  Clearable />
-                                </MudItem>
-                            </MudGrid>
-                        </MudExpansionPanel>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Órgão"
+                                              @bind-Value="InputModel.Orgao"
+                                              Clearable />
+                            </MudItem>
 
-                        <!-- Documentação -->
-                        <MudExpansionPanel Text="Documentação" >
-                            <MudGrid Class="mb-2 pa-3">
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="RG"
-                                                  @bind-Value="InputModel.Rg"
-                                                  Clearable />
-                                </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudDatePicker Label="Data de Nascimento/Fundação"
+                                               Editable="true"
+                                               @bind-Date="InputModel.DataNasFun"
+                                               Mask="@(new DateMask("dd/MM/yyyy"))"
+                                               DateFormat="dd/MM/yyyy"
+                                               Clearable />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Órgão"
-                                                  @bind-Value="InputModel.Orgao"
-                                                  Clearable />
-                                </MudItem>
+                    <!-- Informações de Cliente -->
+                    <MudExpansionPanel Text="Informações de Cliente">
+                        <MudGrid Class="mb-2 pa-3">
+                            <MudItem xs="12">
+                                <MudTextField Label="Observações"
+                                              @bind-Value="InputModel.Obs"
+                                              Lines="4"
+                                              Clearable />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudDatePicker Label="Data de Nascimento/Fundação"
-                                                   Editable="true"
-                                                   @bind-Date="InputModel.DataNasFun"
-                                                   Mask="@(new DateMask("dd/MM/yyyy"))"
-                                                   DateFormat="dd/MM/yyyy"
-                                                   Clearable />
-                                </MudItem>
-                            </MudGrid>
-                        </MudExpansionPanel>
+                    <!-- Informações Financeiras -->
+                    <MudExpansionPanel Text="Informações Financeiras">
+                        <MudGrid Class="mb-2 pa-3">
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Limite Total"
+                                              @bind-Value="InputModel.CliLimiteTotal"
+                                              Format="C2"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Limite Mensal"
+                                              @bind-Value="InputModel.CliLimiteMensal"
+                                              Format="C2"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Número de Parcelas"
+                                              @bind-Value="InputModel.CliLimiteParcelas"
+                                              Format="C2"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Renda Comprovada"
+                                              @bind-Value="InputModel.CliRendaComprovada"
+                                              Format="C2"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Renda"
+                                              @bind-Value="InputModel.CliRenda"
+                                              Format="C2"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
 
-                        <!-- Informações de Cliente -->
-                        <MudExpansionPanel Text="Informações de Cliente">
-                            <MudGrid Class="mb-2 pa-3">
-                                <MudItem xs="12">
-                                    <MudTextField Label="Observações"
-                                                  @bind-Value="InputModel.Obs"
-                                                  Lines="4"
-                                                  Clearable />
-                                </MudItem>
-                            </MudGrid>
-                        </MudExpansionPanel>
+                            <MudItem xs="12" sm="4">
+                                <MudTextField Label="Comprovante de Renda"
+                                              @bind-Value="InputModel.CliComprovanteRenda"
+                                              Culture="@InputModel._ptBR"
+                                              Clearable />
+                            </MudItem>
+                        </MudGrid>
+                    </MudExpansionPanel>
+                </MudExpansionPanels>
+            </MudItem>
 
-                        <!-- Informações Financeiras -->
-                        <MudExpansionPanel Text="Informações Financeiras" >
-                            <MudGrid Class="mb-2 pa-3">
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Limite Total"
-                                                  @bind-Value="InputModel.CliLimiteTotal"
-                                                  Format="C2"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4" >
-                                    <MudTextField Label="Limite Mensal"
-                                                  @bind-Value="InputModel.CliLimiteMensal"
-                                                  Format="C2"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Número de Parcelas"
-                                                  @bind-Value="InputModel.CliLimiteParcelas"
-                                                  Format="C2"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Renda Comprovada"
-                                                  @bind-Value="InputModel.CliRendaComprovada"
-                                                  Format="C2"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Renda"
-                                                  @bind-Value="InputModel.CliRenda"
-                                                  Format="C2"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
+            <MudItem xs="12">
+                <SaveButton />
+            </MudItem>
 
-                                <MudItem xs="12" sm="4">
-                                    <MudTextField Label="Comprovante de Renda"
-                                                  @bind-Value="InputModel.CliComprovanteRenda"
-                                                  Culture="@InputModel._ptBR"
-                                                  Clearable />
-                                </MudItem>
-                            </MudGrid>
-                        </MudExpansionPanel>
-                    </MudExpansionPanels>
-                </MudItem>
+        </MudGrid>
+    </EditForm>
 
-                <MudItem xs="12">
-                    <SaveButton />
-                </MudItem>
-
-            </MudGrid>
-        </EditForm>
-
-    </MudPaper>
-</MudContainer>
+</MudPaper>

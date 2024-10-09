@@ -13,5 +13,6 @@ public interface IUnitOfWork
     IPedidosRepository PedidosRepository { get; }
     IPedidosItemRepository PedidosItemRepository { get; }
     IProdutosEmpresasRepository ProdutosEmpresasRepository { get; }
+    IUsuariosRepository UsuariosRepository { get; }
     Task CommitAsync();
 }

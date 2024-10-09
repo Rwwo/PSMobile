@@ -88,6 +88,12 @@ public class UnitOfWork : IUnitOfWork
         get => _ProdutosEmpresasRepository ??= new ProdutosEmpresasRepository(_context);
     }
 
+    private UsuariosRepository? _UsuariosRepository;
+    public IUsuariosRepository UsuariosRepository
+    {
+        get => _UsuariosRepository ??= new UsuariosRepository(_context);
+    }
+
     public async Task CommitAsync()
     {
         await _context.SaveChangesAsync();

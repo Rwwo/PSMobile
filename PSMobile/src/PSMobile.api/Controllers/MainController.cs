@@ -1,5 +1,6 @@
 ﻿using System.Net;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -9,6 +10,7 @@ using PSMobile.core.Notifications;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
+//[Authorize]
 public abstract class MainController : ControllerBase
 {
     private readonly INotificador _notifier;

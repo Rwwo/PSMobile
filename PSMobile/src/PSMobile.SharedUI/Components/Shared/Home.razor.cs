@@ -2,7 +2,7 @@
 using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Common;
 
-namespace PSMobile.SharedUI.Components.Pages;
+namespace PSMobile.SharedUI.Components.Shared;
 public class HomePage : MyBaseComponent
 {
     public PaginatedResult<Gerais> Geral { get; set; } = PaginatedResult<Gerais>.Empty(1, 1);
@@ -14,7 +14,7 @@ public class HomePage : MyBaseComponent
         var api = await UowAPI.GeraisService.GetAllAsync();
         ServiceLocal.SetarGerais(api);
         Empr = ServiceLocal.EmpresaAtual;
-        
+
 
         await InvokeAsync(StateHasChanged);
         await base.OnInitializedAsync();

@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+using Microsoft.Extensions.Logging;
 
 using PSMobile.SharedKernel;
-using PSMobile.SharedKernel.Utilities.Services;
 using PSMobile.SharedUI;
+using PSMobile.SharedUI.Services;
 
 namespace PSMobile.Mobile;
 public static class MauiProgram
@@ -26,7 +27,8 @@ public static class MauiProgram
         builder.Services.AddSharedKernelServices();
         builder.Services.AddScoped<ConfirmationDialogService>();
 
-        InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
+
+       //InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
 
         return builder.Build();
     }

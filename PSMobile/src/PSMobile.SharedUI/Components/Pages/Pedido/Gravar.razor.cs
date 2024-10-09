@@ -14,6 +14,7 @@ using PSMobile.core.ReturnFunctions;
 using PSMobile.SharedKernel.Common;
 using PSMobile.SharedKernel.Utilities.Services;
 using PSMobile.SharedUI.Components.Shared;
+using PSMobile.SharedUI.Services;
 
 namespace PSMobile.SharedUI.Components.Pages.Pedido;
 

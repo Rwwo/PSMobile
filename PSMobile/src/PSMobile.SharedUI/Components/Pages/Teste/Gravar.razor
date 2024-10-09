@@ -1,0 +1,77 @@
+@page "/teste/gravar"
+@inherits GravarTestePage
+@using ZXingBlazor.Components
+
+
+<PsTitle Title="Gravar Nome executando lib.net" />
+
+<PsPageHeader Icon="@Icons.Material.Filled.Adb"
+              Title="meu teste"
+              ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage" />
+
+<MudPaper Class="mt-2 pa-2">
+    <EditForm Model="@MeuNomeInputModel" OnValidSubmit="OnValidSubmitAsync">
+        <DataAnnotationsValidator />
+
+        <MudTextField Label="First"
+                      HelperText="Campo obrigatório"
+                      Variant="Variant.Outlined"
+                      @bind-Value="MeuNomeInputModel.FirstName"
+                      For="@(() => MeuNomeInputModel.FirstName)" />
+
+        <MudTextField Label="Last Name"
+                      HelperText="Campo obrigatório"
+                      Variant="Variant.Outlined"
+                      @bind-Value="MeuNomeInputModel.LastName"
+                      For="@(() => MeuNomeInputModel.LastName)" />
+
+        <SaveButton />
+
+
+        <MudTextField Label="Ler QR Code"
+                      HelperText="Campo obrigatório"
+                      Variant="Variant.Outlined"
+                      @bind-Value="MeuNomeInputModel.LastName" />
+
+        <MudSpacer />
+        <MudSpacer />
+        <MudSpacer />
+
+        <BarcodeReader ScanResult="ScanResult"
+                               Close="(()=>ShowScanBarcode=!ShowScanBarcode)"
+                               ScanBtnTitle="Scan"
+                               ResetBtnTitle="Reset"
+                               CloseBtnTitle="Close"
+                               Pdf417Only="Pdf417"
+                               Decodeonce="!DecodeContinuously"
+                               DecodeAllFormats="DecodeAllFormats"
+                               SelectDeviceBtnTitle="Select Device" />
+
+    </EditForm>
+</MudPaper>
+
+@code {
+
+    public string? BarCode { get; set; }
+
+    public bool Pdf417 { get; set; }
+    public bool DecodeContinuously { get; set; }
+    public bool DecodeAllFormats { get; set; }
+
+    bool ShowScanBarcode { get; set; } = false;
+
+    private void ScanResult(string e)
+    {
+        if (!DecodeContinuously)
+        {
+            BarCode = e;
+            ShowScanBarcode = !ShowScanBarcode;
+        }
+        else
+        {
+            if (BarCode.Length > 200)
+                BarCode = "";
+            BarCode += e + Environment.NewLine;
+        }
+    }
+}

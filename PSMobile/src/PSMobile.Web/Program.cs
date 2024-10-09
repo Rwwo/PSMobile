@@ -1,7 +1,7 @@
 using PSMobile.SharedUI;
 using PSMobile.Web.Components;
 using PSMobile.SharedKernel;
-using PSMobile.SharedKernel.Utilities.Services;
+using PSMobile.SharedUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSharedKernelServices();
 builder.Services.AddScoped<ConfirmationDialogService>();
 
-InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
+//InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
 
 var app = builder.Build();
 

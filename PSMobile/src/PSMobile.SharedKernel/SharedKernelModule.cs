@@ -19,14 +19,15 @@ public static class SharedKernelModule
         services.AddSingleton(sp => new HttpClient(handler)
         {
             BaseAddress = new Uri("https://192.168.0.170:44332")
+            //BaseAddress = new Uri("https://127.0.0.1:7159")
         });
 
         services.AddSingleton<IUowAPI, UowAPI>();
 
-
         services.AddSingleton<IPssysValidacoesService, PssysValidacoesService>();
 
         services.AddSingleton<ILocalNavigationService, LocalNavigationService>();
+        
 
         services.AddMudExtensions();
 

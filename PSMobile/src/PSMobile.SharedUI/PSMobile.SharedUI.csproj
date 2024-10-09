@@ -16,7 +16,6 @@
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="7.0.1" />
     <PackageReference Include="FluentValidation" Version="11.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.90" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,8 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\Shared\ThirdComponents\Enuns\" />
-    <Folder Include="wwwroot\js\" />
+    <Folder Include="Components\Shared\ThirdComponents\" />
   </ItemGroup>
 
 </Project>

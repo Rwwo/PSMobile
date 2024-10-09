@@ -46,7 +46,11 @@ public class IndexCadastroPage : MyBaseComponent
         ServiceLocal.SetarCliente(input);
         Navigation.NavigateTo($"/cadastro/gravar");
     }
-
+    public void GoToAddPedido()
+    {
+        ServiceLocal.LimparCliente();
+        Navigation.NavigateTo($"/cadastro/gravar");
+    }
 }
 
 

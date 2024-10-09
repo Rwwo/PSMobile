@@ -1,8 +1,8 @@
 ﻿using MudBlazor;
-using PSMobile.SharedKernel.Utilities.Interfaces;
+
 using PSMobile.SharedUI.Components.Shared;
 
-namespace PSMobile.SharedKernel.Utilities.Services;
+namespace PSMobile.SharedUI.Services;
 
 public class ConfirmationDialogService : IConfirmationDialogService
 {

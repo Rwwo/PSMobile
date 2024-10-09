@@ -26,6 +26,7 @@ public class AppDbContext : DbContext
     public DbSet<Produtos> Produtos { get; set; }
     public DbSet<ProdutosEmpresas> ProdutosEmpresas { get; set; }
     public DbSet<Ufs> Ufs { get; set; }
+    public DbSet<Usuarios> Usuarios { get; set; }
 
 
     private const string CONST_DATA_CADASTRO = "DataCadastro";
