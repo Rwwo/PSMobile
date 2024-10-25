@@ -35,6 +35,8 @@ public class Cadastros : BaseEntity
     public CadastroEndereco? CadastroEnderecoCorrespondencia { get; set; }
 
     public ICollection<Pedidos>? Pedidos { get; } = null;
+    public ICollection<OrdensServicos>? OrdensServicos { get; } = null;
+
 
     public override void Deletar()
     {

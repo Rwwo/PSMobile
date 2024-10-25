@@ -18,6 +18,10 @@ public class LocalNavigationService : ILocalNavigationService
     }
 
 
+    public OrdensServicos? OrdemServico { get; private set; } = null;
+    public void SetarOS(OrdensServicos? input) => OrdemServico = input;
+    public void LimparOS() => OrdemServico = null;
+
 
     public Pedidos? Pedido { get; private set; } = null;
     public void SetarPedido(Pedidos? input) => Pedido = input;

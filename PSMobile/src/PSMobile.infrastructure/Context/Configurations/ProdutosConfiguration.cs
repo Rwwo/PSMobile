@@ -13,6 +13,5 @@ public class ProdutosConfiguration : IEntityTypeConfiguration<Produtos>
 
         builder.HasKey(t => t.pro_key);
 
-
     }
 }

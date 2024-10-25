@@ -390,6 +390,7 @@ public class GravarPedidoPage : MyBaseComponent
     {
         Console.WriteLine(PedidoInputModel.SaldoRestante);
     }
+
     public async Task<DialogResult> ViewParcelasFormaPagamentoAsync(PedidosFormasPagamento input)
     {
         var parameters = new DialogParameters<FormaPagamentoParcelasDialog>()
@@ -435,7 +436,7 @@ public class GravarPedidoPage : MyBaseComponent
     {
         var dadoPedido = await UowAPI.PedidoService.GetByPedKeyAsync(emp_key, pedKey);
         PedidoInputModel.CurrentPedido = dadoPedido.Items.FirstOrDefault();
-
+        PedidoInputModel._ped_obs = PedidoInputModel.CurrentPedido.ped_obs;
         PedidoInputModel._ped_key = PedidoInputModel.CurrentPedido.ped_key;
         PedidoInputModel._ped_numero = PedidoInputModel.CurrentPedido.ped_numero;
         PedidoInputModel.Funcionario = PedidoInputModel.CurrentPedido.Funcionario;
@@ -448,7 +449,7 @@ public class GravarPedidoPage : MyBaseComponent
 
     private async Task<Result<PedidosGravarRetornoFuncao>> GravarPedidoServiceAsync()
     {
-
+        PedidoInputModel._ped_obs = PedidoInputModel.CurrentPedido.ped_obs;
         PedidoInputModel._ped_nome = PedidoInputModel.Cliente.cad_nome;
         PedidoInputModel._ped_cad_key = PedidoInputModel.Cliente.cad_key;
         PedidoInputModel._ped_fun_key = PedidoInputModel.Funcionario.fun_key != 0 ? PedidoInputModel.Funcionario.fun_key : null;

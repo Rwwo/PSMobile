@@ -1,7 +1,10 @@
 @page "/teste/gravar"
 @inherits GravarTestePage
-@using ZXingBlazor.Components
+@using Microsoft.Maui.Devices
+@using Microsoft.Maui.Media
+@using Microsoft.Maui.Storage
 
+@using BlazorBarcodeScanner.ZXing.JS
 
 <PsTitle Title="Gravar Nome executando lib.net" />
 
@@ -28,50 +31,51 @@
         <SaveButton />
 
 
-        <MudTextField Label="Ler QR Code"
-                      HelperText="Campo obrigatório"
-                      Variant="Variant.Outlined"
-                      @bind-Value="MeuNomeInputModel.LastName" />
+        @*
+        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" OnClick="TakePhoto"> Ler Código de Barra </MudButton>
 
-        <MudSpacer />
-        <MudSpacer />
-        <MudSpacer />
+        *@
 
-        <BarcodeReader ScanResult="ScanResult"
-                               Close="(()=>ShowScanBarcode=!ShowScanBarcode)"
-                               ScanBtnTitle="Scan"
-                               ResetBtnTitle="Reset"
-                               CloseBtnTitle="Close"
-                               Pdf417Only="Pdf417"
-                               Decodeonce="!DecodeContinuously"
-                               DecodeAllFormats="DecodeAllFormats"
-                               SelectDeviceBtnTitle="Select Device" />
+
+        <MudText>Aqui: @BarcodeResult</MudText>
+
+        <MyBarCodeReader />
 
     </EditForm>
 </MudPaper>
 
 @code {
 
-    public string? BarCode { get; set; }
+    private string BarcodeResult { get; set; } = "resultado da leitura";
 
-    public bool Pdf417 { get; set; }
-    public bool DecodeContinuously { get; set; }
-    public bool DecodeAllFormats { get; set; }
+    FileResult photo = null;
 
-    bool ShowScanBarcode { get; set; } = false;
-
-    private void ScanResult(string e)
+    private async Task TakePhoto()
     {
-        if (!DecodeContinuously)
+        try
         {
-            BarCode = e;
-            ShowScanBarcode = !ShowScanBarcode;
+            FileResult? photo = null;
+
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android || DeviceInfo.Current.Platform == DevicePlatform.iOS)
+                photo = await MediaPicker.CapturePhotoAsync();
+
+            if (photo == null)
+                return;
+
+            string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+            using (var stream = await photo.OpenReadAsync())
+            {
+                var dotnetImageStream = new DotNetStreamReference(stream);
+
+                // save the file into local storage
+
+
+            }
         }
-        else
+        catch (Exception ex)
         {
-            if (BarCode.Length > 200)
-                BarCode = "";
-            BarCode += e + Environment.NewLine;
+            Console.WriteLine(ex.Message);
         }
     }
 }

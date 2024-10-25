@@ -8,4 +8,3 @@ public interface IPedidosRepository : IWriteRepository<PedidoInputModel, Pedidos
 {
     abstract Task<PedidosAtualizarRetornoFuncao> AtualizarAsync(PedidoAtualizarInputModel entity);
 }
-

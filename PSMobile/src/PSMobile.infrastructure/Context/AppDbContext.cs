@@ -18,11 +18,13 @@ public class AppDbContext : DbContext
     public DbSet<FormasPagamento> FormasPagamento { get; set; }
     public DbSet<Funcionarios> Funcionarios { get; set; }
     public DbSet<Gerais> Gerais { get; set; }
+    public DbSet<OrdensServicos> OrdensServicos { get; set; }
+    public DbSet<OrdensServicosItens> OrdensServicosItens { get; set; }
+    public DbSet<Pdvs> Pdvs { get; set; }
     public DbSet<Pedidos> Pedidos { get; set; }
     public DbSet<PedidosFormasPagamento> PedidosFormasPagamento { get; set; }
     public DbSet<PedidosFormasPagamentoParcelas> PedidosFormasPagamentoParcelas { get; set; }
     public DbSet<PedidosItens> PedidosItens { get; set; }
-    public DbSet<Pdvs> Pdvs { get; set; }
     public DbSet<Produtos> Produtos { get; set; }
     public DbSet<ProdutosEmpresas> ProdutosEmpresas { get; set; }
     public DbSet<Ufs> Ufs { get; set; }

@@ -1,0 +1,101 @@
+@using PSMobile.core.InputModel
+<MudDialog>
+    <DialogContent>
+
+        <MudCard Elevation="2">
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@ContentTextTitle</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+
+            <MudCardContent>
+                <MudTextField Variant="Variant.Outlined"
+                              Label="Produto/Serviço"
+                              @bind-Value="ProductDescription"
+                              Lines="5"
+                              Clearable
+                              Required />
+
+                <MudSpacer />
+
+                <MudTextField @bind-Value="_ProductServiceValue"
+                              Label="Valor R$"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              InputMode="InputMode.numeric"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+
+                <MudTextField @bind-Value="_ProductServiceDiscount"
+                              Label="Desconto R$"
+                              InputMode="InputMode.numeric"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+
+                <MudSpacer />
+
+
+                <MudNumericField Variant="Variant.Outlined"
+                                 @bind-Value="Qtde"
+                                 InputMode="InputMode.numeric"
+                                 Label="Quantidade"
+                                 Min="1"
+                                 Immediate="true" />
+            </MudCardContent>
+        </MudCard>
+
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public string ContentTextTitle { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public string ProductDescription { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public decimal? _ProductServiceValue { get; set; }
+
+    [Parameter]
+    [EditorRequired]
+    public decimal? _ProductServiceDiscount { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    [Parameter]
+    public Color Color { get; set; }
+
+    public int Qtde { get; set; } = 1;
+
+    private void Submit()
+    {
+        // Passa a quantidade ao fechar o diálogo
+
+        var retorno = new AddItemWithQtyInputModel()
+            {
+                ProductDescription = ProductDescription,
+                Qtde = Qtde,
+                ProductServiceValue = _ProductServiceValue,
+                ProductServiceDiscount = _ProductServiceDiscount
+            };
+
+        MudDialog.Close(DialogResult.Ok(retorno));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

@@ -1,0 +1,76 @@
+@page "/barcode-reader"
+@using Microsoft.Maui.ApplicationModel
+@using PSMobile.SharedKernel.Common
+@inherits MyBaseComponent
+
+
+<audio id="soundAudio" src="Media/dry.mp3" style="display:none;"></audio>
+<h3>Leitura de Código de Barras</h3>
+
+<div id="barcode-reader" style="width: 640px; height: 480px;"></div>
+
+<p>@(result ?? "Aguardando leitura...")</p>
+
+@code {
+
+
+    private bool isGranted = false;
+    String result = "";
+    private DotNetObjectReference<MyBarCodeReader> objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var status = await Permissions.CheckStatusAsync<Permissions.Camera>();
+            if (status == PermissionStatus.Granted)
+            {
+                isGranted = true;
+            }
+            else
+            {
+                status = await Permissions.RequestAsync<Permissions.Camera>();
+                if (status == PermissionStatus.Granted)
+                {
+                    isGranted = true;
+                }
+            }
+
+            if (isGranted)
+            {
+                StateHasChanged();
+                objRef = DotNetObjectReference.Create(this);
+                await StartQuagga();
+            }
+        }
+    }
+
+    private async Task StartQuagga()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("playSound");
+            await JSRuntime.InvokeVoidAsync("startQuagga", objRef);
+
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+    [JSInvokable]
+    public void OnBarcodeDetected(string data)
+    {
+        result = data;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public void OnError(object data)
+    {
+        Snackbar.Add(data.ToString(), Severity.Error);
+    }
+
+
+}

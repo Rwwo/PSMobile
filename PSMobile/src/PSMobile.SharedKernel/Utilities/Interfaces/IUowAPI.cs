@@ -8,6 +8,8 @@ public interface IUowAPI
     IFuncionariosService FuncionariosService { get; }
     IGeraisService GeraisService { get; }
     IPedidoService PedidoService { get; }
+    IOrdemServicoService OrdemServicoService { get; }
+    IOrdemServicoItemService OrdemServicoItemService { get; }
     IPedidoFormaPagamentoService PedidoFormaPagamentoService { get; }
     IPdvService PdvService { get; }
     IPedidoItemService PedidoItemService { get; }

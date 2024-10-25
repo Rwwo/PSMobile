@@ -14,7 +14,7 @@ public class PedidosConfiguration : IEntityTypeConfiguration<Pedidos>
         builder.HasKey(t => t.ped_key);
 
         builder.HasOne(t => t.Funcionario)
-            .WithMany(f=>f.Pedidos)
+            .WithMany(f => f.Pedidos)
             .HasForeignKey(t => t.ped_fun_key);
 
         builder.HasOne(t => t.Cliente)

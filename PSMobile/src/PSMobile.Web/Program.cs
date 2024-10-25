@@ -1,9 +1,10 @@
-using PSMobile.SharedUI;
 using PSMobile.Web.Components;
 using PSMobile.SharedKernel;
 using PSMobile.SharedUI.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
+//var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

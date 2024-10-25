@@ -24,10 +24,10 @@ public static class SharedKernelModule
 
         services.AddSingleton<IUowAPI, UowAPI>();
 
+
         services.AddSingleton<IPssysValidacoesService, PssysValidacoesService>();
 
         services.AddSingleton<ILocalNavigationService, LocalNavigationService>();
-        
 
         services.AddMudExtensions();
 
@@ -39,7 +39,6 @@ public static class SharedKernelModule
             config.SnackbarConfiguration.HideTransitionDuration = 500;
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
         });
-
 
         return services;
     }

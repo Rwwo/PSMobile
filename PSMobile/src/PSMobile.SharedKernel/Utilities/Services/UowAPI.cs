@@ -41,6 +41,20 @@ public class UowAPI : IUowAPI
         get => _GeraisService ??= new GeraisService(_HttpClient);
     }
 
+
+    private IOrdemServicoService? _OrdemServicoService;
+    public IOrdemServicoService OrdemServicoService
+    {
+        get => _OrdemServicoService ??= new OrdemServicoService(_HttpClient);
+    }
+
+
+    private IOrdemServicoItemService? _OrdemServicoItemService;
+    public IOrdemServicoItemService OrdemServicoItemService
+    {
+        get => _OrdemServicoItemService ??= new OrdemServicoItemService(_HttpClient);
+    }
+
     private PdvService? _PdvService;
     public IPdvService PdvService
     {

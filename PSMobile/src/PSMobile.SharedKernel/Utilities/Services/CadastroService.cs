@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Reflection;
 
 using MudBlazor;
 
@@ -9,6 +10,7 @@ using PSMobile.SharedKernel.Responses;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Services;
+
 public class CadastroService : ICadastroService
 {
     private readonly HttpClient _httpClient;

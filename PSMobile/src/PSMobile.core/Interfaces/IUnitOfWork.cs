@@ -10,9 +10,11 @@ public interface IUnitOfWork
     IPdvsRepository PdvsRepository { get; }
     IPedidosFormasPagamentoRepository PedidosFormasPagamentoRepository { get; }
     IPedidosFormasPagamentoParcelasRepository PedidosFormasPagamentoParcelasRepository { get; }
-    IPedidosRepository PedidosRepository { get; }
     IPedidosItemRepository PedidosItemRepository { get; }
     IProdutosEmpresasRepository ProdutosEmpresasRepository { get; }
+    IPedidosRepository PedidosRepository { get; }
+    IOrdensServicosRepository OrdensServicosRepository { get; }
+    IOrdensServicosItensRepository OrdensServicosItensRepository { get; }
     IUsuariosRepository UsuariosRepository { get; }
     Task CommitAsync();
 }

@@ -42,17 +42,34 @@ public class UnitOfWork : IUnitOfWork
         get => _FuncionariosRepository ??= new FuncionariosRepository(_context);
     }
 
+
     private GeraisRepository? _GeraisRepository;
     public IGeraisRepository GeraisRepository
     {
         get => _GeraisRepository ??= new GeraisRepository(_context);
     }
 
+
+    public OrdensServicosRepository? _OrdensServicosRepository;
+    public IOrdensServicosRepository OrdensServicosRepository
+    {
+        get => _OrdensServicosRepository ??= new OrdensServicosRepository(_context);
+    }
+
+
+    public OrdensServicosItensRepository? _OrdensServicosItensRepository;
+    public IOrdensServicosItensRepository OrdensServicosItensRepository
+    {
+        get => _OrdensServicosItensRepository ??= new OrdensServicosItensRepository(_context);
+    }
+
+
     public PdvsRepository? _PdvsRepository;
     public IPdvsRepository PdvsRepository
     {
         get => _PdvsRepository ??= new PdvsRepository(_context);
     }
+
 
     public PedidosFormasPagamentoRepository? _PedidosFormasPagamentoRepository;
     public IPedidosFormasPagamentoRepository PedidosFormasPagamentoRepository
@@ -87,6 +104,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get => _ProdutosEmpresasRepository ??= new ProdutosEmpresasRepository(_context);
     }
+
 
     private UsuariosRepository? _UsuariosRepository;
     public IUsuariosRepository UsuariosRepository

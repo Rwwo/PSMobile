@@ -15,7 +15,9 @@
     <PackageReference Include="Blazored.TextEditor" Version="1.1.0" />
     <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="7.0.1" />
     <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.91" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+    <PackageReference Include="BlazorBarcodeScanner.ZXing.JS" Version="1.0.4" />
   </ItemGroup>
 
   <ItemGroup>

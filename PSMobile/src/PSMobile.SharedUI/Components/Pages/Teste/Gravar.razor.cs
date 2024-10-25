@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.JSInterop;
 using Microsoft.Maui.ApplicationModel;
 
 using PSMobile.DLLnet;
@@ -9,9 +8,14 @@ namespace PSMobile.SharedUI.Components.Pages.Teste;
 
 public class GravarTestePage : MyBaseComponent
 {
+
     public MeuNome MeuNomeInputModel { get; set; } = new();
 
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
 
+    }
 
 
     public async Task OnValidSubmitAsync(EditContext editContext)

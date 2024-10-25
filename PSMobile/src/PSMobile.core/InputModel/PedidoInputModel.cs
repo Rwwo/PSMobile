@@ -56,7 +56,7 @@ public class PedidoInputModel : PSMobile.core.Entities.InputModel
     [JsonIgnore] public decimal TotalPedidoComDesconto => CalcularVlrFinalPedidoComDesconto() ?? 0;
     [JsonIgnore] public bool DimissEdit => CurrentPedido.ped_finalizado == 1;
 
-    public decimal? CalcularVlrFinalPedidoComDesconto()
+    private decimal? CalcularVlrFinalPedidoComDesconto()
     {
         var descontoEmReais = DescontoReais ?? 0;
 
@@ -92,3 +92,4 @@ public class PedidoInputModel : PSMobile.core.Entities.InputModel
 
 
 }
+

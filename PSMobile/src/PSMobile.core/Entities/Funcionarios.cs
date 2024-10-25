@@ -51,6 +51,7 @@ public class Funcionarios : BaseEntity
 
 
     public ICollection<Pedidos>? Pedidos { get; set; } = null;
+    public ICollection<OrdensServicos>? OrdensServicos { get; set; } = null;
 
     public override string ToString()
     {

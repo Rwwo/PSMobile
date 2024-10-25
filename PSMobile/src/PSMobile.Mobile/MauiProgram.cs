@@ -1,9 +1,12 @@
-﻿
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using PSMobile.SharedKernel;
-using PSMobile.SharedUI;
 using PSMobile.SharedUI.Services;
+
+
+#if ANDROID
+[assembly: Android.App.UsesPermission(Android.Manifest.Permission.Camera)]
+#endif
 
 namespace PSMobile.Mobile;
 public static class MauiProgram
@@ -28,7 +31,7 @@ public static class MauiProgram
         builder.Services.AddScoped<ConfirmationDialogService>();
 
 
-       //InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
+        //InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
 
         return builder.Build();
     }

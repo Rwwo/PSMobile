@@ -84,6 +84,16 @@
                                                              Clearable />
                                         </MudItem>
 
+                                        <MudItem xs="12" sm="12" md="12">
+                                            <MudTextField T="string"
+                                                          @bind-Value="PedidoInputModel.CurrentPedido.ped_obs"
+                                                          Label="Obs."
+                                                          Lines="6"
+                                                          Variant="Variant.Text"
+                                                          HelperText="Observações"
+                                                          Clearable />
+                                        </MudItem>
+
                                     </MudStack>
                                 </MudForm>
                             </ChildContent>
@@ -101,9 +111,24 @@
                                                 {
                                                     <MudItem xs="12" sm="6" md="4" Class="mb-2">
                                                         <MudCard>
+                                                            <MudCardHeader>
+                                                                <CardHeaderAvatar>
+                                                                    <MudAvatar Color="Color.Primary">@item.pedite_item</MudAvatar>
+                                                                </CardHeaderAvatar>
+
+                                                                <CardHeaderContent>
+                                                                    <MudText><strong>Código:</strong> @item.pedite_pro_codigo</MudText>
+                                                                </CardHeaderContent>
+
+                                                                <CardHeaderActions>
+                                                                    <MudStack Justify="Justify.FlexEnd" Row="true" Spacing="1">
+                                                                        <EditButton Disabled=" false" OnClick="@(() => GoToUpdate(item))" />
+                                                                        <DeleteButton Disabled="false" OnClick="@(() => DeleteAsync(item))" />
+                                                                    </MudStack>
+                                                                </CardHeaderActions>
+                                                            </MudCardHeader>
+
                                                             <MudCardContent>
-                                                                <MudText><strong>Item:</strong> @item.pedite_item</MudText>
-                                                                <MudText><strong>Código:</strong> @item.pedite_pro_codigo</MudText>
                                                                 <MudText><strong>Referência:</strong> @item.Produto.pro_reduzido</MudText>
                                                                 <MudText><strong>Tipo:</strong> @item.IsTipo</MudText>
                                                                 <MudText><strong>Descrição:</strong> @item.pedite_nome</MudText>
@@ -317,7 +342,6 @@
                                                 <MudItem xs="12" sm="12" md="6" lg="6">
                                                     <MudCard>
                                                         <MudCardContent>
-                                                            <MudDivider Class="my-2" />
                                                             <MudStack Spacing="2">
 
                                                                 <!-- Lista de Formas de Pagamento -->
