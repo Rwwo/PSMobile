@@ -22,7 +22,7 @@ public class OrdensServicos : Entity
     public short ordser_exc { get; set; }
     public int? ordser_mov_key { get; set; }
     public short ordser_lancado { get; set; }
-    public string? ordser_obs { get; set; }
+    public string? ordser_obs { get; set; } = string.Empty;
     public string? ordser_fone { get; set; }
     public string? ordser_contato { get; set; }
     public string? ordser_endereco { get; set; }

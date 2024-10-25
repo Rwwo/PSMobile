@@ -296,8 +296,9 @@ public class GravarOrdemServicoPage : MyBaseComponent
         OSInputModel._ordser_key = OSInputModel.CurrentOS.ordser_key;
         OSInputModel._ordser_obs = OSInputModel.CurrentOS.ordser_obs;
         OSInputModel._ordser_numero = OSInputModel.CurrentOS.ordser_numero;
-        OSInputModel.Funcionario = OSInputModel.CurrentOS.Funcionario;
-        OSInputModel.Cliente = OSInputModel.CurrentOS.Cliente;
+
+        OSInputModel.Funcionario = OSInputModel.CurrentOS.Funcionario ?? new Funcionarios();
+        OSInputModel.Cliente = OSInputModel.CurrentOS.Cliente ?? new Cadastros();
 
         await InvokeAsync(StateHasChanged);
     }
@@ -515,7 +516,9 @@ public class GravarOrdemServicoPage : MyBaseComponent
 
             var result = await GravarOSServiceAsync();
             if (!result.IsSuccess)
+            {
                 HandleError(result.Errors);
+            }
 
             OSInputModel._ordser_numero = result.Data._ordser_numero;
             OSInputModel._ordser_key = result.Data._ordser_key;

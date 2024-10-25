@@ -12,8 +12,8 @@ public class OrdensServicosInputModel : PSMobile.core.Entities.InputModel
         _ordser_emp_key = emp_key;
     }
 
-    [JsonIgnore] public Cadastros Cliente { get; set; } = new();
-    [JsonIgnore] public Funcionarios Funcionario { get; set; } = new();
+    [JsonIgnore] public Cadastros? Cliente { get; set; } = new();
+    [JsonIgnore] public Funcionarios? Funcionario { get; set; } = new();
     [JsonIgnore] public OrdensServicos? CurrentOS { get; set; } = new();
     [JsonIgnore] public bool HasClient => Cliente.cad_key == 0 ? false : true;
 
@@ -26,7 +26,7 @@ public class OrdensServicosInputModel : PSMobile.core.Entities.InputModel
     public string _ordser_comput { get; set; } = "API PSMobile";
     public int _ordser_usu { get; set; } = 0;
     public int? _ordser_fun_key { get; set; } = null;
-    public string _ordser_obs { get; set; }
+    public string _ordser_obs { get; set; } = string.Empty;
     public string? _ordser_placa { get; set; }
     public string? _ordser_faturamento { get; set; }
     public string? _ordser_cnpj { get; set; }

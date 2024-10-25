@@ -57,7 +57,7 @@ public class ProdutosEmpresasHandler
     public async Task<PaginatedResult<core.Entities.ProdutosEmpresas>> Handle(GetProdutosEmpresasByEmpKeyAndCustomQuery request,
                                                             CancellationToken cancellationToken)
     {
-        var toLower = request.Custom;
+        var toUpper = request.Custom.ToUpper();
 
         Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => c.proemp_exc == 0 &&
                                                                               (c.proemp_emp_key == request.EmpKey
@@ -65,14 +65,14 @@ public class ProdutosEmpresasHandler
                                                                                 (
                                                                                     c.Produto.pro_exc == 0 &&
 
-                                                                                    c.Produto.pro_codigo.Contains(toLower) ||
-                                                                                    c.Produto.pro_codigo == toLower ||
+                                                                                    c.Produto.pro_codigo.Contains(toUpper) ||
+                                                                                    c.Produto.pro_codigo == toUpper ||
 
-                                                                                    c.Produto.pro_reduzido.Contains(toLower) ||
-                                                                                    c.Produto.pro_reduzido == toLower ||
+                                                                                    c.Produto.pro_reduzido.Contains(toUpper) ||
+                                                                                    c.Produto.pro_reduzido == toUpper ||
 
-                                                                                    c.Produto.pro_nome.Contains(toLower) ||
-                                                                                    c.Produto.pro_nome == toLower
+                                                                                    c.Produto.pro_nome.StartsWith(toUpper) ||
+                                                                                    c.Produto.pro_nome == toUpper
 
                                                                                 ));
 
@@ -81,7 +81,7 @@ public class ProdutosEmpresasHandler
             e => e.Produto
         };
 
-        Expression<Func<core.Entities.ProdutosEmpresas, object>> order = o => o.proemp_key;
+        Expression<Func<core.Entities.ProdutosEmpresas, object>> order = o => o.Produto.pro_nome;
 
         return await _uow.ProdutosEmpresasRepository.GetAllAsync(filter,
                                                                  includes,

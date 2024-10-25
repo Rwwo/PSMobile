@@ -43,14 +43,15 @@ public class CadastrosQueryHandler
 
     public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetAllCustomColumnCadastrosQuery request, CancellationToken cancellationToken)
     {
-        var toLower = request.Custom.ToLower();
+        var toUpper = request.Custom.ToUpper();
 
         Expression<Func<core.Entities.Cadastros, bool>>? filter = c => c.CadastroCliente.cad_cli_exc == 0 &&
-                                                                        (c.cad_nome.ToLower().Contains(toLower) ||
-                                                                        (c.cad_cnpj.ToLower().Contains(toLower) || c.cad_cnpj.ToLower().Equals(toLower)) ||
-                                                                         c.cad_razao.ToLower().Contains(toLower)
+                                                                        (
+                                                                            c.cad_nome.StartsWith(toUpper) ||
+                                                                            (c.cad_cnpj.Contains(toUpper) || c.cad_cnpj.Equals(toUpper))
                                                                         );
-        Expression<Func<core.Entities.Cadastros, object>> order = o => o.cad_key;
+
+        Expression<Func<core.Entities.Cadastros, object>> order = o => o.cad_nome;
 
 
         return await _uow.CadastroRepository.GetAllAsync(filter,

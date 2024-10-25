@@ -145,7 +145,7 @@
 
     public Task OnSearch(string text)
     {
-        searchString = text;
+        searchString = text.ToUpper();
         return dataGrid.ReloadServerData();
     }
 }
