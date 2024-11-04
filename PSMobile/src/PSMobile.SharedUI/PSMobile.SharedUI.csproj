@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UseMaui>true</UseMaui>
   </PropertyGroup>
 
 
@@ -13,11 +14,15 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.TextEditor" Version="1.1.0" />
-    <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="7.0.1" />
+    <PackageReference Include="CodeBeam.MudBlazor.Extensions" Version="7.0.2" />
+    <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
     <PackageReference Include="FluentValidation" Version="11.10.0" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.91" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
-    <PackageReference Include="BlazorBarcodeScanner.ZXing.JS" Version="1.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
+    <PackageReference Include="ZXing.Net" Version="0.16.9" />
+    <PackageReference Include="ZXing.Net.Maui" Version="0.4.0" />
+    <PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +32,24 @@
 
   <ItemGroup>
     <Folder Include="Components\Shared\ThirdComponents\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <MauiXaml Update="Components\MauiPages\CameraPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.92" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Maui.Controls" Version="8.0.92" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
   </ItemGroup>
 
 </Project>

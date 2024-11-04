@@ -66,11 +66,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.90" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.90" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.91" />
-        <PackageReference Include="MudBlazor" Version="7.8.0" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="8.0.92" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.92" />
+        <PackageReference Include="MudBlazor" Version="7.15.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -78,5 +78,9 @@
     </ItemGroup>
 
     <ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionPSMobileMobileHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
+    </ItemGroup>
 
 </Project>

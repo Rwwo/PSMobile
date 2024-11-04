@@ -20,7 +20,6 @@ public class MainActivity : MauiAppCompatActivity
 
         Window.SetSoftInputMode(SoftInput.AdjustResize);
 
-       
     }
 
 }

@@ -13,7 +13,7 @@ public class ConfirmationDialogService : IConfirmationDialogService
         _dialogService = dialogService;
     }
 
-    public async Task<bool> ConfirmAsync(string title, string contentText, string buttonText = "Sim", Color color = Color.Success)
+    public async Task<bool> ConfirmAsync(string title, string contentText, string buttonText = "Sim", MudBlazor.Color color = MudBlazor.Color.Success)
     {
         var parameters = new DialogParameters
         {

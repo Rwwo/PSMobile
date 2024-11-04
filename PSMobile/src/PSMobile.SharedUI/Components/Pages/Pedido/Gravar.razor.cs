@@ -12,9 +12,12 @@ using PSMobile.core.InputModel;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
 using PSMobile.SharedKernel.Common;
+using PSMobile.SharedKernel.Utilities.Interfaces;
 using PSMobile.SharedKernel.Utilities.Services;
+using PSMobile.SharedUI.Components.MauiPages;
 using PSMobile.SharedUI.Components.Shared;
 using PSMobile.SharedUI.Services;
+
 
 namespace PSMobile.SharedUI.Components.Pages.Pedido;
 
@@ -39,12 +42,12 @@ public class GravarPedidoPage : MyBaseComponent
     public bool _showStepResultIndicator = false;
     public bool _addResultStep = false;
     public bool _customLocalization = true;
-    public Color _color = Color.Primary;
+    public MudBlazor.Color _color = MudBlazor.Color.Primary;
     public int _activeIndex = 0;
     public bool _loading;
     public bool _showCustomButton = false;
     public bool _vertical = false;
-    public Size _headerSize = Size.Medium;
+    public MudBlazor.Size _headerSize = MudBlazor.Size.Medium;
     public StepperActionsJustify _stepperActionsJustify = StepperActionsJustify.SpaceBetween;
 
 
@@ -59,15 +62,16 @@ public class GravarPedidoPage : MyBaseComponent
     public PaginatedResult<Pdvs> PdvsPaginated { get; set; }
     public PaginatedResult<FormasPagamento> FormasPagamentoPaginated { get; set; }
 
+    [Inject] protected INavigationService NaviPopUp { get; set; } = null;
+
 
     private int emp_key = 0;
     public bool IsBothNFE_NFCe { get; set; } = false;
     public bool IsOnlyNFCe { get; private set; }
-
     public string NomeBotaoFinaliza => PedidoInputModel.DimissEdit ? "Reabrir Pedido" : "Finalizar Pedido";
-
     protected override async Task OnInitializedAsync()
     {
+
         emp_key = ServiceLocal.EmpresaAtual.emp_key;
         PedidoInputModel = new PedidoInputModel(emp_key);
 
@@ -161,7 +165,7 @@ public class GravarPedidoPage : MyBaseComponent
         {
             { x => x.ContentText, $"Edição de quantidade: {Item.Produto.pro_codigo} - {Item.Produto.pro_nome}?" },
             { x => x.ButtonText, "Sim" },
-            { x => x.Color, Color.Success }
+            { x => x.Color, MudBlazor.Color.Success }
         };
 
         var dialog = await DialogService.ShowAsync<ConfirmQtdDialog>("Editar Quantidade", parameters);
@@ -419,6 +423,21 @@ public class GravarPedidoPage : MyBaseComponent
 
     }
 
+    public async Task OpenPopUp()
+    {
+        try
+        {
+            if (NaviPopUp == null)
+                return;
+
+            var camera = new CameraPage();
+            await NaviPopUp.PushAsync(camera);
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
     public async Task SearchProductsDialogAsync()
     {
         try

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace PSMobile.SharedKernel.Responses;
+namespace PSMobile.SharedKernel.Extensions;
 public static class HttpResponseMessageExtension
 {
     public static async Task<List<string>> TratarErroAsync(this HttpResponseMessage response)

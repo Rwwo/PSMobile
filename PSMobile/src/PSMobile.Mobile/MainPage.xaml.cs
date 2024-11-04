@@ -6,5 +6,7 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
 
-    }   
+        NavigationPage.SetHasNavigationBar(this, false);
+    }
+
 }

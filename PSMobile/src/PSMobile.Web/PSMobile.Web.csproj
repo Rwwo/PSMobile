@@ -8,8 +8,8 @@
   
   <ItemGroup>
     <PackageReference Include="Blazored.TextEditor" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.91" />
-    <PackageReference Include="MudBlazor" Version="7.8.0" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.92" />
+    <PackageReference Include="MudBlazor" Version="7.15.0" />
   </ItemGroup>
   
   <ItemGroup>

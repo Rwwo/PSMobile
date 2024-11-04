@@ -23,8 +23,7 @@ public static class SharedKernelModule
         });
 
         services.AddSingleton<IUowAPI, UowAPI>();
-
-
+    
         services.AddSingleton<IPssysValidacoesService, PssysValidacoesService>();
 
         services.AddSingleton<ILocalNavigationService, LocalNavigationService>();

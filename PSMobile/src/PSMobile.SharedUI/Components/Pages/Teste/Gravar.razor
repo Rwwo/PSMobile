@@ -4,8 +4,6 @@
 @using Microsoft.Maui.Media
 @using Microsoft.Maui.Storage
 
-@using BlazorBarcodeScanner.ZXing.JS
-
 <PsTitle Title="Gravar Nome executando lib.net" />
 
 <PsPageHeader Icon="@Icons.Material.Filled.Adb"
@@ -31,51 +29,6 @@
         <SaveButton />
 
 
-        @*
-        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" OnClick="TakePhoto"> Ler Código de Barra </MudButton>
-
-        *@
-
-
-        <MudText>Aqui: @BarcodeResult</MudText>
-
-        <MyBarCodeReader />
 
     </EditForm>
 </MudPaper>
-
-@code {
-
-    private string BarcodeResult { get; set; } = "resultado da leitura";
-
-    FileResult photo = null;
-
-    private async Task TakePhoto()
-    {
-        try
-        {
-            FileResult? photo = null;
-
-            if (DeviceInfo.Current.Platform == DevicePlatform.Android || DeviceInfo.Current.Platform == DevicePlatform.iOS)
-                photo = await MediaPicker.CapturePhotoAsync();
-
-            if (photo == null)
-                return;
-
-            string localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
-
-            using (var stream = await photo.OpenReadAsync())
-            {
-                var dotnetImageStream = new DotNetStreamReference(stream);
-
-                // save the file into local storage
-
-
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-}

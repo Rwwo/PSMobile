@@ -2,19 +2,15 @@
 using Microsoft.AspNetCore.Components.Forms;
 using PSMobile.core.Entities;
 using PSMobile.SharedKernel.Common;
-using PSMobile.SharedKernel.Common.Dtos.Extensions;
 using PSMobile.core.InputModel;
 using MudExtensions;
 using Microsoft.AspNetCore.Components;
 using MudExtensions.Utilities;
-using PSMobile.core.Enums;
 using PSMobile.core.Interfaces;
 using PSMobile.core.ReturnFunctions;
 using PSMobile.SharedKernel.Utilities.Services;
 using PSMobile.SharedUI.Components.Shared;
 using PSMobile.SharedUI.Services;
-using static MudBlazor.CategoryTypes;
-using static MudBlazor.Icons;
 
 namespace PSMobile.SharedUI.Components.Pages.OrdemServico;
 public class GravarOrdemServicoPage : MyBaseComponent
@@ -38,12 +34,12 @@ public class GravarOrdemServicoPage : MyBaseComponent
     public bool _showStepResultIndicator = false;
     public bool _addResultStep = false;
     public bool _customLocalization = true;
-    public Color _color = Color.Primary;
+    public MudBlazor.Color _color = MudBlazor.Color.Primary;
     public int _activeIndex = 0;
     public bool _loading;
     public bool _showCustomButton = false;
     public bool _vertical = false;
-    public Size _headerSize = Size.Medium;
+    public MudBlazor.Size _headerSize = MudBlazor.Size.Medium;
     public StepperActionsJustify _stepperActionsJustify = StepperActionsJustify.SpaceBetween;
 
 
@@ -133,7 +129,7 @@ public class GravarOrdemServicoPage : MyBaseComponent
                 { x => x._ProductServiceDiscount, Item.ordserite_desconto},
 
                 { x => x.ButtonText, "Sim" },
-                { x => x.Color, Color.Success }
+                { x => x.Color, MudBlazor.Color.Success }
             };
 
             var opt = new DialogOptions

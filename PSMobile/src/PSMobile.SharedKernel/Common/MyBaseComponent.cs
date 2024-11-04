@@ -17,7 +17,6 @@ public abstract class MyBaseComponent : ComponentBase
     [Inject] protected IDialogService DialogService { get; set; } = null!;
     [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
 
-
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;
     protected bool IsStriped { get; private set; } = true;
@@ -33,7 +32,7 @@ public abstract class MyBaseComponent : ComponentBase
         Snackbar.Add(msg, Severity.Warning, conf =>
         {
             conf.Action = "Detalhes";
-            conf.ActionColor = Color.Info;
+            conf.ActionColor = MudBlazor.Color.Info;
             conf.Onclick = snack =>
             {
                 ShowDetails(string.Join('\n', ErrorsList.ToArray()));
@@ -47,7 +46,7 @@ public abstract class MyBaseComponent : ComponentBase
         Snackbar.Add("Erro ao executar operação!", Severity.Warning, conf =>
         {
             conf.Action = "Detalhes";
-            conf.ActionColor = Color.Info;
+            conf.ActionColor = MudBlazor.Color.Info;
             conf.Onclick = snack =>
             {
                 ShowDetails(string.Join('\n', ErrosApiService.ToArray()));
@@ -60,7 +59,7 @@ public abstract class MyBaseComponent : ComponentBase
         Snackbar.Add("Erro ao executar operação!", Severity.Warning, conf =>
         {
             conf.Action = "Detalhes";
-            conf.ActionColor = Color.Info;
+            conf.ActionColor = MudBlazor.Color.Info;
             conf.Onclick = snack =>
             {
                 ShowDetails(ex.Message);
