@@ -9,6 +9,10 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
+using ZXing.Aztec.Internal;
+
+using static MudBlazor.Colors;
+
 namespace PSMobile.infrastructure.Services;
 public class AuthService : IAuthService
 {
@@ -44,9 +48,9 @@ public class AuthService : IAuthService
         var key = _configuration["Jwt:Key"];
 
         var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-        var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256Signature);
+        var credentials = new SigningCredentials(securitykey, SecurityAlgorithms.HmacSha256);
 
-        var subject = new ClaimsIdentity(
+        var subject = new List<Claim>(
             new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userBD.usu_emp_key.ToString()),
@@ -55,21 +59,19 @@ public class AuthService : IAuthService
 
         var expires = DateTime.UtcNow.AddMinutes(60);
 
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = subject,
-            Expires = expires,
-            Issuer = issuer,
-            Audience = audience,
-            SigningCredentials = credentials
-        };
+        var token = new JwtSecurityToken
+        (
+            issuer: issuer,
+            audience: audience,
+            claims: subject,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: credentials
+        );
 
 
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        var jwtToken = tokenHandler.WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
 
-        return jwtToken.ToString();
+        return tokenString.ToString();
     }
 }

@@ -4,7 +4,7 @@ namespace PSMobile.core.Interfaces;
 
 public interface IUsuariosRepository : IReadRepository<Usuarios>
 {
-    Task<(bool, Usuarios)> GetAuthentication(string login, string password);
+    Task<(bool, Usuarios)> GetAuthentication(string nome, string password);
 }
 
 

@@ -2,13 +2,15 @@
 
 using MediatR;
 
+using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.core.Notifications;
 using PSMobile.core.Services;
+using PSMobile.core.ViewModel;
 
 namespace PSMobile.application.Commands.Usuarios;
 
-public class LoginUsuarioCommandHandler : BaseService, IRequestHandler<LoginUsuarioCommand, Dictionary<string, object>>
+public class LoginUsuarioCommandHandler : BaseService, IRequestHandler<LoginUsuarioCommand, LoginViewModel>
 {
     private readonly IAuthService _authService;
     private readonly IUnitOfWork _uow;
@@ -21,10 +23,10 @@ public class LoginUsuarioCommandHandler : BaseService, IRequestHandler<LoginUsua
         _mapper = mapper;
     }
 
-    public async Task<Dictionary<string, object>> Handle(LoginUsuarioCommand request, CancellationToken cancellationToken)
+    public async Task<LoginViewModel> Handle(LoginUsuarioCommand request, CancellationToken cancellationToken)
     {
 
-        var retornoLogin = await _uow.UsuariosRepository.GetAuthentication(request.Usu_login, request.Usu_Senha);
+        var retornoLogin = await _uow.UsuariosRepository.GetAuthentication(request.Usu_nome, request.Usu_Senha);
 
         if (!retornoLogin.Item1)
         {
@@ -34,11 +36,8 @@ public class LoginUsuarioCommandHandler : BaseService, IRequestHandler<LoginUsua
 
         var token = _authService.GenerateJwtToken(retornoLogin.Item2);
 
-        var result = new Dictionary<string, object>
-                {
-                    { "Usuario", retornoLogin.Item2 },
-                    { "TokenJWT", token }
-                };
+        var result = new LoginViewModel(retornoLogin.Item2, token);
+
         return result;
     }
 }

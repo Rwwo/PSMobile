@@ -15,10 +15,11 @@ public class UsuariosRepository : ReadRepository<Usuarios>, IUsuariosRepository
         _context = context;
     }
 
-    public async Task<(bool, Usuarios)> GetAuthentication(string login, string password)
+    public async Task<(bool, Usuarios)> GetAuthentication(string nome, string password)
     {
-        var nomeToLower = login;
-        var usuarioEncontrado = _context.Usuarios.FirstOrDefault(c => c.usu_nome.ToLower().Equals(login) && c.usu_senha.Equals(password));
+        var nomeToLower = nome.ToLower();
+
+        var usuarioEncontrado = _context.Usuarios.FirstOrDefault(c => c.usu_nome.ToLower().Equals(nomeToLower) && c.usu_senha.Equals(password));
 
         if (usuarioEncontrado is not null)
             return (true, usuarioEncontrado);

@@ -10,7 +10,7 @@ using PSMobile.core.Notifications;
 namespace PSMobile.api.Controllers;
 
 [ApiController]
-//[Authorize]
+[Authorize]
 public abstract class MainController : ControllerBase
 {
     private readonly INotificador _notifier;
