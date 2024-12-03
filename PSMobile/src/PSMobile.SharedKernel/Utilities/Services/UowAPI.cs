@@ -1,5 +1,8 @@
 ﻿using PSMobile.SharedKernel.Utilities.Interfaces;
 
+using System.Net.Http.Headers;
+using System.Net.Http;
+
 namespace PSMobile.SharedKernel.Utilities.Services;
 
 public class UowAPI : IUowAPI
@@ -8,6 +11,10 @@ public class UowAPI : IUowAPI
     public UowAPI(HttpClient httpClient)
     {
         _HttpClient = httpClient;
+    }
+    public void SetarToken(string token)
+    {
+        _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
     private CadastroService? _CadastroService;
@@ -80,11 +87,17 @@ public class UowAPI : IUowAPI
     }
 
 
-
     private ProdutosEmpresasService? _ProdutosEmpresasService;
     public IProdutosEmpresasService ProdutosEmpresasService
     {
         get => _ProdutosEmpresasService ??= new ProdutosEmpresasService(_HttpClient);
     }
+
+    private UsuariosService? _UsuariosService;
+    public IUsuariosService UsuariosService
+    {
+        get => _UsuariosService ??= new UsuariosService(_HttpClient);
+    }
+
 }
 

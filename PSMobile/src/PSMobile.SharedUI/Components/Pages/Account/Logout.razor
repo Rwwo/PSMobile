@@ -1,0 +1,20 @@
+@page "/auth/logout"
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Http
+@using PSMobile.SharedKernel.Common.Dtos
+@inject NavigationManager NavigationManager
+@inherits MyBaseComponent
+
+<p>Logging out...</p>
+
+@code {
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _TokenService.JwtToken = null;
+
+        NavigationManager.NavigateTo("/auth/login", replace: true);
+    }
+}

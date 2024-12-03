@@ -2,6 +2,7 @@
 
 public interface IUowAPI
 {
+    void SetarToken(string token);
     ICadastroService CadastroService { get; }
     ICidadesService CidadesService { get; }
     IFormasPagamentosService FormasPagamentosService { get; }
@@ -14,5 +15,7 @@ public interface IUowAPI
     IPdvService PdvService { get; }
     IPedidoItemService PedidoItemService { get; }
     IProdutosEmpresasService ProdutosEmpresasService { get; }
+    IUsuariosService UsuariosService { get; }
+    
 }
 

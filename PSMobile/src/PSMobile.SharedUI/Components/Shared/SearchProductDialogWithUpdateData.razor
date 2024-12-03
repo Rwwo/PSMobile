@@ -1,4 +1,5 @@
 @using PSMobile.SharedKernel.Common
+@using PSMobile.SharedUI.Components.MauiPages
 @using PSMobile.core.InputModel
 @using PSMobile.core.Interfaces
 @inject ISnackbar Snackbar
@@ -48,17 +49,39 @@
             </MudItem>
         </MudGrid>
 
+        <!-- Botão de câmera flutuante -->
+        @if (IsMobile)
+        {
+            <div class="floating-camera-button">
+                <MudFab Color="Color.Primary"
+                        Size="Size.Large"
+                        @onclick="@OpenPopUp"
+                        StartIcon="@Icons.Material.Filled.CameraAlt" />
+            </div>
+        }
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancelar</MudButton>
     </DialogActions>
 </MudDialog>
 
+<style>
+    .floating-camera-button {
+        position: fixed;
+        bottom: 40px;
+        right: 20px;
+        z-index: 100;
+    }
+</style>
+
 @code {
 
     [Inject] IDialogService DialogService { get; set; } = null!;
     [Inject] private IUowAPI UowAPI { get; set; } = null!;
     [Inject] protected ILocalNavigationService ServiceLocal { get; set; } = null!;
+
+    [Inject] protected INavigationService NaviPopUp { get; set; } = null;
 
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
 
@@ -124,7 +147,9 @@
                 {
                     ProdutosEmpresas = ProdEmpr,
                     Qtde = itemAdd.Qtde,
-                    ProductDescription = itemAdd.ProductDescription
+                    ProductDescription = itemAdd.ProductDescription,
+                    ProductServiceDiscount = itemAdd.ProductServiceDiscount,
+                    ProductServiceValue = itemAdd.ProductServiceValue
                 };
 
             MudDialog.Close(DialogResult.Ok(returno));
@@ -161,6 +186,33 @@
     {
         searchString = text;
         return dataGrid.ReloadServerData();
+    }
+
+    public async Task OpenPopUp()
+    {
+        try
+        {
+            if (NaviPopUp == null)
+                return;
+
+            var camera = new CameraPage();
+            var ret = await NaviPopUp.PushAsync(camera);
+
+            if (ret != null)
+            {
+                searchString = ret.First().Value;
+
+                StateHasChanged();
+
+                await dataGrid.ReloadServerData();
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
     }
 }
 

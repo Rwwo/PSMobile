@@ -2,10 +2,9 @@
 
 using Microsoft.Extensions.Logging;
 
-using PSMobile.Mobile.Services;
 using PSMobile.SharedKernel;
 using PSMobile.SharedKernel.Utilities.Interfaces;
-using PSMobile.SharedKernel.Utilities.Services;
+using PSMobile.SharedUI.Components.MauiPages.Values;
 using PSMobile.SharedUI.Services;
 
 using ZXing.Net.Maui.Controls;
@@ -36,16 +35,15 @@ public static class MauiProgram
 #if DEBUG
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
+        // Configura o logging com nível de detalhe
+        builder.Logging.SetMinimumLevel(LogLevel.Error); // Defina como Debug para capturar mais eventos
 #endif
         builder.Services.AddSharedKernelServices();
         builder.Services.AddScoped<ConfirmationDialogService>();
-        
+
         builder.Services.AddScoped<INavigationService, Services.NavigationService>();
-
-
-        //InteractiveRenderSettings.ConfigureBlazorHybridRenderModes();
+        builder.Services.AddSingleton<BarcodeResultsStates>();
 
         return builder.Build();
     }
-
 }

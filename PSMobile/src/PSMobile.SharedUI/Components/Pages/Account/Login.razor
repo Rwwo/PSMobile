@@ -1,0 +1,71 @@
+@page "/login"
+@using PSMobile.SharedUI.Services
+
+@inject AuthenticationStateProvider AuthStateProvider
+@inherits MyBaseComponent
+
+
+<MudPaper Elevation="4" Class="pa-4 mt-6 mx-auto" MaxWidth="400px">
+    
+    <MudStack>    
+
+        <MudText Typo="Typo.h5">Login</MudText>
+
+        <MudTextField Variant="Variant.Outlined" Label="Usuário" @bind-Value="usu_nome" Required="true" />
+        <MudTextField Variant="Variant.Outlined" Label="Senha" @bind-Value="usu_senha"  Required="true" />
+    
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin">Entrar</MudButton>
+        
+    </MudStack>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <MudText Color="Color.Error">@ErrorMessage</MudText>
+    }
+</MudPaper>
+
+@code {
+
+    private string usu_nome { get; set; }
+    private string usu_senha { get; set; }
+
+    private string ErrorMessage { get; set; }
+
+    private async Task HandleLogin()
+    {
+        ErrorMessage = string.Empty;
+
+        try
+        {
+            if (String.IsNullOrEmpty(usu_nome) || string.IsNullOrEmpty(usu_senha))
+            {
+                throw new Exception("Nome e senha são obrigatórios");
+            }
+
+            var loginData = new { usu_nome, usu_senha };
+            var response = await UowAPI.UsuariosService.Login(usu_nome, usu_senha);
+
+            if (response.IsSuccess)
+            {
+                // Extrai o token JWT do backend
+                var token = response.Data;
+                
+
+                // Atualiza o estado de autenticação
+                var apiAuthProvider = (ApiAuthenticationStateProvider)AuthStateProvider;
+                await apiAuthProvider.MarkUserAsAuthenticated(token.Token);
+
+                // Redireciona para a página principal após o login
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                ErrorMessage = "Credenciais inválidas. Tente novamente.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Erro ao efetuar login: {ex.Message}";
+        }
+    }
+}

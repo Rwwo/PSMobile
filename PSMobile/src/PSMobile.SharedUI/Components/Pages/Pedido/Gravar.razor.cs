@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Localization;
 
 using MudBlazor;
 
@@ -17,6 +18,8 @@ using PSMobile.SharedKernel.Utilities.Services;
 using PSMobile.SharedUI.Components.MauiPages;
 using PSMobile.SharedUI.Components.Shared;
 using PSMobile.SharedUI.Services;
+
+using ZXing;
 
 
 namespace PSMobile.SharedUI.Components.Pages.Pedido;
@@ -62,7 +65,6 @@ public class GravarPedidoPage : MyBaseComponent
     public PaginatedResult<Pdvs> PdvsPaginated { get; set; }
     public PaginatedResult<FormasPagamento> FormasPagamentoPaginated { get; set; }
 
-    [Inject] protected INavigationService NaviPopUp { get; set; } = null;
 
 
     private int emp_key = 0;
@@ -423,21 +425,7 @@ public class GravarPedidoPage : MyBaseComponent
 
     }
 
-    public async Task OpenPopUp()
-    {
-        try
-        {
-            if (NaviPopUp == null)
-                return;
 
-            var camera = new CameraPage();
-            await NaviPopUp.PushAsync(camera);
-        }
-        catch (Exception ex)
-        {
-            HandleException(ex);
-        }
-    }
     public async Task SearchProductsDialogAsync()
     {
         try

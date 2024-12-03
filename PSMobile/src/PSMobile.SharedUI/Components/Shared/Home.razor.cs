@@ -10,11 +10,11 @@ public class HomePage : MyBaseComponent
     public Empresas Empr { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
-
         var api = await UowAPI.GeraisService.GetAllAsync();
-        ServiceLocal.SetarGerais(api);
-        Empr = ServiceLocal.EmpresaAtual;
 
+        ServiceLocal.SetarGerais(api);
+
+        Empr = ServiceLocal.EmpresaAtual;
 
         await InvokeAsync(StateHasChanged);
         await base.OnInitializedAsync();

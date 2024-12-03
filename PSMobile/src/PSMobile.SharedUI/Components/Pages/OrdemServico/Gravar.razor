@@ -1,5 +1,7 @@
+
 @page "/ordens-servicos/gravar"
 @inherits GravarOrdemServicoPage
+@attribute [Authorize]
 
 <PsTitle Title="Ordem Serviço" />
 
@@ -192,10 +194,6 @@
                                                         Disabled="OSInputModel.DimissEdit"
                                                         StartIcon="@Icons.Material.Filled.Add" />
 
-                                                <MudFab Color="Color.Primary"
-                                                        Size="Size.Medium"
-                                                        Disabled="true"
-                                                        StartIcon="@Icons.Material.Filled.CameraAlt" />
                                             </MudStack>
                                         </MudItem>
                                     </MudStack>

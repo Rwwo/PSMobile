@@ -1,0 +1,10 @@
+@page "/pagina-protegida"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+
+@attribute [Authorize]
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Página Protegida</h3>
+<p>Bem-vindo! Somente usuários autenticados podem ver esta página.</p>

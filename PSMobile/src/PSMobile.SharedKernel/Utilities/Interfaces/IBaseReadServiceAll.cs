@@ -11,7 +11,7 @@ public interface IBaseReadServiceId<T> where T : Entity
 }
 public interface IBaseReadServiceAll<T> : IBaseReadServiceId<T> where T : Entity
 {
-    Task<PaginatedResult<T>> GetAllAsync(int pageSize = 10, int pageNumber = 1);
+    Task<PaginatedResult<T>> GetAllAsync( int pageSize = 10, int pageNumber = 1);
 }
 
 public interface IBaseReadServiceWithEmpKey<T> where T : Entity

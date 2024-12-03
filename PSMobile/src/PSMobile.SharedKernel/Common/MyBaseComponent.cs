@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Microsoft.JSInterop;
-using Microsoft.Maui.Devices;
 
 using MudBlazor;
 
@@ -16,6 +16,7 @@ public abstract class MyBaseComponent : ComponentBase
     [Inject] protected NavigationManager Navigation { get; set; } = null!;
     [Inject] protected IDialogService DialogService { get; set; } = null!;
     [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
+    [Inject] protected TokenService? _TokenService { get; set; } = null;
 
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;

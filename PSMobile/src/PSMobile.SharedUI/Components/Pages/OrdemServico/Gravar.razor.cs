@@ -343,7 +343,7 @@ public class GravarOrdemServicoPage : MyBaseComponent
         input._item = 0;
 
         input._ordserite_pro_codigo = inputItem.ProdutosEmpresas.Produto.pro_codigo;
-        input._ordserite_valorunitario = inputItem.ProdutosEmpresas.proemp_valor;
+        input._ordserite_valorunitario = inputItem.ProductServiceValue.HasValue ? inputItem.ProductServiceValue.Value : 0;
 
         input._ordserite_desconto = inputItem.ProductServiceDiscount ?? 0;
         input._ordserite_subtotal = decimal.Subtract(input._ordserite_valorunitario, input._ordserite_desconto);

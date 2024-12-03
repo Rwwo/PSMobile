@@ -1,6 +1,7 @@
 @page "/pedidos/gravar"
 @using PSMobile.SharedKernel.Extensions
 @inherits GravarPedidoPage
+@attribute [Authorize]
 
 <PsTitle Title="Pedidos" />
 
@@ -193,13 +194,7 @@
                                                         Disabled="PedidoInputModel.DimissEdit"
                                                         StartIcon="@Icons.Material.Filled.Add" />
 
-                                                @if(IsMobile){
-
-                                                <MudFab Color="Color.Primary"
-                                                        Size="Size.Medium"                                                        
-                                                        @onclick="@OpenPopUp"
-                                                        StartIcon="@Icons.Material.Filled.CameraAlt" />
-                                                }
+                                                
                                             </MudStack>
                                         </MudItem>
                                     </MudStack>

@@ -1,4 +1,5 @@
 @using PSMobile.SharedKernel.Common
+@using PSMobile.SharedUI.Components.MauiPages
 @using PSMobile.core.InputModel
 @using PSMobile.core.Interfaces
 @inject ISnackbar Snackbar
@@ -48,17 +49,38 @@
             </MudItem>
         </MudGrid>
 
+        @if (IsMobile)
+        {
+            <div class="floating-camera-button">
+                <MudFab Color="Color.Primary"
+                        Size="Size.Large"
+                        @onclick="@OpenPopUp"
+                        StartIcon="@Icons.Material.Filled.CameraAlt" />
+            </div>
+        }
+
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancelar</MudButton>
     </DialogActions>
 </MudDialog>
 
+<style>
+    .floating-camera-button {
+        position: fixed;
+        bottom: 35px;
+        right: 20px;
+        z-index: 200;
+    }
+</style>
+
 @code {
 
     [Inject] IDialogService DialogService { get; set; } = null!;
     [Inject] private IUowAPI UowAPI { get; set; } = null!;
     [Inject] protected ILocalNavigationService ServiceLocal { get; set; } = null!;
+
+    [Inject] protected INavigationService NaviPopUp { get; set; } = null;
 
     [CascadingParameter] private MudDialogInstance MudDialog { get; set; } = null!;
 
@@ -124,7 +146,7 @@
         int pageSize = dataGrid.RowsPerPage == 0 ? 10 : dataGrid.RowsPerPage;
         int pageNumber = dataGrid.CurrentPage == 0 ? 1 : dataGrid.CurrentPage;
 
-        PaginatedResult<ProdutosEmpresas> dados = PaginatedResult<ProdutosEmpresas>.Empty(1,10);
+        PaginatedResult<ProdutosEmpresas> dados = PaginatedResult<ProdutosEmpresas>.Empty(1, 10);
 
         if (!string.IsNullOrEmpty(searchString))
         {
@@ -148,6 +170,31 @@
         searchString = text.ToUpper();
         return dataGrid.ReloadServerData();
     }
+
+    public async Task OpenPopUp()
+    {
+        try
+        {
+            if (NaviPopUp == null)
+                return;
+
+            var camera = new CameraPage();
+            var ret = await NaviPopUp.PushAsync(camera);
+
+            if (ret != null)
+            {
+                searchString = ret.First().Value;
+                
+                StateHasChanged();
+
+                await dataGrid.ReloadServerData();
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
 }
-
-

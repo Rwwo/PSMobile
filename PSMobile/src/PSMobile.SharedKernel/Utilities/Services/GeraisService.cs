@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+
+using MediatR;
 
 using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
@@ -12,6 +15,7 @@ public class GeraisService : IGeraisService
     public GeraisService(HttpClient httpClient)
     {
         _httpClient = httpClient;
+
     }
     public async Task<PaginatedResult<Gerais>> GetAllAsync(int pageSize = 1, int pageNumber = 10000)
     {

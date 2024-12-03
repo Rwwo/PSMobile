@@ -23,6 +23,8 @@
                 <MudIconButton @onclick="ThemeToggle" Icon="@Icons.Material.Filled.DarkMode" Color="Color.Inherit" />
             }
 
+            <MudIconButton @onclick="LogOff" Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" Edge="Edge.End" />
+
         </MudStack>
     </MudAppBar>
 
@@ -37,6 +39,7 @@
 </MudLayout>
 
 @code {
+
     private bool _drawerOpen = true;
     private bool _isDark = false;
 
@@ -50,9 +53,9 @@
         _isDark = !_isDark;
     }
 
-    private void LogOff()
+    private async Task LogOff()
     {
-        Navigation.NavigateTo("/Account/Manage/logout");
+        Navigation.NavigateTo("/auth/logout");
     }
 
     private MudTheme myCustomTheme = new MudTheme()

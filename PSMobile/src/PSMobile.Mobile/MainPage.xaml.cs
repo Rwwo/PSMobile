@@ -1,10 +1,16 @@
-﻿namespace PSMobile.Mobile;
+﻿using PSMobile.SharedUI.Components.MauiPages.Values;
+
+namespace PSMobile.Mobile;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    private readonly BarcodeResultsStates _results;
+    public MainPage(BarcodeResultsStates results)
     {
         InitializeComponent();
+
+        _results = results;
+        BindingContext = _results;
 
         NavigationPage.SetHasNavigationBar(this, false);
     }

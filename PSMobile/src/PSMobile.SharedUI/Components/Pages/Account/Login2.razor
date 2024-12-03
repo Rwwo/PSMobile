@@ -1,0 +1,132 @@
+@page "/auth/login"
+@using PSMobile.SharedUI.Services
+
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inherits MyBaseComponent
+
+
+<MudPaper Elevation="4" Class="pa-4 mt-6 mx-auto" MaxWidth="400px">
+
+    <EditForm Model="Model" OnValidSubmit="LoginUserAsync" FormName="@LoginForm">
+        <DataAnnotationsValidator />
+
+        <MudText Typo="Typo.h5">Login</MudText>
+
+        <MudStack>
+
+            <MudTextField ShrinkLabel
+                          Variant="Variant.Outlined"
+                          Label="Usuário"
+                          @bind-Value="Model.Email"
+                          For="@(() => Model.Email)"
+                          Required="true" 
+                          />
+
+            <MudTextField ShrinkLabel
+                          @bind-Value="Model.Password"
+                          Label="Senha"
+                          Immediate
+                          Variant="Variant.Outlined"
+                          InputType="@PasswordInput"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@PasswordInputIcon"
+                          OnAdornmentClick="ButtonTestclick"
+                          AdornmentAriaLabel="Show Password"
+                          For="@(() => Model.Password)" 
+                          Required 
+                          />
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUserAsync">Entrar</MudButton>
+
+        </MudStack>
+    </EditForm>
+</MudPaper>
+
+@code {
+
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private const string LoginForm = "login-form";
+
+    [SupplyParameterFromForm(FormName = LoginForm)]
+    private LoginModel Model { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    public string ReturnUrl { get; set; } = "/";
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    void ButtonTestclick()
+    {
+        if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+
+    private async Task LoginUserAsync()
+    {
+        try
+        {
+            var response = await UowAPI.UsuariosService.Login(Model.Email, Model.Password);
+
+            if (response.IsSuccess)
+            {
+                // Ler o token JWT retornado pela API
+                var jwtResponse = response.Data;
+
+                if (jwtResponse?.Token != null)
+                {
+                    // Atualizar o estado de autenticação
+                    var authStateProvider = (ApiAuthenticationStateProvider)AuthStateProvider;
+
+                    await authStateProvider.MarkUserAsAuthenticated(jwtResponse.Token);
+
+                    _TokenService.JwtToken = jwtResponse.Token;
+
+                    // Redirecionar para a página de destino
+                    Navigation.NavigateTo("/");
+                }
+                else
+                {
+                    base.HandleException(new Exception("Token inválido recebido."));
+                }
+            }
+            else
+            {
+                base.HandleException(new Exception("Falha ao realizar o login. Verifique suas credenciais."));
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log de erro ou exibição de mensagem para o usuário
+            Console.WriteLine($"Erro durante o login: {ex.Message}");
+        }
+    }
+
+    class LoginModel
+    {
+        [Required]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [StringLength(8, ErrorMessage = "A senha deve conter ao menos 8 caracteres")]
+        public string Password { get; set; } = "";
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
+    }
+
+}

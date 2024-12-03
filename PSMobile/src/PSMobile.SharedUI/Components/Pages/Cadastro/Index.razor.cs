@@ -20,7 +20,7 @@ public class IndexCadastroPage : MyBaseComponent
 
         if (string.IsNullOrEmpty(searchString))
         {
-            dados = await UowAPI.CadastroService.GetAllAsync(pageSize, pageNumber);
+            dados = await UowAPI.CadastroService.GetAllAsync( pageSize, pageNumber);
         }
         else
         {
