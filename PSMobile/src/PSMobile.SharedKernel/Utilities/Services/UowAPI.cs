@@ -2,6 +2,8 @@
 
 using System.Net.Http.Headers;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
+using PSMobile.core.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Services;
 
@@ -86,12 +88,30 @@ public class UowAPI : IUowAPI
         get => _PedidoService ??= new PedidoService(_HttpClient);
     }
 
+    private PrescritoresService? _PrescritoresService;
+    public IPrescritoresService PrescritoresService
+    {
+        get => _PrescritoresService ??= new PrescritoresService(_HttpClient);
+    }
 
     private ProdutosEmpresasService? _ProdutosEmpresasService;
     public IProdutosEmpresasService ProdutosEmpresasService
     {
         get => _ProdutosEmpresasService ??= new ProdutosEmpresasService(_HttpClient);
     }
+
+    private ReceituarioOticoService? _ReceituarioOticoService;
+    public IReceituarioOticoService ReceituarioOticoService
+    {
+        get => _ReceituarioOticoService ??= new ReceituarioOticoService(_HttpClient);
+    }
+
+    private TiposMateriaisService? _TiposMateriaisService;
+    public ITiposMateriaisService TiposMateriaisService
+    {
+        get => _TiposMateriaisService ??= new TiposMateriaisService(_HttpClient);
+    }
+
 
     private UsuariosService? _UsuariosService;
     public IUsuariosService UsuariosService

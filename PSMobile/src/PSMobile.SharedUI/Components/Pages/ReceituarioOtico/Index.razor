@@ -1,0 +1,85 @@
+@page "/receituario-otico"
+@inherits IndexReceituarioOticoPage
+@attribute [Authorize]
+
+<PsTitle Title="Receituário Ótico" />
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-4 px-4">
+    @* <MudText Typo="Typo.h4" Class="mb-4">Cadastros</MudText> *@
+
+    <PsPageHeader Icon="@Icons.Material.Filled.PeopleAlt"
+                  Title="Receituário Ótico"
+                  ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage"
+                  ButtonText="Novo Receituário" OnClick="@GoToAddReceituarioOculos" />
+
+
+    <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-2 px-0 mb-4">
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudDataGrid @ref="dataGrid"
+                             T="ReceituarioOculos"
+                             ServerData="ServerReload"
+                             Striped="IsStriped"
+                             Hover="IsHover"
+                             Dense="IsDense"
+                             Bordered="IsBordered"
+                             Filterable="false">
+
+                    <ToolBarContent>
+                        <MudText Typo="Typo.h6">Receituário Ótico</MudText>
+                        <MudSpacer />
+                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    </ToolBarContent>
+
+                    <Columns>
+                        <TemplateColumn Title="Status">
+                            <CellTemplate>
+                                @if (context.Item._status)
+                                {
+                                    <MudTooltip Text="Fechado">
+                                        <MudIcon Icon="@Icons.Material.TwoTone.DoneAll" Color="Color.Success" />
+                                    </MudTooltip>
+                                }
+                                else
+                                {
+                                    <MudTooltip Text="Aberto">
+                                        <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Warning" />
+                                    </MudTooltip>
+                                }
+                            </CellTemplate>
+                        </TemplateColumn>
+                        <PropertyColumn Property="x => x.recocu_numos" Title="Número OS" />
+                        <PropertyColumn Property="x => x.recocu_data_abert" Title="Data Abert." Format="dd/MM/yyyy hh:mm" />
+                        <PropertyColumn Property="x => x.recocu_data_prev" Title="Data Prev." Format="dd/MM/yyyy hh:mm" />
+                        <PropertyColumn Property="x => x.recocu_data_fech" Title="Data Fech." Format="dd/MM/yyyy hh:mm" />
+                        <PropertyColumn Property="x => x.Cadastros.cad_nome" Title="Cliente" />
+                        <PropertyColumn Property="x => x.Funcionarios.fun_nome" Title="Vendedor" />
+                        <PropertyColumn Property="x => x._recocu_vta" Title="VTA" />
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudStack Row Class="gap-2">
+                                    <EditButton Disabled="false" OnClick="@(() => GoToUpdate(context.Item))" />
+                                </MudStack>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                    <PagerContent>
+                        <MudDataGridPager PageSizeOptions="@PageSizeOptionsString"
+                                          RowsPerPageString="@RowsPerPageString"
+                                          InfoFormat="@InfoFormatString"
+                                          T="ReceituarioOculos" />
+                    </PagerContent>
+                </MudDataGrid>
+                <MudTooltip Text="Fechado">
+                    <MudIcon Icon="@Icons.Material.TwoTone.DoneAll" Color="Color.Success" /> Fechado
+                </MudTooltip>
+                <MudTooltip Text="Aberto">
+                    <MudIcon Icon="@Icons.Material.Filled.Check" Color="Color.Warning" /> Aberto
+                </MudTooltip>
+            </MudItem>
+        </MudGrid>
+
+    </MudContainer>
+</MudContainer>

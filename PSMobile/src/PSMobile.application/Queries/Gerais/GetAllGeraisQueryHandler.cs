@@ -4,9 +4,6 @@ using AutoMapper;
 
 using MediatR;
 
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.EntityFrameworkCore;
-
 using PSMobile.core.Interfaces;
 
 namespace PSMobile.application.Queries.Gerais;

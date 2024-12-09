@@ -10,4 +10,3 @@ public class ProdutosEmpresasRepository : ReadRepository<ProdutosEmpresas>, IPro
     public ProdutosEmpresasRepository(AppDbContext context)
         : base(context) { }
 }
-

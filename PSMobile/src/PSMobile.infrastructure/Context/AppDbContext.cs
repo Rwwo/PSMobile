@@ -27,6 +27,7 @@ public class AppDbContext : DbContext
     public DbSet<PedidosItens> PedidosItens { get; set; }
     public DbSet<Produtos> Produtos { get; set; }
     public DbSet<ProdutosEmpresas> ProdutosEmpresas { get; set; }
+    public DbSet<ReceituarioOculos> ReceituarioOculos { get; set; }
     public DbSet<Ufs> Ufs { get; set; }
     public DbSet<Usuarios> Usuarios { get; set; }
 

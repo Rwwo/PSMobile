@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 
 using MudBlazor.Services;
 
@@ -53,6 +54,12 @@ public static class SharedKernelModule
             config.SnackbarConfiguration.HideTransitionDuration = 500;
             config.SnackbarConfiguration.ShowTransitionDuration = 500;
         });
+
+        if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
+            services.AddScoped<IStorageService, MobileStorageService>();
+        else
+            services.AddScoped<IStorageService, WebStorageService>();
+
 
         return services;
     }

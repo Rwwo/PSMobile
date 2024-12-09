@@ -14,8 +14,11 @@ public interface IUowAPI
     IPedidoFormaPagamentoService PedidoFormaPagamentoService { get; }
     IPdvService PdvService { get; }
     IPedidoItemService PedidoItemService { get; }
+    IPrescritoresService PrescritoresService { get; }
     IProdutosEmpresasService ProdutosEmpresasService { get; }
+    IReceituarioOticoService ReceituarioOticoService { get; }
+    ITiposMateriaisService TiposMateriaisService { get; }
     IUsuariosService UsuariosService { get; }
-    
+
 }
 

@@ -29,7 +29,11 @@ public class LocalNavigationService : ILocalNavigationService
 
 
     public Cadastros? Cadastro { get; private set; } = null;
-
     public void SetarCliente(Cadastros? input) => Cadastro = input;
     public void LimparCliente() => Cadastro = null;
+
+
+    public ReceituarioOculos? ReceituarioOculos { get; private set; } = null;
+    public void SetarReceituarioOtico(ReceituarioOculos? input) => ReceituarioOculos = input;
+    public void LimparReceituarioOtico() => ReceituarioOculos = null;
 }

@@ -18,8 +18,4 @@ public class PdvService : IPdvService
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
         return await _httpClient.GetFromJsonAsync<PaginatedResult<Pdvs>>($"api/v1/pdvs/all/{empKey}{query}");
     }
-
-    
 }
-
-

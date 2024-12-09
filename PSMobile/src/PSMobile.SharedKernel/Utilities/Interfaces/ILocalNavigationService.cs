@@ -22,4 +22,8 @@ public interface ILocalNavigationService
     OrdensServicos? OrdemServico { get; }
     void LimparOS();
     void SetarOS(OrdensServicos? input);
+
+    ReceituarioOculos? ReceituarioOculos { get; }
+    void LimparReceituarioOtico();
+    void SetarReceituarioOtico(ReceituarioOculos? input);
 }

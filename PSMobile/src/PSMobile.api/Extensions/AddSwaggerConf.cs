@@ -23,8 +23,8 @@ public static class AddSwaggerConf
             c.SwaggerDoc("v1", new OpenApiInfo
             {
                 Version = "v1",
-                Title = "API Teste",
-                Description = "API para Teste",
+                Title = "API Módulo MultiPlataforma PSSYS",
+                Description = "API Módulo MultiPlataforma PSSYS",
                 Contact = new OpenApiContact
                 {
                     Name = "Rubens",
@@ -35,7 +35,7 @@ public static class AddSwaggerConf
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+                Description = "Insira o token JWT desta maneira: 'Bearer {seu token}'",
                 Name = "Authorization",
                 Scheme = "Bearer",
                 BearerFormat = "JWT",

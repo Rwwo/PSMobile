@@ -1,5 +1,6 @@
 @page "/auth/login"
 @using PSMobile.SharedUI.Services
+@using System.IdentityModel.Tokens.Jwt
 
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthStateProvider
@@ -20,8 +21,7 @@
                           Label="Usuário"
                           @bind-Value="Model.Email"
                           For="@(() => Model.Email)"
-                          Required="true" 
-                          />
+                          Required="true" />
 
             <MudTextField ShrinkLabel
                           @bind-Value="Model.Password"
@@ -33,11 +33,16 @@
                           AdornmentIcon="@PasswordInputIcon"
                           OnAdornmentClick="ButtonTestclick"
                           AdornmentAriaLabel="Show Password"
-                          For="@(() => Model.Password)" 
-                          Required 
-                          />
+                          For="@(() => Model.Password)"
+                          Required />
 
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUserAsync">Entrar</MudButton>
+            <MudCheckBox @bind-Value="Model.RememberMe"
+                         Label="Lembrar-me?" />
+
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="LoginUserAsync">Entrar</MudButton>
 
         </MudStack>
     </EditForm>
@@ -59,6 +64,43 @@
 
     [CascadingParameter]
     public HttpContext HttpContext { get; set; } = default!;
+
+    private bool isInitialized = false;
+    public string storedToken = "";
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Garantir que a lógica seja executada apenas no primeiro render
+        if (firstRender && !isInitialized)
+        {
+            isInitialized = true;
+
+            // Carregar o token usando o StorageService
+            storedToken = await StorageService.GetAsync("jwtToken");
+
+            if (!string.IsNullOrEmpty(storedToken) && !IsTokenExpired(storedToken))
+            {
+                // Autenticar o usuário se o token for válido
+                var authStateProvider = (ApiAuthenticationStateProvider)AuthStateProvider;
+                await authStateProvider.MarkUserAsAuthenticated(storedToken);
+
+                _TokenService.JwtToken = storedToken;
+
+                // Redirecionar para a página inicial
+                Navigation.NavigateTo("/");
+            }
+        }
+    }
+
+
+    private bool IsTokenExpired(string jwtToken)
+    {
+        var handler = new JwtSecurityTokenHandler();
+        var jwt = handler.ReadJwtToken(jwtToken);
+        return jwt.ValidTo < DateTime.UtcNow;
+    }
+
 
     void ButtonTestclick()
     {
@@ -96,6 +138,18 @@
 
                     _TokenService.JwtToken = jwtResponse.Token;
 
+                    // Verificar se o usuário marcou "Lembrar-me"
+                    if (Model.RememberMe)
+                    {
+                        await StorageService.SetAsync("jwtToken", jwtResponse.Token);
+                        await StorageService.SetAsync("userEmail", Model.Email);
+                    }
+                    else
+                    {
+                        await StorageService.Remove("jwtToken");
+                        await StorageService.Remove("userEmail");
+                    }
+
                     // Redirecionar para a página de destino
                     Navigation.NavigateTo("/");
                 }
@@ -126,7 +180,7 @@
         public string Password { get; set; } = "";
 
         [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
+        public bool RememberMe { get; set; } = true;
     }
 
 }

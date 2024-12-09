@@ -11,9 +11,7 @@ public class Cidades : Entity
     public string cid_cep { get; set; }
     public DateTime cid_datamud { get; set; }
     public int cid_pai_codigo { get; set; }
-
     public int cid_ufs_codigo { get; set; }
-
     public Ufs Ufs { get; set; }
 
     public string CidadeNormalizado => this.ToString();

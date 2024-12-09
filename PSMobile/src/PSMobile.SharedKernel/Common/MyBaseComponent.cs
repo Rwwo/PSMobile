@@ -5,6 +5,7 @@ using Microsoft.JSInterop;
 using MudBlazor;
 
 using PSMobile.SharedKernel.Utilities.Interfaces;
+using PSMobile.SharedKernel.Utilities.Services;
 
 namespace PSMobile.SharedKernel.Common;
 public abstract class MyBaseComponent : ComponentBase
@@ -17,6 +18,7 @@ public abstract class MyBaseComponent : ComponentBase
     [Inject] protected IDialogService DialogService { get; set; } = null!;
     [Inject] protected IPssysValidacoesService PSSysService { get; set; } = null!;
     [Inject] protected TokenService? _TokenService { get; set; } = null;
+    [Inject] protected IStorageService StorageService { get; set; } = null!;
 
     protected bool IsDense { get; private set; } = true;
     protected bool IsHover { get; private set; } = true;
@@ -82,8 +84,12 @@ public abstract class MyBaseComponent : ComponentBase
     {
         if (DeviceInfo.Platform == DevicePlatform.Android || DeviceInfo.Platform == DevicePlatform.iOS)
         {
+            StorageService = new MobileStorageService();
             return true;
         }
+
+        StorageService = new WebStorageService(JSRuntime);
+
         return false;
     }
 

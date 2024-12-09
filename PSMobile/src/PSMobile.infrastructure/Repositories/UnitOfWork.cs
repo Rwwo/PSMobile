@@ -82,9 +82,9 @@ public class UnitOfWork : IUnitOfWork
     public IPedidosFormasPagamentoParcelasRepository PedidosFormasPagamentoParcelasRepository
     {
         get => _PedidosFormaPagamentoParcelasRepository ??= new PedidosFormasPagamentoParcelasRepository(_context);
-    } 
-    
-    
+    }
+
+
     public PedidosRepository? _PedidosRepository;
     public IPedidosRepository PedidosRepository
     {
@@ -99,10 +99,25 @@ public class UnitOfWork : IUnitOfWork
     }
 
 
+    private PrescritoresRepository? _PrescritoresRepository;
+    public IPrescritoresRepository PrescritoresRepository
+    {
+        get => _PrescritoresRepository ??= new PrescritoresRepository(_context);
+    }
+
+
+
     private ProdutosEmpresasRepository? _ProdutosEmpresasRepository;
     public IProdutosEmpresasRepository ProdutosEmpresasRepository
     {
         get => _ProdutosEmpresasRepository ??= new ProdutosEmpresasRepository(_context);
+    }
+
+
+    private ReceituarioOculosRepository? _ReceituarioOculosRepository;
+    public IReceituarioOculosRepository ReceituarioOculosRepository
+    {
+        get => _ReceituarioOculosRepository ??= new ReceituarioOculosRepository(_context);
     }
 
 
@@ -111,6 +126,14 @@ public class UnitOfWork : IUnitOfWork
     {
         get => _UsuariosRepository ??= new UsuariosRepository(_context);
     }
+
+
+    private TiposMateriaisRepository? _TiposMateriaisRepository;
+    public ITiposMateriaisRepository TiposMateriaisRepository
+    {
+        get => _TiposMateriaisRepository ??= new TiposMateriaisRepository(_context);
+    }
+
 
     public async Task CommitAsync()
     {

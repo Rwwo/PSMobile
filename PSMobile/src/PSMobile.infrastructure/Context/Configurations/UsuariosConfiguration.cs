@@ -14,4 +14,3 @@ public class UsuariosConfiguration : IEntityTypeConfiguration<Usuarios>
         builder.HasKey(t => t.usu_key);
     }
 }
-
