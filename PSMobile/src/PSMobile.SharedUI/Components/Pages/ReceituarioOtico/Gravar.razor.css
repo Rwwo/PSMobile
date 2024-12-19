@@ -1,0 +1,32 @@
+﻿.compact-card {
+    padding: 8px;
+}
+
+.compact-stack {
+    gap: 4px; /* Ajuste para espaçamento entre componentes */
+}
+
+.compact-textfield {
+    margin: 0;
+    padding: 4px;
+    font-size: 0.85rem; /* Diminui o tamanho do texto */
+}
+
+.compact-stepper {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.full-screen-grid {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 100% da altura da viewport */
+    width: 100vw; /* 100% da largura da viewport */
+}
+
+.content-card {
+    flex: 1; /* Faz o card crescer para ocupar o espaço restante */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

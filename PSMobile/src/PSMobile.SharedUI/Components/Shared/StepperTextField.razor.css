@@ -1,0 +1,23 @@
+﻿.ultra-compact-stepper {
+    align-items: center !important;
+    gap: 0.1rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.ultra-compact-button {
+    min-width: 20px !important;
+    min-height: 20px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+.ultra-compact-textfield {
+    width: 45px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+    text-align: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}

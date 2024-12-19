@@ -27,7 +27,7 @@ public class TiposMateriaisHandler
     public async Task<PaginatedResult<core.Entities.TiposMateriais>> Handle(GetAllTiposMateriais request, CancellationToken cancellationToken)
     {
 
-        Expression<Func<core.Entities.TiposMateriais, bool>>? filter = c => c.tipmat_exc == 0;
+        Expression<Func<core.Entities.TiposMateriais, bool>> filter = c => c.tipmat_exc == 0;
 
         return await _uow.TiposMateriaisRepository.GetAllAsync(filter,
                                                                  null,
@@ -42,7 +42,7 @@ public class TiposMateriaisHandler
     public async Task<PaginatedResult<core.Entities.TiposMateriais>> Handle(GetTipoMaterialByKeyQuery request, CancellationToken cancellationToken)
     {
 
-        Expression<Func<core.Entities.TiposMateriais, bool>>? filter = c => c.tipmat_exc == 0 && c.tipmat_key == request.TipMatKey;
+        Expression<Func<core.Entities.TiposMateriais, bool>> filter = c => c.tipmat_exc == 0 && c.tipmat_key == request.TipMatKey;
 
         return await _uow.TiposMateriaisRepository.GetAllAsync(filter,
                                                                  null,

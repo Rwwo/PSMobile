@@ -26,7 +26,9 @@ public static class SharedKernelModule
         // Configura o HttpClient para usar o handler JWT e ignora erros de certificado (somente em desenvolvimento)
         services.AddHttpClient("WithJwtClient", client =>
         {
-            client.BaseAddress = new Uri("https://192.168.0.170:44332");
+            client.BaseAddress = new Uri("https://192.168.0.170:41352/");
+            //client.BaseAddress = new Uri("https://192.168.0.170:44332");
+            //client.BaseAddress = new Uri("https://192.168.0.170:5000");
         })
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
         {

@@ -1,0 +1,17 @@
+<MudItem xs="6" md="3">
+    <MudTextField Label="@Label"
+                  ShrinkLabel
+                  Variant="Variant.Outlined"
+                  @bind-Value="@BindingValue"
+                  InputMode="InputMode.numeric"
+                  Clearable
+                  Error="@IsInvalid"
+                  HelperText="@HelperText" />
+</MudItem>
+
+@code {
+    [Parameter] public string Label { get; set; }
+    [Parameter] public string HelperText { get; set; }
+    [Parameter] public bool IsInvalid { get; set; } = false;
+    [CascadingParameter] public string BindingValue { get; set; }
+}

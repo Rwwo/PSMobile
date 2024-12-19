@@ -1,0 +1,88 @@
+<MudTextFieldExtended @bind-Value="Value"
+                      ShrinkLabel
+                      Immediate
+                      Margin="Margin.Normal"
+                      Variant="Variant.Outlined"
+                      Label="@Label"
+                      InputMode="InputMode.numeric"
+                      Text="@DisplayedValue"
+                      TextChanged="OnTextChanged">
+    <AdornmentStart>
+        <MudIcon Icon="@Icons.Material.Filled.Remove" @onclick="Decrement" Size="Size.Small" />
+    </AdornmentStart>
+    <AdornmentEnd>
+        <MudIcon Icon="@Icons.Material.Filled.Add" @onclick="Increment" Size="Size.Small" />
+    </AdornmentEnd>
+</MudTextFieldExtended>
+
+@code {
+    [Parameter]
+    [EditorRequired]
+    public string Label { get; set; }
+
+    [Parameter]
+    public bool OnlyPositive { get; set; } = false;
+
+    [Parameter]
+    public decimal Step { get; set; } = new decimal(0.25);
+
+    [Parameter]
+    public decimal? Value { get; set; } = null;
+
+    [Parameter]
+    public EventCallback<decimal?> ValueChanged { get; set; }
+
+    [Parameter]
+    public bool UseFormatting { get; set; } = true;
+
+    // Exibe o valor formatado ou o valor bruto, dependendo de 'UseFormatting'
+    private string DisplayedValue => UseFormatting ? FormattedValue : (Value.HasValue && Value != 0 ? Value?.ToString("0.00") : string.Empty);
+
+    // Formatação do valor
+    private string FormattedValue => Value switch
+    {
+        null => string.Empty,
+        0 => string.Empty,
+        > 0 => $"+{Value:0.00}",
+        _ => $"{Value:0.00}"
+    };
+
+    private async Task Increment()
+    {
+        if (!Value.HasValue) Value = 0;
+
+        Value += Step;
+
+        await ValueChanged.InvokeAsync(Value);
+
+        StateHasChanged();
+    }
+
+    private async Task Decrement()
+    {
+        if (!Value.HasValue) Value = 0;
+
+        if (!OnlyPositive || Value - Step >= 0)
+        {
+            Value -= Step;
+        }
+
+        await ValueChanged.InvokeAsync(Value);
+
+        StateHasChanged();
+    }
+
+    private async Task OnTextChanged(string text)
+    {
+        if (decimal.TryParse(text, out var parsedValue))
+        {
+            Value = parsedValue;
+        }
+        else
+        {
+            Value = null;
+        }
+
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

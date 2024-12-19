@@ -26,6 +26,8 @@ public abstract class MyBaseComponent : ComponentBase
     protected bool IsBordered { get; private set; } = false;
     protected bool IsLoading { get; set; } = true;
 
+    protected Variant _Variant => Variant.Text;
+
     protected string RowsPerPageString { get; private set; } = "Itens por página";
     protected int[] PageSizeOptionsString { get; private set; } = { 10, 25, 50, 100, int.MaxValue };
     protected string InfoFormatString { get; private set; } = "{first_item}-{last_item} de {all_items}";

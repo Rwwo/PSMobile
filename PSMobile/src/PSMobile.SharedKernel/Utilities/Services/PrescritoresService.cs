@@ -13,7 +13,7 @@ public class PrescritoresService : IPrescritoresService
     {
         _httpClient = httpClient;
     }
-    public async Task<PaginatedResult<Prescritores>> GetAllAsync(int pageSize = 1, int pageNumber = 100)
+    public async Task<PaginatedResult<Prescritores>> GetAllAsync(int pageSize = 200, int pageNumber = 1)
     {
         var query = $"?PageNumber={pageNumber}&PageSize={pageSize}";
         return await _httpClient.GetFromJsonAsync<PaginatedResult<Prescritores>>($"api/v1/prescritores/all/{query}");

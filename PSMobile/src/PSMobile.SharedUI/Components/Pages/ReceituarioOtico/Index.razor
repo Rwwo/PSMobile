@@ -2,15 +2,15 @@
 @inherits IndexReceituarioOticoPage
 @attribute [Authorize]
 
-<PsTitle Title="Receitu·rio ”tico" />
+<PsTitle Title="Receitu√°rio √ìtico" />
 
 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-4 px-4">
     @* <MudText Typo="Typo.h4" Class="mb-4">Cadastros</MudText> *@
 
     <PsPageHeader Icon="@Icons.Material.Filled.PeopleAlt"
-                  Title="Receitu·rio ”tico"
+                  Title="Receitu√°rio √ìtico"
                   ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage"
-                  ButtonText="Novo Receitu·rio" OnClick="@GoToAddReceituarioOculos" />
+                  ButtonText="Novo Receitu√°rio" OnClick="@GoToAddReceituarioOculos" />
 
 
     <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="mt-2 px-0 mb-4">
@@ -27,7 +27,7 @@
                              Filterable="false">
 
                     <ToolBarContent>
-                        <MudText Typo="Typo.h6">Receitu·rio ”tico</MudText>
+                        <MudText Typo="Typo.h6">Receitu√°rio √ìtico</MudText>
                         <MudSpacer />
                         <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
                                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -50,7 +50,7 @@
                                 }
                             </CellTemplate>
                         </TemplateColumn>
-                        <PropertyColumn Property="x => x.recocu_numos" Title="N˙mero OS" />
+                        <PropertyColumn Property="x => x.recocu_numos" Title="N√∫mero OS" />
                         <PropertyColumn Property="x => x.recocu_data_abert" Title="Data Abert." Format="dd/MM/yyyy hh:mm" />
                         <PropertyColumn Property="x => x.recocu_data_prev" Title="Data Prev." Format="dd/MM/yyyy hh:mm" />
                         <PropertyColumn Property="x => x.recocu_data_fech" Title="Data Fech." Format="dd/MM/yyyy hh:mm" />

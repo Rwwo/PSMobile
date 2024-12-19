@@ -8,7 +8,7 @@ public class Prescritores : Entity
     public int pre_key { get; set; }
     public int? pre_crm { get; set; }
     public string? pre_fone { get; set; }
-    public string pre_nome { get; set; }
+    public string? pre_nome { get; set; }
     public string? pre_ufcrm { get; set; }
     public short pre_exc { get; set; }
     public DateTime? pre_datacad { get; set; }
@@ -31,4 +31,6 @@ public class Prescritores : Entity
     public string? pre_complemento { get; set; }
     public DateTime? pre_dataexc { get; set; }
     public int pre_tmpconsul { get; set; }
+
+    public override string ToString() => pre_nome;
 }

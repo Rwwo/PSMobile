@@ -1,0 +1,28 @@
+<MudField Label="@Label" Variant="Variant.Outlined" InnerPadding="false" Class="m-2">
+    <MudGrid>
+        @foreach (var field in Fields)
+        {
+            <MudItem xs="6" md="3">
+                <MudTextField Label="@field.Label"
+                              ShrinkLabel
+                              Immediate
+                              Variant="Variant.Outlined"
+                              @bind-Value="@field.Value"
+                              InputMode="InputMode.numeric"
+                              Clearable />
+            </MudItem>
+        }
+    </MudGrid>
+</MudField>
+
+@code {
+
+    [Parameter] public string Label { get; set; }
+    [Parameter] public List<EyeField> Fields { get; set; }
+
+    public class EyeField
+    {
+        public string Label { get; set; }
+        public decimal? Value { get; set; }
+    }
+}

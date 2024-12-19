@@ -37,7 +37,10 @@ public class Cadastros : BaseEntity
     public ICollection<Pedidos>? Pedidos { get; } = null;
     public ICollection<OrdensServicos>? OrdensServicos { get; } = null;
 
-
+    public override string ToString()
+    {
+        return $"{cad_nome}";
+    }
     public override void Deletar()
     {
         CadastroCliente?.Deletar();
