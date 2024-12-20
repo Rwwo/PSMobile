@@ -343,7 +343,6 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
 
     public void OnBlurEixo_perodeixo()
     {
-        // Remove o sufixo ao sair do foco, mas mantém a formatação no setter da propriedade.
         if (decimal.TryParse(FormattedEixo_perodeixo?.Replace("º", ""), out var result))
         {
             recocu_perodeixo = result;
@@ -440,6 +439,36 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
     public decimal? recocu_vertical { get; set; }
     public decimal? recocu_diagonal { get; set; }
     public decimal? recocu_adicao { get; set; }
+
+    public void OnBlurAdicao()
+    {
+        if (!recocu_adicao.HasValue)
+            return;
+
+
+        if (recocu_lonodesf.HasValue)
+            recocu_perodesf = recocu_lonodesf + recocu_adicao;
+
+        if (recocu_lonoeesf.HasValue)
+            recocu_peroeesf = recocu_lonoeesf + recocu_adicao;
+
+
+        if (recocu_lonodcil.HasValue)
+            recocu_perodcil = recocu_lonodcil + recocu_adicao;
+
+        if (recocu_lonoecil.HasValue)
+            recocu_peroecil = recocu_lonoecil + recocu_adicao;
+
+
+        if (recocu_lonodeixo.HasValue)
+            recocu_perodeixo = recocu_lonodeixo;
+
+        if (recocu_lonoeeixo.HasValue)
+            recocu_peroeeixo = recocu_lonoeeixo;
+
+
+
+    }
     public string _recocu_adicao
     {
         get => recocu_adicao?.ToString("0.00") ?? string.Empty;
@@ -462,6 +491,8 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
 
         // Atualiza o texto exibido no campo
         _recocu_adicao = text;
+
+        OnBlurAdicao();
     }
     public decimal? recocu_ponte { get; set; }
     public decimal? recocu_horizontal { get; set; }

@@ -42,7 +42,7 @@
     private string FormattedValue => Value switch
     {
         null => string.Empty,
-        0 => string.Empty,
+        // 0 => string.Empty,
         > 0 => $"+{Value:0.00}",
         _ => $"{Value:0.00}"
     };
