@@ -33,7 +33,7 @@ public class Cadastros : BaseEntity
     public CadastroEndereco? CadastroEndereco { get; set; }
     public CadastroEndereco? CadastroEnderecoEntrega { get; set; }
     public CadastroEndereco? CadastroEnderecoCorrespondencia { get; set; }
-
+    public ClientesOtica? ClientesOtica { get; set; }
     public ICollection<Pedidos>? Pedidos { get; } = null;
     public ICollection<OrdensServicos>? OrdensServicos { get; } = null;
 

@@ -14,3 +14,16 @@ public class ClienteGravarRetornoFuncao
     }
     public int codigo { get; set; }
 }
+
+public class ClienteOticaGravarRetornoFuncao
+
+{
+    [JsonConstructor]
+    public ClienteOticaGravarRetornoFuncao() { }
+    public ClienteOticaGravarRetornoFuncao(int valor)
+    {
+        codigo = valor;
+
+    }
+    public int codigo { get; set; }
+}

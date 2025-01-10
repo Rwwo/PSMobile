@@ -28,8 +28,12 @@
                     <ToolBarContent>
                         <MudText Typo="Typo.h6">Produtos</MudText>
                         <MudSpacer />
-                        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Pesquise por Código, descrição.." Adornment="Adornment.Start"
-                                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+                        <MudStack row>
+                            <MudSwitch @bind-Value="ExibirImagem" Label="Imagem?" Color="Color.Success" />
+                            <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Pesquise por Código, descrição.." Adornment="Adornment.Start"
+                                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                        </MudStack>
                     </ToolBarContent>
 
                     <Columns>
@@ -38,7 +42,25 @@
                         <PropertyColumn Property="x => x.Produto.pro_nome" Title="Descrição" />
                         <PropertyColumn Property="x => x.proemp_qtd" Title="Estoque" Format="N" />
                         <PropertyColumn Property="x => x.proemp_valor" Title="Valor" Format="C2" />
+
+                        @if (ExibirImagem)
+                        {
+                            <TemplateColumn CellClass="d-flex justify-end" Title="Imagem">
+                                <CellTemplate>
+                                    @if (context.Item.Produto.ProdutosImagens?.Count() <= 0)
+                                    {
+                                        <MudText>S/ Imagem</MudText>
+                                    }
+                                    else
+                                    {
+                                        <MudImage Src="@GetProductImageBase64(context.Item)" Alt="Imagem do Produto" Style="max-width: 100px; max-height: 100px;" />
+                                    }
+
+                                </CellTemplate>
+                            </TemplateColumn>
+                        }
                     </Columns>
+
                     <NoRecordsContent>
                         @(GetNotFoundMessage(searchString))
                     </NoRecordsContent>
@@ -90,6 +112,18 @@
     private string searchString { get; set; } = string.Empty;
 
     [Parameter] public ProdutosEmpresas ProdEmpr { get; set; } = null!;
+
+    public bool ExibirImagem { get; set; } = true;
+
+    private string GetProductImageBase64(ProdutosEmpresas produto)
+    {
+        if (produto?.Produto?.ProdutosImagens?.Count > 0)
+        {
+            return $"data:image/jpeg;base64,{Convert.ToBase64String(produto.Produto.ProdutosImagens.FirstOrDefault(t => t.proima_indice == 1)?.proima_imagem)}";
+        }
+
+        return string.Empty;
+    }
 
     private void Cancel() => MudDialog.Cancel();
 
@@ -184,7 +218,7 @@
             if (ret != null)
             {
                 searchString = ret.First().Value;
-                
+
                 StateHasChanged();
 
                 await dataGrid.ReloadServerData();

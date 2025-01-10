@@ -29,10 +29,6 @@ public class ReceituarioOculosConfiguration : IEntityTypeConfiguration<Receituar
             .WithOne()
             .HasForeignKey<ReceituarioOculos>(t => t.recocu_cad_key);
 
-        builder.HasOne(t => t.TiposMateriais)
-            .WithOne()
-            .HasForeignKey<ReceituarioOculos>(t => t.recocu_tipmat_key);
-
 
         builder.HasMany(t => t.ReceituarioOculosAnexos)
             .WithOne(c => c.ReceituarioOculos)

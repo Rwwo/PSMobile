@@ -20,6 +20,12 @@ public class UnitOfWork : IUnitOfWork
     {
         get => _cadastroRepository ??= new CadastroRepository(_context);
     }
+     
+    private ClienteOticaRepository? _clienteOticaRepository;
+    public IClienteOticaRepository ClienteOticaRepository
+    {
+        get => _clienteOticaRepository ??= new ClienteOticaRepository(_context);
+    }
 
 
     public CidadesRepository? _cidadesRepository;

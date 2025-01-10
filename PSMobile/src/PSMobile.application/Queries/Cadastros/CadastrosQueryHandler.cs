@@ -4,6 +4,7 @@ using AutoMapper;
 
 using MediatR;
 
+using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.SharedKernel.Utilities.Interfaces;
 
@@ -18,12 +19,18 @@ public class CadastrosQueryHandler
     private readonly IUnitOfWork _uow;
     private readonly IMapper _map;
     private readonly IPssysValidacoesService _psservice;
+    private List<Expression<Func<core.Entities.Cadastros, object>>>? includes = null;
 
     public CadastrosQueryHandler(IUnitOfWork uow, IMapper map, IPssysValidacoesService psservice)
     {
         _uow = uow;
         _map = map;
         _psservice = psservice;
+
+        includes = new List<Expression<Func<core.Entities.Cadastros, object>>>()
+        {
+            e => e.ClientesOtica
+        };
     }
 
     public async Task<PaginatedResult<core.Entities.Cadastros>> Handle(GetAllCadastrosQuery request, CancellationToken cancellationToken)
@@ -33,7 +40,7 @@ public class CadastrosQueryHandler
         Expression<Func<core.Entities.Cadastros, object>> order = o => o.cad_key;
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
-                                                        null,
+                                                        includes,
                                                         null,
                                                         order,
                                                         true,
@@ -55,7 +62,7 @@ public class CadastrosQueryHandler
 
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
-                                                        null,
+                                                        includes,
                                                         null,
                                                         order,
                                                         false,
@@ -69,7 +76,7 @@ public class CadastrosQueryHandler
                                                                        c.cad_key == request.CadKey;
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
-                                                null,
+                                                includes,
                                                 null,
                                                 null,
                                                 false,
@@ -83,7 +90,7 @@ public class CadastrosQueryHandler
                                                                        c.cad_cnpj.Equals(_psservice.PSFormatarCNPJ(request.NumDoc));
 
         return await _uow.CadastroRepository.GetAllAsync(filter,
-                                        null,
+                                        includes,
                                         null,
                                         null,
                                         false,

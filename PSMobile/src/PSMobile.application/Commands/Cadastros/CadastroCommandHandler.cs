@@ -10,7 +10,8 @@ using PSMobile.SharedKernel.Common.Dtos.Extensions;
 namespace PSMobile.application.Commands.Cadastros;
 
 public class CadastroCommandHandler :
-      IRequestHandler<GravarCadastroCommand, ClienteGravarRetornoFuncao>
+      IRequestHandler<GravarCadastroCommand, ClienteGravarRetornoFuncao>,
+      IRequestHandler<GravarClienteOticaCommand, ClienteOticaGravarRetornoFuncao>
 {
     private readonly IUnitOfWork _uow;
     private readonly IMapper _mapper;
@@ -26,5 +27,10 @@ public class CadastroCommandHandler :
         var cliente = request.Cliente.ToModel();
 
         return await _uow.CadastroRepository.GravarAsync(cliente);
+    }
+
+    public async Task<ClienteOticaGravarRetornoFuncao> Handle(GravarClienteOticaCommand request, CancellationToken cancellationToken)
+    {
+        return await _uow.ClienteOticaRepository.GravarAsync(request.Cliente);
     }
 }

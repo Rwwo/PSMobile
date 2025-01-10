@@ -47,7 +47,7 @@ public class CadastroService : ICadastroService
     {
         cadastro.CliDataCad = DateTime.Now;
 
-        var response = await _httpClient.PostAsJsonAsync("api/v1/cadastros", cadastro);
+        var response = await _httpClient.PostAsJsonAsync("api/v1/cadastros/gravar-cadastro", cadastro);
         if (response.IsSuccessStatusCode)
         {
             var cadastroResult = await response.Content.ReadFromJsonAsync<Cadastros>();

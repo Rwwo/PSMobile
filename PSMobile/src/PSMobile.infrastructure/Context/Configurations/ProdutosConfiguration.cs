@@ -13,5 +13,10 @@ public class ProdutosConfiguration : IEntityTypeConfiguration<Produtos>
 
         builder.HasKey(t => t.pro_key);
 
+        builder.HasMany(x => x.ProdutosImagens)
+           .WithOne(m => m.Produtos)
+           .HasForeignKey(c => c.proima_pro_codigo)
+            .HasPrincipalKey(p => p.pro_codigo);
+
     }
 }

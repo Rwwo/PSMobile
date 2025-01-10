@@ -3,6 +3,7 @@
 public interface IUnitOfWork
 {
     ICadastroRepository CadastroRepository { get; }
+    IClienteOticaRepository ClienteOticaRepository { get; }
     ICidadesRepository CidadesRepository { get; }
     IFormasPagamentosRepository FormasPagamentosRepository { get; }
     IFuncionariosRepository FuncionariosRepository { get; }

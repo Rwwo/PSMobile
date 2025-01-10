@@ -59,8 +59,8 @@ namespace PSMobile.api.Controllers
         }
 
         // Rota para criar ou atualizar cadastro
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CadastroInputModel entity)
+        [HttpPost("gravar-cadastro")]
+        public async Task<IActionResult> PostGravarCadastro([FromBody] CadastroInputModel entity)
         {
             if (!ModelState.IsValid)
             {
@@ -72,6 +72,24 @@ namespace PSMobile.api.Controllers
             }
 
             var command = new GravarCadastroCommand(entity);
+            var result = await _mediator.Send(command);
+            return CustomResponse(HttpStatusCode.OK, result);
+        }
+
+        // Rota para criar ou atualizar cadastro
+        [HttpPost("gravar-cliente-otica")]
+        public async Task<IActionResult> PostGravarClienteOtica([FromBody] ClienteOticaInputModel entity)
+        {
+            if (!ModelState.IsValid)
+            {
+                var messages = ModelState
+                    .SelectMany(ms => ms.Value.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(messages);
+            }
+
+            var command = new GravarClienteOticaCommand(entity);
             var result = await _mediator.Send(command);
             return CustomResponse(HttpStatusCode.OK, result);
         }

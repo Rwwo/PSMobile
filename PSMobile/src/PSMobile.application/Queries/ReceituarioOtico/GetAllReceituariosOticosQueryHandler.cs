@@ -20,6 +20,7 @@ public class ReceituariosOticosQueryHandler
     private readonly IUnitOfWork _uow;
     private readonly IMapper _map;
 
+
     public ReceituariosOticosQueryHandler(IUnitOfWork uow,
                                                     IMapper map, INotificador notificador) : base(notificador)
     {
@@ -44,8 +45,6 @@ public class ReceituariosOticosQueryHandler
             e => e.Funcionarios,
             e => e.Cadastros,
             e => e.ClientesOtica,
-            e => e.TiposMateriais,
-
             e => e.ReceituarioOculosAnexos,
             e => e.ReceituarioOculosArmacao
         };
@@ -56,13 +55,14 @@ public class ReceituariosOticosQueryHandler
                           .ThenInclude(i => i.TiposMateriais)
         };
 
-        Expression<Func<core.Entities.ReceituarioOculos, object>> order = o => o.recocu_numos;
+
+        Expression<Func<core.Entities.ReceituarioOculos, object>> order = o => o.recocu_data_abert;
 
         var dados = await _uow.ReceituarioOculosRepository.GetAllAsync(filter,
                                                                        includes,
-                                                                       null,
-                                                                       null,
-                                                                       true,
+                                                                       thenIncludes,
+                                                                       order,
+                                                                       false,
                                                                        request.PageNumber,
                                                                        request.PageSize);
         return dados;
@@ -97,13 +97,14 @@ public class ReceituariosOticosQueryHandler
                           .ThenInclude(i => i.TiposMateriais)
         };
 
-        Expression<Func<core.Entities.ReceituarioOculos, object>> order = o => o.recocu_numos;
+
+        Expression<Func<core.Entities.ReceituarioOculos, object>> order = o => o.recocu_data_abert;
 
         var dados = await _uow.ReceituarioOculosRepository.GetAllAsync(filter,
                                                                        includes,
-                                                                       null,
-                                                                       null,
-                                                                       true,
+                                                                       thenIncludes,
+                                                                       order,
+                                                                       false,
                                                                        request.PageNumber,
                                                                        request.PageSize);
         return dados;

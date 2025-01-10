@@ -1,0 +1,171 @@
+@using PSMobile.core.InputModel
+@inherits MyBaseComponent
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+            Novo Cliente Ótica
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="form" Model="@cliente">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Nome"
+                                  @bind-Value="cliente.clioti_nome"
+                                  Required="true"
+                                  RequiredError="O nome é obrigatório." />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="CPF"
+                                  @bind-Value="cliente.clioti_cpf"
+                                  Placeholder="000.000.000-00" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Endereço"
+                                  @bind-Value="cliente.clioti_endereco" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string"
+                                  Label="Complemento"
+                                  @bind-Value="cliente.clioti_complemento" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+
+                    <MudTextField T="string"
+                                  Label="Fone 1"
+                                  Immediate
+                                  @bind-Value="cliente.clioti_fone1"
+                                  OnBlur="ValidarNumeroTelefone" />
+
+                    <MudSwitch @bind-Value="cliente.clioti_whats1"
+                               Label="WhatsApp?" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+
+                    <MudTextField T="string"
+                                  Immediate
+                                  Label="Fone 2"
+                                  @bind-Value="cliente.clioti_fone2"
+                                  OnBlur="ValidarNumeroTelefone" />
+
+                    <MudSwitch @bind-Value="cliente.clioti_whats2"
+                               Label="WhatsApp?" />
+                </MudItem>
+
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string"
+                                  Immediate
+                                  Label="Fone 3"
+                                  @bind-Value="cliente.clioti_fone3"
+                                  OnBlur="ValidarNumeroTelefone"/>
+
+                    <MudSwitch @bind-Value="cliente.clioti_whats3"
+                               Label="WhatsApp?" />
+                </MudItem>
+
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudItem xs="12" class="d-flex justify-end">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SubmitForm">Salvar</MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="ResetForm">Cancelar</MudButton>
+        </MudItem>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+
+    [Parameter]
+    [EditorRequired]
+    public Cadastros Cadastro { get; set; }
+
+    private MudForm? form;
+    private ClienteOticaInputModel cliente = new();
+
+    private void Cancel() => MudDialog.Cancel();
+
+    protected override Task OnInitializedAsync()
+    {
+        ResetForm();
+
+        return base.OnInitializedAsync();
+    }
+
+    public void ValidarNumeroTelefone()
+    {
+        if (cliente.clioti_fone1 is not null)
+            cliente.clioti_fone1 = PSSysService.PSFormatarFone(cliente.clioti_fone1);
+
+        if (cliente.clioti_fone2 is not null)
+            cliente.clioti_fone2 = PSSysService.PSFormatarFone(cliente.clioti_fone2);
+
+        if (cliente.clioti_fone3 is not null)
+            cliente.clioti_fone3 = PSSysService.PSFormatarFone(cliente.clioti_fone3);
+
+    }
+
+    private async Task SubmitForm()
+    {
+        try
+        {
+            await form!.Validate();
+
+            if (form.IsValid)
+            {
+                var result = await UowAPI.ClientesOticaService.GravarAsync(cliente);
+
+                if (result.IsSuccess)
+                {
+                    Snackbar.Add("Cadastro criado com sucesso!", Severity.Success);
+                    MudDialog?.Close(DialogResult.Ok(result.Data.codigo));
+                }
+                else
+                {
+                    HandleError(result.Errors);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+    private void ResetForm()
+    {
+        cliente = new();
+
+        cliente.clioti_cad_key = Cadastro.cad_key;
+        cliente.clioti_nome = Cadastro.cad_nome;
+        cliente.clioti_cpf = Cadastro.cad_cnpj;
+        cliente.clioti_endereco = Cadastro.CadastroEndereco.cad_endereco;
+        cliente.clioti_complemento = Cadastro.CadastroEndereco.cad_complemento;
+
+        cliente.clioti_fone1 = Cadastro.CadastroContato.cad_fone1;
+        cliente.clioti_whats1 = Cadastro.CadastroContato.cad_whats1 == 1 ? true : false;
+
+        cliente.clioti_fone2 = Cadastro.CadastroContato.cad_fone2;
+        cliente.clioti_whats2 = Cadastro.CadastroContato.cad_whats2 == 1 ? true : false;
+
+        cliente.clioti_fone3 = Cadastro.CadastroContato.cad_fone3;
+        cliente.clioti_whats3 = Cadastro.CadastroContato.cad_whats3 == 1 ? true : false;
+
+        cliente.clioti_comput = Environment.MachineName;
+    }
+
+    private bool IsValid()
+    {
+        return !string.IsNullOrEmpty(cliente.clioti_nome);
+    }
+}

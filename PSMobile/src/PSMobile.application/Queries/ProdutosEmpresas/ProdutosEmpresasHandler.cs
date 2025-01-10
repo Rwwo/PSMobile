@@ -4,6 +4,10 @@ using AutoMapper;
 
 using MediatR;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+
+using PSMobile.core.Entities;
 using PSMobile.core.Interfaces;
 using PSMobile.core.Services;
 
@@ -36,17 +40,18 @@ public class ProdutosEmpresasHandler
         Expression<Func<core.Entities.ProdutosEmpresas, bool>>? filter = c => c.proemp_exc == 0 &&
                                                                               (c.proemp_emp_key == request.EmpKey);
 
-        var includes = new List<Expression<Func<core.Entities.ProdutosEmpresas, object>>>
+        var thenIncludes = new List<Func<IQueryable<core.Entities.ProdutosEmpresas>, IIncludableQueryable<core.Entities.ProdutosEmpresas, object>>>
         {
-            e => e.Produto
+            query => query.Include(e => e.Produto)
+                          .ThenInclude(i => i.ProdutosImagens)
         };
 
 
         Expression<Func<core.Entities.ProdutosEmpresas, object>> order = o => o.proemp_key;
 
         return await _uow.ProdutosEmpresasRepository.GetAllAsync(filter,
-                                                                 includes,
                                                                  null,
+                                                                 thenIncludes,
                                                                  order,
                                                                  false,
                                                                  request.PageNumber,
@@ -76,16 +81,17 @@ public class ProdutosEmpresasHandler
 
                                                                                 ));
 
-        var includes = new List<Expression<Func<core.Entities.ProdutosEmpresas, object>>>
+        var thenIncludes = new List<Func<IQueryable<core.Entities.ProdutosEmpresas>, IIncludableQueryable<core.Entities.ProdutosEmpresas, object>>>
         {
-            e => e.Produto
+            query => query.Include(e => e.Produto)
+                          .ThenInclude(i => i.ProdutosImagens)
         };
 
         Expression<Func<core.Entities.ProdutosEmpresas, object>> order = o => o.Produto.pro_nome;
 
         return await _uow.ProdutosEmpresasRepository.GetAllAsync(filter,
-                                                                 includes,
                                                                  null,
+                                                                 thenIncludes,
                                                                  order,
                                                                  false,
                                                                  request.PageNumber,

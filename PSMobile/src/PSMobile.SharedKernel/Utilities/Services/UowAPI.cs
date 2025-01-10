@@ -1,9 +1,6 @@
 ﻿using PSMobile.SharedKernel.Utilities.Interfaces;
 
 using System.Net.Http.Headers;
-using System.Net.Http;
-using Microsoft.EntityFrameworkCore;
-using PSMobile.core.Interfaces;
 
 namespace PSMobile.SharedKernel.Utilities.Services;
 
@@ -17,6 +14,12 @@ public class UowAPI : IUowAPI
     public void SetarToken(string token)
     {
         _HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+    }
+
+    private ClientesOticaService? _ClientesOticaService;
+    public IClientesOticaService ClientesOticaService
+    {
+        get => _ClientesOticaService ??= new ClientesOticaService(_HttpClient);
     }
 
     private CadastroService? _CadastroService;

@@ -88,7 +88,6 @@ public class OrdensServicosRepository : ReadRepository<OrdensServicos>, IOrdensS
         try
         {
 
-
             return new OrdensServicoGravarRetornoFuncao("0|0");
         }
         catch (Exception ex)

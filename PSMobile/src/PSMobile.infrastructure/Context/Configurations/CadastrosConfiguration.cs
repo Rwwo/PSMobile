@@ -14,6 +14,9 @@ public class CadastrosConfiguration : IEntityTypeConfiguration<Cadastros>
         // Chave Primária
         builder.HasKey(c => c.cad_key);
 
+        builder.HasOne(t => t.ClientesOtica)
+            .WithOne(o => o.Cadastros)
+            .HasForeignKey<ClientesOtica>(t=>t.clioti_cad_key);
 
         builder.Property(c => c.cad_tipocli).HasColumnName("cad_tipocli");
         builder.Property(f => f.cad_tipofor).HasColumnName("cad_tipofor");

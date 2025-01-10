@@ -8,4 +8,3 @@ public interface ICadastroService : IBaseReadServiceAll<Cadastros>, IBaseWriteSe
     Task<PaginatedResult<Cadastros>> GetByCustomColumnAsync(string custom, int pageSize = 10, int pageNumber = 1);
     Task<PaginatedResult<Cadastros>> GetByDocNumberAsync(string NumDoc, int pageSize = 10, int pageNumber = 1);
 }
-

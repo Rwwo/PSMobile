@@ -95,5 +95,6 @@ public class Produtos : Entity
     public short pro_ecommerce { get; set; }
 
     public ProdutosEmpresas? ProdutosEmpresas { get; set; } 
+    public List<ProdutosImagens>? ProdutosImagens { get; set; } 
 
 }

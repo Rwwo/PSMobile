@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using PSMobile.core.Interfaces;
 using System.Net;
 using PSMobile.application.Queries.ReceituarioOtico;
-using PSMobile.application.Queries.TiposMateriais;
+using PSMobile.core.InputModel;
+using PSMobile.application.Commands.ReceituarioOculos;
 
 namespace PSMobile.api.Controllers;
 
@@ -29,10 +30,27 @@ public class ReceituarioOculosController : MainController
     }
 
     [HttpGet("os/{numos}")]
-    public async Task<IActionResult> GetTipoMaterialById(int numos, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> Get(int numos, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
     {
         var query = new GetReceituarioOculosByNumOSQuery(numos, pageNumber, pageSize);
         var result = await _mediator.Send(query);
+        return CustomResponse(HttpStatusCode.OK, result);
+    }
+
+    [HttpPost("gravar")]
+    public async Task<IActionResult> PostGravar([FromBody] ReceituarioOculosInputModel entity)
+    {
+        if (!ModelState.IsValid)
+        {
+            var messages = ModelState
+                .SelectMany(ms => ms.Value.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+            return BadRequest(messages);
+        }
+
+        var command = new ReceituarioOculosCommand(entity);
+        var result = await _mediator.Send(command);
         return CustomResponse(HttpStatusCode.OK, result);
     }
 }

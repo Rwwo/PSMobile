@@ -4,9 +4,12 @@ using MudBlazor;
 
 using PSMobile.core.Entities;
 using PSMobile.core.InputModel;
+using PSMobile.core.ReturnFunctions;
 using PSMobile.SharedKernel.Common;
-using PSMobile.SharedUI.Components.Pages.ReceituarioOtico.Services;
+using PSMobile.SharedUI.Components.Pages.ReceituarioOtico.Component;
 using PSMobile.SharedUI.Components.Shared;
+
+using ZXing;
 
 using static MudBlazor.Colors;
 
@@ -16,9 +19,7 @@ public class GravarReceituarioOticoPage : MyBaseComponent
     public ReceituarioOculosInputModel InputModel { get; set; } = new();
     public ReceituarioOculos? CurrentReceituario { get; set; } = null;
 
-    public ISelectionStyleFormatFactory EventTB;
     public bool IsEditing { get; set; } = false;
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,7 +34,7 @@ public class GravarReceituarioOticoPage : MyBaseComponent
             var tiposMateriais = await UowAPI.TiposMateriaisService.GetAllAsync();
             InputModel.AdicionarTiposMateriais(tiposMateriais.Items);
 
-            var funcionarios = await UowAPI.FuncionariosService.GetAllAsync();
+            var funcionarios = await UowAPI.FuncionariosService.GetAllAsync(100, 1);
             InputModel.AdicionarVendedores(funcionarios.Items);
 
             if (CurrentReceituario is null)
@@ -57,9 +58,37 @@ public class GravarReceituarioOticoPage : MyBaseComponent
             if (editContext.Model is ReceituarioOculosInputModel model)
             {
 
-                Snackbar.Add("Receituário cadastrado com sucesso!", Severity.Success);
-                Navigation.NavigateTo("/receituario-otico");
+                var result = await UowAPI.ReceituarioOticoService.GravarAsync(model);
+
+                if (result.IsSuccess)
+                {
+                    if (IsEditing)
+                        Snackbar.Add("Receituário atualizado com sucesso!", Severity.Success);
+                    else
+                        Snackbar.Add("Receituário cadastrado com sucesso!", Severity.Success);
+
+
+                    ServiceLocal.LimparCliente();
+                    Navigation.NavigateTo("/receituario-otico");
+                }
+                else
+                {
+                    HandleError(result.Errors);
+                }
+
             }
+        }
+        catch (Exception ex)
+        {
+            HandleException(ex);
+        }
+    }
+
+    public async Task OnInValidSubmitAsync(EditContext editContext)
+    {
+        try
+        {
+            Snackbar.Add("Verifique os campos e tente novamente");
         }
         catch (Exception ex)
         {
@@ -69,26 +98,39 @@ public class GravarReceituarioOticoPage : MyBaseComponent
 
     public async Task ValidatedNumDocAsync()
     {
+        var cpf = InputModel.cpf;
 
-        var aux = InputModel.Cadastros.cad_cnpj;
-
-        if (!string.IsNullOrEmpty(InputModel.Cadastros.cad_cnpj))
+        if (string.IsNullOrEmpty(cpf))
         {
-            InputModel.Cadastros.cad_cnpj = PSSysService.PSFormatarCNPJ(InputModel.Cadastros.cad_cnpj);
-            if (!string.IsNullOrEmpty(InputModel.Cadastros.cad_cnpj))
-            {
-                var ret = await UowAPI.CadastroService.GetByDocNumberAsync(aux);
-
-                if (ret.Items.Count >= 1)
-                    SetCustomerData(ret.Items[0]);
-            }
-        }
-        else
-        {
-            InputModel.Cadastros = new();
+            ResetCustomerData();
+            return;
         }
 
+        FormatAndSyncCpf();
+
+        if (string.IsNullOrEmpty(InputModel.Cadastros.cad_cnpj))
+            return;
+
+        var result = await UowAPI.CadastroService.GetByDocNumberAsync(cpf);
+
+        if (result.Items.Any())
+            SetCustomerData(result.Items.First());
+
+        StateHasChanged();
     }
+
+    private void FormatAndSyncCpf()
+    {
+        InputModel.cpf = PSSysService.PSFormatarCNPJ(InputModel.cpf);
+        InputModel.Cadastros.cad_cnpj = InputModel.cpf;
+    }
+
+    private void ResetCustomerData()
+    {
+        InputModel.NomeCliente = string.Empty;
+        InputModel.Cadastros = new();
+    }
+
 
     public async Task SearchProductsDialogAsync()
     {
@@ -146,10 +188,49 @@ public class GravarReceituarioOticoPage : MyBaseComponent
         }
     }
 
-    private void SetCustomerData(Cadastros Cliente)
+    private async Task SetCustomerData(Cadastros Cliente)
     {
         InputModel.Cadastros = Cliente;
+        InputModel.NomeCliente = Cliente.cad_nome;
         InputModel.recocu_cad_key = Cliente.cad_key;
+
+        if (Cliente.ClientesOtica is null)
+        {
+            var parameters = new DialogParameters<NovoClienteOticaComponent>
+            {
+                { x=> x.Cadastro , Cliente }
+            };
+
+            DialogOptions _options = new()
+            {
+                MaxWidth = MaxWidth.Large,
+                FullScreen = IsMobile,
+                CloseButton = true,
+                CloseOnEscapeKey = true
+            };
+
+            var dialog = await DialogService.ShowAsync<NovoClienteOticaComponent>(
+                "Atualize o cadastro ótica do cliente",
+                 parameters,
+                 _options
+            );
+
+            var result = await dialog.Result;
+
+            if (!result.Canceled)
+            {
+                //InputModel.recocu_clioti_key = ((ClienteOticaGravarRetornoFuncao)result.Data).codigo;
+                InputModel.recocu_clioti_key = (int)result.Data;
+            }
+            
+            dialog.Close();
+
+            Console.WriteLine();
+        }
+        else
+        {
+            InputModel.recocu_clioti_key = Cliente.ClientesOtica.clioti_key;
+        }
     }
 
     public async Task<IEnumerable<Funcionarios>> SearchEmployeeAsync(string value, CancellationToken token)

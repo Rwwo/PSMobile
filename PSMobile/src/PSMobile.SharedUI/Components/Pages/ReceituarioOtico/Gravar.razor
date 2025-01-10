@@ -1,5 +1,4 @@
 @page "/receituario-otico/gravar"
-@using PSMobile.SharedUI.Components.Pages.ReceituarioOtico.Services
 @inherits GravarReceituarioOticoPage
 @attribute [Authorize]
 
@@ -10,7 +9,7 @@
               ButtonTextBack="Voltar" OnClickGoBack="@GoToHomePage" />
 
 <MudPaper Class="mt-2 mb-4 pa-2">
-    <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync">
+    <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync" OnInvalidSubmit="OnInValidSubmitAsync">
         <DataAnnotationsValidator />
 
         <MudGrid Spacing="0">
@@ -19,13 +18,12 @@
 
                 <MudCard Elevation="2" Class="pa-4">
                     <MudStack Row="true">
-                        <MudItem xs="4" sm="4" md="3">
+                        <MudItem xs="12" sm="12" md="4">
                             <MudTextField T="string"
                                           Immediate
                                           Label="CPF"
-                                          @bind-Value="InputModel.Cadastros.cad_cnpj"
+                                          @bind-Value="InputModel.cpf"
                                           OnBlur="ValidatedNumDocAsync"
-                                          For="@(() => InputModel.Cadastros.cad_cnpj)"
                                           Variant="Variant.Text"
                                           InputMode="InputMode.numeric"
                                           Adornment="Adornment.End"
@@ -35,21 +33,21 @@
                                           Clearable />
                         </MudItem>
 
-                        <MudItem xs="8" sm="8" md="9">
+                        <MudItem xs="12" sm="12" md="8">
                             <MudTextField T="string"
-                                          @bind-Value="InputModel.Cadastros.cad_nome"
+                                          Disabled
                                           Label="Nome"
-                                          Variant="Variant.Text"
-                                          ReadOnly="true" />
+                                          Text="@InputModel.NomeCliente"
+                                          Variant="_Variant" />
                         </MudItem>
                     </MudStack>
                 </MudCard>
 
                 <MudSpacer />
 
-                <MudExpansionPanels MultiExpansion="true" Dense="IsDense" Class="mt-4 mb-2">
+                <MudExpansionPanels MultiExpansion="true" Dense="IsDense"  Class="mt-4 mb-2">
 
-                    <MudExpansionPanel Text="** Dados do Receituário" Class="mb-1">
+                    <MudExpansionPanel Text="** Dados do Receituário" Class="mb-1" Expanded="true">
                         <MudGrid Class="mb-4">
 
                             <MudItem xs="12" md="6" sm="6">
@@ -57,6 +55,7 @@
                                                  Variant="@_Variant"
                                                  Label="Vendedor"
                                                  @bind-Value="InputModel.Funcionario"
+                                                 For="@(() => InputModel.Funcionario)"
                                                  HelperText="Selecione o Vendedor"
                                                  SearchFunc="@SearchEmployeeAsync"
                                                  Clearable />
@@ -67,6 +66,7 @@
                                                  Variant="@_Variant"
                                                  Label="Prescritor"
                                                  @bind-Value="InputModel.Prescritor"
+                                                 For="@(() => InputModel.Prescritor)"
                                                  HelperText="Selecione o Prescritor"
                                                  SearchFunc="@SearchDoctorAsync"
                                                  Clearable />
@@ -125,15 +125,17 @@
                             </MudItem>
 
                             <MudItem xs="12" sm="12" md="6">
-                                <MudTextField T="decimal?"
-                                              @bind-Value="InputModel.recocu_valorlente"
-                                              Label="Valor"
-                                              Adornment="Adornment.Start"
-                                              AdornmentIcon="@Icons.Material.Filled.AttachMoney"
-                                              Variant="_Variant"
-                                              HelperText="Valor da Lente"
-                                              InputMode="InputMode.numeric"
-                                              Clearable />
+                                <MudNumericField T="decimal?"
+                                                 @bind-Value="InputModel.recocu_valorlente"
+                                                 Label="Valor"
+                                                 Adornment="Adornment.Start"
+                                                 AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                                                 Variant="_Variant"
+                                                 HelperText="Valor da Lente"
+                                                 HideSpinButtons
+                                                 Format="F2"
+                                                 InputMode="InputMode.numeric"
+                                                 Clearable />
                             </MudItem>
 
                             <MudItem xs="12" sm="12" md="6">
@@ -202,14 +204,16 @@
                                                                       Clearable />
                                                     </MudItem>
                                                     <MudItem xs="12" sm="12" md="3">
-                                                        <MudTextField T="decimal?"
-                                                                      @bind-Value="InputModel.recocu_valorarmacao"
-                                                                      Label="Valor Armação"
-                                                                      Adornment="Adornment.Start"
-                                                                      AdornmentIcon="@Icons.Material.Filled.AttachMoney"
-                                                                      InputMode="InputMode.numeric"
-                                                                      Variant="_Variant"
-                                                                      Clearable />
+                                                        <MudNumericField T="decimal?"
+                                                                         @bind-Value="InputModel.recocu_valorarmacao"
+                                                                         Label="Valor Armação"
+                                                                         Adornment="Adornment.Start"
+                                                                         AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                                                                         InputMode="InputMode.numeric"
+                                                                         Variant="_Variant"
+                                                                         HideSpinButtons
+                                                                         Format="F2"
+                                                                         Clearable />
                                                     </MudItem>
 
                                                     <MudItem xs="12" sm="12" md="3">
@@ -235,7 +239,7 @@
                                             </MudItem>
                                             <MudItem xs="12" sm="12" md="3">
                                                 <MudField Label="Tipo Material" Variant="Variant.Outlined" InnerPadding="false">
-                                                    <MudChipSet @bind-SelectedValues="_selected" SelectionMode="SelectionMode.MultiSelection" CheckMark="true" Variant="_Variant" Color="Color.Info">
+                                                    <MudChipSet @bind-SelectedValues="@InputModel._TipoMateriaisSelected" SelectionMode="SelectionMode.MultiSelection" CheckMark="true" Variant="_Variant" Color="Color.Info">
                                                         @foreach (var item in InputModel.TiposMateriais)
                                                         {
                                                             <MudChip T="TiposMateriais" Value="@item">@item.tipmat_descricao</MudChip>
@@ -262,37 +266,36 @@
                                         <MudStack Row="true" Spacing="1">
                                             <MudText Typo="Typo.subtitle1">OD</MudText>
                                             <MudGrid Spacing="1">
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="ESF"
                                                                       Value="@InputModel.recocu_lonodesf"
                                                                       ValueChanged="@((v) => InputModel.recocu_lonodesf = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="CIL"
                                                                       Value="@InputModel.recocu_lonodcil"
                                                                       UseFormatting="false"
                                                                       ValueChanged="@((v) => InputModel.recocu_lonodcil = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
-                                                    <MudNumericField Label="EIXO"
+                                                <MudItem xs="6" sm="3" md="3">
+                                                    <MudTextField Label="EIXO"
+                                                                  ShrinkLabel
+                                                                  Margin="Margin.Normal"
+                                                                  Variant="Variant.Outlined"
+                                                                  @bind-Value="@InputModel.FormattedEixo_lonodeixo"
+                                                                  InputMode="InputMode.numeric"
+                                                                  OnBlur="@InputModel.OnBlurEixo_lonodeixo"
+                                                                  Clearable />
+                                                </MudItem>
+                                                <MudItem xs="6" sm="3" md="3">
+                                                    <MudNumericField Label="DNP"
                                                                      ShrinkLabel
                                                                      HideSpinButtons
                                                                      Margin="Margin.Normal"
                                                                      Variant="Variant.Outlined"
-                                                                     @bind-Value="@InputModel.FormattedEixo_lonodeixo"
+                                                                     @bind-Value="@InputModel.recocu_lonoddnp"
                                                                      InputMode="InputMode.numeric"
-                                                                     OnBlur="@InputModel.OnBlurEixo_lonodeixo"
                                                                      Clearable />
-                                                </MudItem>
-                                                <MudItem xs="6" md="3">
-                                                    <MudNumericField Label="DNP"
-                                                                  ShrinkLabel
-                                                                     HideSpinButtons
-                                                                  Margin="Margin.Normal"
-                                                                  Variant="Variant.Outlined"
-                                                                  @bind-Value="@InputModel.recocu_lonoddnp"
-                                                                  InputMode="InputMode.numeric"
-                                                                  Clearable />
                                                 </MudItem>
                                             </MudGrid>
                                         </MudStack>
@@ -300,29 +303,28 @@
                                         <MudStack Row="true" Spacing="1">
                                             <MudText Typo="Typo.subtitle1">OE</MudText>
                                             <MudGrid Spacing="1">
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="ESF"
                                                                       Value="@InputModel.recocu_lonoeesf"
                                                                       ValueChanged="@((v) => InputModel.recocu_lonoeesf = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="CIL"
                                                                       Value="@InputModel.recocu_lonoecil"
                                                                       UseFormatting="false"
                                                                       ValueChanged="@((v) => InputModel.recocu_lonoecil = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
-                                                    <MudNumericField Label="EIXO"
-                                                                     ShrinkLabel
-                                                                     Margin="Margin.Normal"
-                                                                     Variant="Variant.Outlined"
-                                                                     HideSpinButtons
-                                                                     @bind-Value="@InputModel.FormattedEixo_lonoeeixo"
-                                                                     InputMode="InputMode.numeric"
-                                                                     OnBlur="@InputModel.OnBlurEixo_lonoeeixo"
-                                                                     Clearable />
+                                                <MudItem xs="6" sm="3" md="3">
+                                                    <MudTextField Label="EIXO"
+                                                                  ShrinkLabel
+                                                                  Margin="Margin.Normal"
+                                                                  Variant="Variant.Outlined"
+                                                                  @bind-Value="@InputModel.FormattedEixo_lonoeeixo"
+                                                                  InputMode="InputMode.numeric"
+                                                                  OnBlur="@InputModel.OnBlurEixo_lonoeeixo"
+                                                                  Clearable />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <MudNumericField Label="DNP"
                                                                      ShrinkLabel
                                                                      HideSpinButtons
@@ -379,29 +381,28 @@
                                         <MudStack Row="true" Spacing="1">
                                             <MudText Typo="Typo.subtitle1">OD</MudText>
                                             <MudGrid Spacing="1">
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="ESF"
                                                                       Value="@InputModel.recocu_perodesf"
                                                                       ValueChanged="@((v) => InputModel.recocu_perodesf = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="CIL"
                                                                       Value="@InputModel.recocu_perodcil"
                                                                       UseFormatting="false"
                                                                       ValueChanged="@((v) => InputModel.recocu_perodcil = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
-                                                    <MudNumericField Label="EIXO"
-                                                                     ShrinkLabel
-                                                                     Variant="Variant.Outlined"
-                                                                     Margin="Margin.Normal"
-                                                                     @bind-Value="@InputModel.FormattedEixo_perodeixo"
-                                                                     InputMode="InputMode.numeric"
-                                                                     OnBlur="@InputModel.OnBlurEixo_perodeixo"
-                                                                     HideSpinButtons
-                                                                     Clearable />
+                                                <MudItem xs="6" sm="3" md="3">
+                                                    <MudTextField Label="EIXO"
+                                                                  ShrinkLabel
+                                                                  Variant="Variant.Outlined"
+                                                                  Margin="Margin.Normal"
+                                                                  @bind-Value="@InputModel.FormattedEixo_perodeixo"
+                                                                  InputMode="InputMode.numeric"
+                                                                  OnBlur="@InputModel.OnBlurEixo_perodeixo"
+                                                                  Clearable />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <MudNumericField Label="DNP"
                                                                      ShrinkLabel
                                                                      HideSpinButtons
@@ -417,29 +418,28 @@
                                         <MudStack Row="true" Spacing="1">
                                             <MudText Typo="Typo.subtitle1">OE</MudText>
                                             <MudGrid Spacing="1">
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="ESF"
                                                                       Value="@InputModel.recocu_peroeesf"
                                                                       ValueChanged="@((v) => InputModel.recocu_peroeesf = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <StepperTextField Label="CIL"
                                                                       Value="@InputModel.recocu_peroecil"
                                                                       UseFormatting="false"
                                                                       ValueChanged="@((v) => InputModel.recocu_peroecil = v)" />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
-                                                    <MudNumericField Label="EIXO"
-                                                                     ShrinkLabel
-                                                                     HideSpinButtons
-                                                                     Variant="Variant.Outlined"
-                                                                     Margin="Margin.Normal"
-                                                                     @bind-Value="@InputModel.FormattedEixo_peroeeixo"
-                                                                     OnBlur="@InputModel.OnBlurEixo_peroeeixo"
-                                                                     InputMode="InputMode.numeric"
-                                                                     Clearable />
+                                                <MudItem xs="6" sm="3" md="3">
+                                                    <MudTextField Label="EIXO"
+                                                                  ShrinkLabel
+                                                                  Variant="Variant.Outlined"
+                                                                  Margin="Margin.Normal"
+                                                                  @bind-Value="@InputModel.FormattedEixo_peroeeixo"
+                                                                  OnBlur="@InputModel.OnBlurEixo_peroeeixo"
+                                                                  InputMode="InputMode.numeric"
+                                                                  Clearable />
                                                 </MudItem>
-                                                <MudItem xs="6" md="3">
+                                                <MudItem xs="6" sm="3" md="3">
                                                     <MudNumericField Label="DNP"
                                                                      ShrinkLabel
                                                                      HideSpinButtons
@@ -523,8 +523,7 @@
 
                 </MudExpansionPanels>
 
-                <MudItem xs="12" Class="d-flex justify-content-between">
-                    <MudText Typo="Typo.body1">Criado por: @InputModel.recocu_cad_key</MudText>
+                <MudItem xs="12" Class="d-flex justify-content-end">
                     <SaveButton />
                 </MudItem>
 
@@ -532,10 +531,5 @@
         </MudGrid>
 
     </EditForm>
-
 </MudPaper>
-
-@code {
-    private IReadOnlyCollection<TiposMateriais> _selected;
-
-}
+<MudText Typo="Typo.body1">Criado por: @InputModel.recocu_cad_key</MudText>

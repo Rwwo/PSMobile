@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     }
     public DbSet<Cadastros> Cadastros { get; set; }
+    public DbSet<ClientesOtica> ClientesOtica { get; set; }
     public DbSet<Cidades> Cidades { get; set; }
     public DbSet<Empresas> Empresas { get; set; }
     public DbSet<FormasPagamento> FormasPagamento { get; set; }

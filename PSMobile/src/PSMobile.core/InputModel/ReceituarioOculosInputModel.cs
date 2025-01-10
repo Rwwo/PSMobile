@@ -1,5 +1,8 @@
 ﻿using PSMobile.core.Entities;
 
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace PSMobile.core.InputModel;
 
 public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
@@ -11,6 +14,10 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
 
         recocu_data_prev = recocu_data_abert.Value.AddYears(1);
         recocu_data_renov = recocu_data_abert.Value.AddYears(1);
+
+        recocu_mov_num = string.Empty;
+        recocu_cor = string.Empty;
+        recocu_pro_codigo = string.Empty;
     }
 
     public ReceituarioOculosInputModel AdicionarExistente(ReceituarioOculos input)
@@ -25,7 +32,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
         recocu_data_abert = input.recocu_data_abert;
         recocu_data_prev = input.recocu_data_prev;
         recocu_data_renov = input.recocu_data_renov;
-        recocu_data_fech = (DateTime)input.recocu_data_fech;
+        recocu_data_fech = input.recocu_data_fech;
         recocu_mov_num = input.recocu_mov_num;
         recocu_lente = input.recocu_lente;
         recocu_cor = input.recocu_cor;
@@ -79,9 +86,11 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
 
         Cadastros = input.Cadastros;
         recocu_cad_key = Cadastros?.cad_key;
+        cpf = Cadastros?.cad_cnpj;
+        NomeCliente = Cadastros?.cad_nome;        
 
         TipoMateriais = input.TiposMateriais;
-        recocu_tipmat_key = TipoMateriais.tipmat_key;
+        recocu_tipmat_key = TipoMateriais?.tipmat_key;
 
         Prescritor = input.Prescritores;
         recocu_pre_key = Prescritor?.pre_key;
@@ -95,26 +104,28 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
     #region Dados do Objeto
     public int recocu_key { get; set; }
     public int? recocu_numos { get; set; } = null;
+
+    [Required(ErrorMessage = "A Data de abertura é obrigatória")]
     public DateTime? recocu_data_abert { get; set; }
     public DateTime? recocu_data_prev { get; set; }
     public DateTime? recocu_data_renov { get; set; }
     public DateTime? recocu_data_fech { get; set; }
-    public string recocu_mov_num { get; set; }
-    public string recocu_lente { get; set; }
-    public string recocu_cor { get; set; }
+    public string? recocu_mov_num { get; set; }
+    public string? recocu_lente { get; set; }
+    public string? recocu_cor { get; set; }
     public short recocu_cr39 { get; set; }
     public short recocu_poli { get; set; }
     public short recocu_trivex { get; set; }
     public short recocu_cristal { get; set; }
     public short recocu_vta => _recocu_vta == true ? (short)1 : (short)0;
-    public bool _recocu_vta { get; set; } = false;
+    [JsonIgnore] public bool _recocu_vta { get; set; } = false;
     public short recocu_vtanodia => _recocu_vtanodia == true ? (short)1 : (short)0;
-    public bool _recocu_vtanodia { get; set; } = false;
+    [JsonIgnore] public bool _recocu_vtanodia { get; set; } = false;
     public DateTime? recocu_vta_data { get; set; }
     public string? recocu_armacao { get; set; } = null;
     public string? recocu_referencia { get; set; } = null;
     public string? recocu_pro_codigo { get; set; } = null;
-    public int recocu_tipmat_key { get; set; }
+    public int? recocu_tipmat_key { get; set; }
 
 
     #region Longe OD
@@ -176,7 +187,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
             }
         }
     }
-    public string FormattedEixo_lonodeixo { get; set; }
+    [JsonIgnore] public string? FormattedEixo_lonodeixo { get; set; }
     private string FormatEixo(decimal? value)
     {
         if (value.HasValue && value >= 0 && value <= 180)
@@ -261,7 +272,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
             }
         }
     }
-    public string FormattedEixo_lonoeeixo { get; set; }
+    [JsonIgnore] public string? FormattedEixo_lonoeeixo { get; set; }
     public void OnBlurEixo_lonoeeixo()
     {
         // Remove o sufixo ao sair do foco, mas mantém a formatação no setter da propriedade.
@@ -339,7 +350,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
             }
         }
     }
-    public string FormattedEixo_perodeixo { get; set; }
+    [JsonIgnore] public string? FormattedEixo_perodeixo { get; set; }
 
     public void OnBlurEixo_perodeixo()
     {
@@ -416,7 +427,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
             }
         }
     }
-    public string FormattedEixo_peroeeixo { get; set; }
+    [JsonIgnore] public string? FormattedEixo_peroeeixo { get; set; }
     public void OnBlurEixo_peroeeixo()
     {
         // Remove o sufixo ao sair do foco, mas mantém a formatação no setter da propriedade.
@@ -469,6 +480,7 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
 
 
     }
+    [JsonIgnore]
     public string _recocu_adicao
     {
         get => recocu_adicao?.ToString("0.00") ?? string.Empty;
@@ -497,13 +509,6 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
     public decimal? recocu_ponte { get; set; }
     public decimal? recocu_horizontal { get; set; }
 
-
-
-
-
-
-
-
     public string? recocu_observacao { get; set; } = null;
     public short recocu_exc { get; set; }
     public DateTime recocu_data_mud { get; set; }
@@ -513,14 +518,65 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
     public string? recocu_id { get; set; } = null;
     public string? recocu_sinc { get; set; } = null;
     public short? recocu_sincenviar { get; set; } = null;
-    public decimal? recocu_valorlente { get; set; }
-    public decimal? recocu_valorarmacao { get; set; }
+    
+    private decimal? _recocu_valorlente;
+    public decimal? recocu_valorlente
+    {
+        get => _recocu_valorlente;
+        set
+        {
+            _recocu_valorlente = value;
+        }
+    }
 
-    public string _Nome => recocu_numos == null ? " ** Receituário em DIGITAÇÃO ** " : $"Receituário Nº {recocu_numos}";
+    private decimal? _recocu_valorarmacao;
+    public decimal? recocu_valorarmacao
+    {
+        get => _recocu_valorarmacao;
+        set
+        {
+            _recocu_valorarmacao = value;
+        }
+    }
 
-    public string _Lente { get; set; }
+    [JsonIgnore] public string _Nome => recocu_numos == null ? " ** Receituário em DIGITAÇÃO ** " : $"Receituário Nº {recocu_numos}";
 
+    private string? _lente;    
+    [JsonIgnore] public string? _Lente
+    {
+        get => _lente;
+        set
+        {
+            _lente = value;
 
+            recocu_cr39 = 0;
+            recocu_poli = 0;
+            recocu_trivex = 0;
+            recocu_cristal = 0;
+
+            switch (_lente)
+            {
+                case "CR 39":
+                    recocu_cr39 = 1;
+                    break;
+
+                case "Poli":
+                    recocu_poli = 1;
+                    break;
+
+                case "Trivex":
+                    recocu_trivex = 1;
+                    break;
+
+                case "Cristal":
+                    recocu_cristal = 1;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
 
     #endregion
 
@@ -528,22 +584,43 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
     {
         recocu_emp_key = input.emp_key;
     }
+
+    [Required(ErrorMessage = "A empresa é obrigatória")]
     public int recocu_emp_key { get; set; }
 
 
     public int? recocu_cad_key { get; set; }
-    public Cadastros Cadastros { get; set; } = new();
-    public ClientesOtica ClientesOtica { get; set; } = new();
-    public int? recocu_clioti_key { get; set; }
+    [JsonIgnore] public Cadastros? Cadastros { get; set; } = new();
+    [JsonIgnore] public ClientesOtica? ClientesOtica { get; set; } = new();
 
+    public int? recocu_clioti_key { get; set; } = null;
+
+
+    [JsonIgnore] public string? cpf { get; set; } = null;
+    [JsonIgnore] public string? NomeCliente { get; set; }
 
     public void AdicionarVendedores(List<Funcionarios> input)
     {
         Funcionarios.Clear();
         Funcionarios.AddRange(input.OrderBy(x => x.fun_nome));
     }
-    public List<Funcionarios> Funcionarios { get; private set; } = new();
-    public Funcionarios? Funcionario { get; set; } = null;
+    [JsonIgnore] public List<Funcionarios> Funcionarios { get; private set; } = new();
+
+    private Funcionarios _Funcionario;
+
+    [JsonIgnore]
+    public Funcionarios? Funcionario
+    {
+        get => _Funcionario;
+        set
+        {
+            _Funcionario = value;
+            recocu_fun_key = _Funcionario?.fun_key;
+        }
+    }
+
+
+    [Required(ErrorMessage = "Funcionário é obrigatório")]
     public int? recocu_fun_key { get; set; }
 
 
@@ -552,8 +629,10 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
         TiposMateriais.Clear();
         TiposMateriais.AddRange(input);
     }
-    public List<TiposMateriais> TiposMateriais { get; private set; } = new();
-    public TiposMateriais? TipoMateriais { get; set; } = null;
+    [JsonIgnore] public List<TiposMateriais> TiposMateriais { get; private set; } = new();
+    [JsonIgnore] public TiposMateriais? TipoMateriais { get; set; } = null;
+
+    [JsonIgnore] public IReadOnlyCollection<TiposMateriais> _TipoMateriaisSelected;
 
 
     public void AdicionarPrescritores(List<Prescritores> input)
@@ -561,14 +640,29 @@ public class ReceituarioOculosInputModel : PSMobile.core.Entities.InputModel
         Prescritores.Clear();
         Prescritores.AddRange(input.OrderBy(x => x.pre_nome));
     }
-    public List<Prescritores> Prescritores { get; private set; } = new();
-    public Prescritores? Prescritor { get; set; } = null;
+    [JsonIgnore] public List<Prescritores> Prescritores { get; private set; } = new();
+
+    [Required(ErrorMessage = "O Prescritor é obrigatório")]
+    private Prescritores _Prescritor;
+
+    [JsonIgnore]
+    public Prescritores? Prescritor
+    {
+        get => _Prescritor;
+        set
+        {
+            _Prescritor = value;
+            recocu_pre_key = _Prescritor?.pre_key;
+        }
+    }
+
+    [Required(ErrorMessage = "O Prescritor é obrigatório")]
     public int? recocu_pre_key { get; set; }
 
 
-    public List<ReceituarioOculosAnexos>? ReceituarioOculosAnexos { get; set; } = null;
-    public List<ReceituarioOculosArmacao>? ReceituarioOculosArmacao { get; set; } = null;
-    public List<ReceituarioOculosArmacaoMaterial>? ReceituarioOculosArmacaoMaterial { get; set; } = null;
+    [JsonIgnore] public List<ReceituarioOculosAnexos>? ReceituarioOculosAnexos { get; set; } = null;
+    [JsonIgnore] public List<ReceituarioOculosArmacao>? ReceituarioOculosArmacao { get; set; } = null;
+    [JsonIgnore] public List<ReceituarioOculosArmacaoMaterial>? ReceituarioOculosArmacaoMaterial { get; set; } = null;
 
 
 

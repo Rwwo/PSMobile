@@ -34,7 +34,7 @@ public class CadastroControllerTests
         _controller.ModelState.AddModelError("Nome", "O Nome é obrigatório");
 
         // Act
-        var result = await _controller.Post(inputModel);
+        var result = await _controller.PostGravarCadastro(inputModel);
 
         // Assert
         var badRequestResult = Assert.IsAssignableFrom<BadRequestObjectResult>(result); // Correto: Retorno é BadRequestObjectResult
@@ -54,7 +54,7 @@ public class CadastroControllerTests
                      .ReturnsAsync(commandResult);
 
         // Act
-        var result = await _controller.Post(inputModel);
+        var result = await _controller.PostGravarCadastro(inputModel);
 
         // Assert
         var okResult = Assert.IsAssignableFrom<ObjectResult>(result); // Correto: Retorno é um ObjectResult
